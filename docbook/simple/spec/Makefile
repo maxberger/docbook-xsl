@@ -5,7 +5,7 @@ XSLT=xsltproc
 STATUS=wd
 OASISTC=docbook
 SPECNAME=simple
-SPECVER=1.0-CR3
+SPECVER=1.0-CR1
 
 SPECROOT=$(STATUS)-$(OASISTC)-$(SPECNAME)
 SPECBASE=$(SPECROOT)-$(SPECVER)
@@ -34,7 +34,7 @@ $(SPECBASE).fo: $(SPECROOT).xml valid
 	$(XSLT) $< $(FOSTYLE) $(SPECBASE).fo $(FOPARAM)
 
 $(SPECBASE).pdf: $(SPECBASE).fo
-	xep -2 $(SPECBASE).fo
+	xep $(SPECBASE).fo
 	rm -f $(SPECBASE).fo
 
 clean:
