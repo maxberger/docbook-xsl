@@ -3,63 +3,27 @@ include ../cvstools/Makefile.incl
 
 VPATH=.:tests/
 
-.SUFFIXES: .html .fo .xml .pdf .index .tex .rtf .dvi
+.SUFFIXES: .html .fo .xml .pdf
 
-# testing mode, either dsssl or xsl
-MODE		?= xsl
+XSLHTML=../xsl/html/docbook.xsl
+XSLFO=../xsl/fo/docbook.xsl
+XSLCHUNK=../xsl/html/chunk.xsl
 
-# stylesheets to use
-XSLHTML		?= ../xsl/html/docbook.xsl
-XSLFO		?= ../xsl/fo/docbook.xsl
-XSLCHUNK	?= ../xsl/html/chunk.xsl
-DSSSLHTML	?= ../dsssl/html/docbook.dsl
-DSSSLPRINT	?= ../dsssl/print/docbook.dsl
+CHUNK=0
+USETIDY=1
+XSLPARAM=
+VALIDATE=1
 
-# whether to do chunking
-CHUNK		?= 0
-# whether to run tidy on resulting HTML output
-USETIDY		?= 0
-# whether to run validation before running the test
-VALIDATE	?= 0
-
-# how to make DSSSL indexes
-DSSSLINDEXER	?= perl $(DSSSLROOT)/bin/collateindex.pl
-
-# additional XSL parameters, if any
-XSLPARAM	?=
-
-# additional Jade/DSSSL parameters, if any
-DSSSLPARAM	?= -V%generate-article-toc%
-
-# what to use to format XSL FO
-FO_FORMATTER	?= tex
-
-TESTS		:= $(basename $(wildcard tests/*.xml))
-TESTBASE	:= $(shell ls -1 tests/*.xml | sed -e 's/\.[0-9][0-9][0-9]\.xml$$//' | sort | uniq)
+FORMATTER=xep
 
 # ======================================================================
 
-# default rule
-.PHONY: test
-test:
-	@echo "no default rule; try 'make xref.001.html' or 'make alltests'"
-
-.PHONY: $(TESTS)
-$(TESTS):
-ifeq ($(MODE),xsl)
-	$(MAKE) $(notdir $@).html $(notdir $@).pdf
-else
-	$(MAKE) $(notdir $@).html $(notdir $@).dvi
-endif
-
-# run all tests in a given category
-.PHONY: $(TESTBASE)
-$(TESTBASE):
-	$(MAKE) $(basename $(notdir $(wildcard $@.[0-9][0-9][0-9].xml)))
-
-# run all tests
-.PHONY: alltests
-alltests: $(TESTS)
+clean:
+	rm -f *.html *.htm *.fo *.pdf *.ps *.rtf
+	rm -f *.log *.aux *.out *.tex *.dvi
+	rm -f toc.hhc htmlhelp.hhp htmlhelp.chm Index.hhk
+	rm -f HTML.index
+	rm -f jhelpidx.xml jhelpmap.jhm jhelpset.hs jhelptoc.xml
 
 # ======================================================================
 
@@ -67,85 +31,38 @@ alltests: $(TESTS)
 ifeq ($(VALIDATE),1)
 	$(XJPARSE) $<
 endif
-ifeq ($(MODE),xsl)
 ifeq ($(CHUNK),1)
 	$(XSLT) $< $(XSLCHUNK) $@ $(XSLPARAM)
+ifeq ($(USETIDY),1)
+	$(TIDY) -iq -latin1 -mn *.html
+endif
 else
 	$(XSLT)  $< $(XSLHTML) $@ $(XSLPARAM)
-endif				# chunk
-else				# mode is DSSSL
-ifeq ($(CHUNK),1)
-	$(JADE) sgml $(DSSSLHTML) $< -V%html-ext%=.html $(DSSSLPARAM)
-else
-	$(JADE) sgml $(DSSSLHTML) $< -V%html-ext%=.html -Vnochunks $(DSSSLPARAM)> $@
-endif
-endif
 ifeq ($(USETIDY),1)
-ifeq ($(CHUNK),1)
-	$(TIDY) -iq -n -ascii -mn *.html
-else
-	$(TIDY) -iq -n -ascii -mn $@
+	$(TIDY) -iq -latin1 -mn $@
 endif
-endif
-
-.xml.index:
-ifeq ($(MODE),xsl)
-	@echo "don't know how to create XSL indexes" >&2
-	exit 1
-else
-	@test -f $*.index.xml || ( echo $(DSSSLINDEXER) -N -o $*.index.xml ; $(DSSSLINDEXER) -N -o $*.index.xml )
-	$(JADE) sgml $(DSSSLHTML) $< -Vhtml-index -Vhtml-index-filename=$*.index.xml $(DSSSLPARAM)
-	@test ! -f HTML.index || test HTML.index -ot $@ || ( echo mv HTML.index $@ ; mv HTML.index $@ )
-endif
-
-%.index.xml:	%.index
-ifeq ($(MODE),xsl)
-	@echo "don't know how to create XSL indexes" >&2
-	exit 1
-else
-	$(DSSSLINDEXER) -o $@ $<
 endif
 
 .xml.fo:
 ifeq ($(VALIDATE),1)
 	$(XJPARSE) $<
 endif
-ifeq ($(MODE),xsl)
-	$(XSLT) $< $(XSLFO) $@ $(FO_FORMATTER).extensions=1 $(XSLPARAM)
+ifeq ($(FORMATTER),tex)
+	$(XSLT) $< $(XSLFO) $@ passivetex.extensions=1 $(XSLPARAM)
 else
-	$(JADE) fo $(DSSSLPRINT) $< -o $@ $(DSSSLPARAM)
-endif
-
-.xml.rtf:
-ifeq ($(VALIDATE),1)
-	$(XJPARSE) $<
-endif
-ifeq ($(MODE),xsl)
-	@echo "not sure how to make RTF"
-	exit 1
+ifeq ($(FORMATTER),fop)
+	$(XSLT) $< $(XSLFO) $@ fop.extensions=1 $(XSLPARAM)
 else
-	$(JADE) rtf $(DSSSLPRINT) $< -o $@ $(DSSSLPARAM)
+ifeq ($(FORMATTER),xep)
+	$(XSLT) $< $(XSLFO) $@ xep.extensions=1 $(XSLPARAM)
+else
+	$(XSLT) $< $(XSLFO) $@ $(XSLPARAM)
+endif
+endif
 endif
 
-ifeq ($(MODE),dsssl)
-.xml.tex:
-ifeq ($(VALIDATE),1)
-	$(XJPARSE) $<
-endif
-	$(JADE) tex $(DSSSLPRINT) $< -o $@ $(DSSSLPARAM)
-endif
-
-ifeq ($(MODE),dsssl)
-.tex.dvi:
-	jadetex $<
-
-.tex.pdf:
-	pdfjadetex $<
-endif
-
-ifeq ($(MODE),xsl)
 .fo.pdf:
-ifeq ($(FO_FORMATTER),tex)
+ifeq ($(FORMATTER),tex)
 	pdftex "&pdfxmltex" $<
 	@if [ `grep Rerun $(basename $@).log | wc -l` -gt 0 ]; then \
 		pdftex "&pdfxmltex" $< ; \
@@ -154,31 +71,17 @@ ifeq ($(FO_FORMATTER),tex)
 		pdftex "&pdfxmltex" $< ; \
 	fi
 else
-ifeq ($(FO_FORMATTER),fop)
+ifeq ($(FORMATTER),fop)
 	fop $< $@
 else
-ifeq ($(FO_FORMATTER),xep)
+ifeq ($(FORMATTER),xep)
 	xep $<
 else
 	echo No formatter specified. How would you like me to make the PDF file?
-endif				# xep
-endif				# fop
-endif				# tex
-endif				# xsl
+endif
+endif
+endif
 
-
-# ======================================================================
-
-.PHONY: clean
-clean:
-	rm -f *.html *.htm *.fo *.pdf *.ps *.rtf
-	rm -f *.log *.aux *.out *.tex *.dvi *.index *.index.xml
-	rm -f toc.hhc htmlhelp.hhp htmlhelp.chm Index.hhk
-	rm -f HTML.index
-	rm -f jhelpidx.xml jhelpmap.jhm jhelpset.hs jhelptoc.xml
-	find . -name '*~' -o -name '*.bak' -o -name '.#*' -o -name core | xargs rm -f
-
-.PHONY: distrib
 distrib:
 	$(CVS2LOG) -w
 ifeq ($(DIFFVER),)
@@ -187,7 +90,6 @@ else
 	$(MERGELOGS) -v $(DIFFVER) > WhatsNew
 endif
 
-.PHONY: newversion
 newversion:
 ifeq ($(NEXTVER),)
 	$(NEXTVERSION)
@@ -196,7 +98,6 @@ else
 endif
 	make DIFFVER=$(DIFFVER) distrib
 
-.PHONY: zip
 zip:
 ifeq ($(ZIPVER),)
 	@echo You must specify ZIPVER for the zip target
@@ -221,8 +122,5 @@ else
 	cd /tmp && zip -rpD docbook-testdocs-$(ZIPVER).zip docbook-testdocs-$(ZIPVER)
 	rm -f tar.exclude
 endif
-
-# remove target if error in the rule
-.DELETE_ON_ERROR:
 
 # EOF

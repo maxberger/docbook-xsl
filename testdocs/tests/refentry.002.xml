@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
-          "http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+                  "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
 <article>
 <articleinfo>
 <title>Unit Test: refentry.002</title>
@@ -20,31 +20,10 @@
 <refpurpose>Another test of a minimal RefEntry</refpurpose>
 </refnamediv>
 
-<refsection>
+<refsect1>
 <title>Description</title>
 <para>This is a minimal RefEntry.</para>
-
-<refsection>
-<title>Subsection</title>
-<para>This is a minimal RefEntry.</para>
-
-<refsection>
-<title>Sub-subsection</title>
-<para>This is a minimal RefEntry.</para>
-</refsection>
-</refsection>
-</refsection>
-
-<refsection>
-<title>More Description</title>
-<para>This is a not-so minimal RefEntry.</para>
-</refsection>
-
-<refsection>
-<title>Even More Description</title>
-<para>This is an even less minimal RefEntry.</para>
-</refsection>
-
+</refsect1>
 </refentry>
 
 </article>

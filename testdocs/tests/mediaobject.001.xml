@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
-          "http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+                  "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
 <article>
+<?dbhtml dir="html"?>
 <articleinfo>
 <title>Unit Test: mediaobject.001</title>
 <releaseinfo role="CVS">$Id$</releaseinfo>
@@ -14,16 +15,16 @@
     <imageobject>
       <imagedata
         align="right"
-        width="6in"
-        fileref="graphics/duck-small.png"
-        format="PNG"
+        width="50%"
+        fileref="graphics/duck-small.gif"
         srccredit="O'Reilly &amp; Associates/Dover Archives"/>
     </imageobject>
     <imageobject>
       <imagedata
         align="right"
-        width="6in"
-        fileref="graphics/duck-small.gif"
+        width="50%"
+        fileref="graphics/duck-small.png"
+        format="PNG"
         srccredit="O'Reilly &amp; Associates/Dover Archives"/>
     </imageobject>
     <textobject><phrase>The DocBook: TDG Duck</phrase></textobject>
