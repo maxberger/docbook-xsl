@@ -40,16 +40,6 @@
   <!--nop-->
 </xsl:template>
 
-<xsl:template match="base" mode="head.mode">
-  <base href="{@href}">
-    <xsl:if test="@target">
-      <xsl:attribute name="target">
-        <xsl:value-of select="@target"/>
-      </xsl:attribute>
-    </xsl:if>
-  </base>
-</xsl:template>
-
 <xsl:template match="keywords" mode="head.mode">
   <meta name="keyword" content="{.}"/>
 </xsl:template>
@@ -67,14 +57,7 @@
 </xsl:template>
 
 <xsl:template match="meta" mode="head.mode">
-  <xsl:choose>
-    <xsl:when test="@http-equiv">
-      <meta http-equiv="{@http-equiv}" content="{@content}"/>
-    </xsl:when>
-    <xsl:otherwise>
-      <meta name="{@name}" content="{@content}"/>
-    </xsl:otherwise>
-  </xsl:choose>
+  <meta name="{@name}" content="{@content}"/>
 </xsl:template>
 
 <xsl:template match="script" mode="head.mode">
@@ -161,11 +144,6 @@
 </xsl:template>
 
 <xsl:template match="revhistory" mode="head.mode">
-  <!--nop-->
-</xsl:template>
-
-<xsl:template match="rddl:*" mode="head.mode"
-              xmlns:rddl='http://www.rddl.org/'>
   <!--nop-->
 </xsl:template>
 

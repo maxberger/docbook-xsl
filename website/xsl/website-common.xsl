@@ -17,7 +17,7 @@
 
 <!-- ==================================================================== -->
 
-<xsl:import href="http://docbook.sourceforge.net/release/xsl/snapshot/html/docbook.xsl"/>
+<xsl:import href="http://docbook.sf.net/release/xsl/snapshot/xhtml/docbook.xsl"/>
 <xsl:import href="xbel.xsl"/>
 <xsl:include href="VERSION"/>
 <xsl:include href="param.xsl"/>
@@ -94,20 +94,6 @@ node.</para>
   <xsl:variable name="toc" select="($tocentry/ancestor-or-self::toc[1]
                                    | $autolayout//toc[1])[last()]"/>
 
-  <xsl:variable name="feedback">
-    <xsl:choose>
-      <xsl:when test="$page/config[@param='feedback.href']">
-        <xsl:value-of select="($page/config[@param='feedback.href'])[1]/@value"/>
-      </xsl:when>
-      <xsl:when test="$autolayout/autolayout/config[@param='feedback.href']">
-        <xsl:value-of select="($autolayout/autolayout/config[@param='feedback.href'])[1]/@value"/>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:value-of select="$feedback.href"/>
-      </xsl:otherwise>
-    </xsl:choose>
-  </xsl:variable>
-
   <div class="navfoot">
     <xsl:if test="$footer.hr != 0"><hr/></xsl:if>
     <table width="100%" border="0" summary="Footer navigation">
@@ -145,19 +131,19 @@ node.</para>
         </td>
         <td width="33%" align="right">
             <xsl:choose>
-              <xsl:when test="$feedback != ''">
+              <xsl:when test="$feedback.href != ''">
                 <span class="footfeed">
                   <a>
                     <xsl:choose>
                       <xsl:when test="$feedback.with.ids != 0">
                         <xsl:attribute name="href">
-                          <xsl:value-of select="$feedback"/>
+                          <xsl:value-of select="$feedback.href"/>
                           <xsl:value-of select="$page/@id"/>
                         </xsl:attribute>
                       </xsl:when>
                       <xsl:otherwise>
                         <xsl:attribute name="href">
-                          <xsl:value-of select="$feedback"/>
+                          <xsl:value-of select="$feedback.href"/>
                         </xsl:attribute>
                       </xsl:otherwise>
                     </xsl:choose>
@@ -339,7 +325,12 @@ node.</para>
 
 <xsl:template match="holder" mode="footer.mode">
   <xsl:apply-templates/>
-  <xsl:if test="position() != last()">, </xsl:if>
+</xsl:template>
+
+<xsl:template match="holder[@role]" mode="footer.mode">
+  <a href="{@role}">
+    <xsl:apply-templates/>
+  </a>
 </xsl:template>
 
 <!-- ==================================================================== -->
@@ -428,12 +419,6 @@ node.</para>
 
 <!-- ==================================================================== -->
 
-<xsl:template match="@*" mode="copy">
-  <xsl:attribute name="{local-name(.)}">
-    <xsl:value-of select="."/>
-  </xsl:attribute>
-</xsl:template>
-
 <xsl:template match="html:*">
   <xsl:element name="{local-name(.)}" namespace="">
     <xsl:apply-templates select="@*" mode="copy"/>
@@ -441,32 +426,10 @@ node.</para>
   </xsl:element>
 </xsl:template>
 
-<!-- ==================================================================== -->
-
-<xsl:template match="rddl:*" xmlns:rddl='http://www.rddl.org/'>
-  <xsl:element name="{name(.)}">
-    <xsl:apply-templates select="@*" mode="copy"/>
-    <xsl:apply-templates/>
-  </xsl:element>
-</xsl:template>
-
-<xsl:template match="section[@rddl]" xmlns:rddl='http://www.rddl.org/'>
-  <xsl:variable name="rddl" select="id(@rddl)"/>
-  <xsl:choose>
-    <xsl:when test="local-name($rddl) != 'resource'">
-      <xsl:message>
-        <xsl:text>Warning: section rddl isn't an rddl:resource: </xsl:text>
-        <xsl:value-of select="@rddl"/>
-      </xsl:message>
-      <xsl:apply-imports/>
-    </xsl:when>
-    <xsl:otherwise>
-      <xsl:element name="{name($rddl)}">
-        <xsl:apply-templates select="$rddl/@*" mode="copy"/>
-        <xsl:apply-imports/>
-      </xsl:element>
-    </xsl:otherwise>
-  </xsl:choose>
+<xsl:template match="@*" mode="copy">
+  <xsl:attribute name="{local-name(.)}">
+    <xsl:value-of select="."/>
+  </xsl:attribute>
 </xsl:template>
 
 <!-- ==================================================================== -->
@@ -557,7 +520,6 @@ node.</para>
 <!-- ==================================================================== -->
 
 <xsl:template name="link.to.page">
-  <xsl:param name="href" select="''"/>
   <xsl:param name="page" select="ancestor-or-self::tocentry"/>
   <xsl:param name="linktext" select="'???'"/>
   <xsl:param name="relpath">
@@ -577,19 +539,7 @@ node.</para>
     </xsl:choose>
   </xsl:variable>
 
-  <xsl:variable name="html.href">
-    <xsl:choose>
-      <xsl:when test="$href != ''">
-        <xsl:value-of select="$href"/>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:value-of select="concat($relpath,$dir,$filename-prefix)"/>
-        <xsl:value-of select="$page/@filename"/>
-      </xsl:otherwise>
-    </xsl:choose>
-  </xsl:variable>
-
-  <a href="{$html.href}">
+  <a href="{$relpath}{$dir}{$filename-prefix}{$page/@filename}">
     <xsl:if test="summary">
       <xsl:attribute name="title">
         <xsl:value-of select="summary"/>

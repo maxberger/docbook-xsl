@@ -44,15 +44,15 @@
               <xsl:value-of select="$homebanner/@altval"/>
             </xsl:attribute>
           </img>
-          <xsl:value-of select="$currentpage.marker"/>
+          <xsl:text>@</xsl:text>
         </xsl:when>
         <xsl:when test="$homebannertext">
           <xsl:value-of select="$homebannertext/@value"/>
-          <xsl:value-of select="$currentpage.marker"/>
+          <xsl:text>@</xsl:text>
         </xsl:when>
         <xsl:otherwise>
           <xsl:text>Home</xsl:text>
-          <xsl:value-of select="$currentpage.marker"/>
+          <xsl:text>@</xsl:text>
         </xsl:otherwise>
       </xsl:choose>
     </xsl:when>
@@ -107,23 +107,10 @@
           <xsl:apply-templates select="title"/>
         </xsl:otherwise>
       </xsl:choose>
-      <xsl:value-of select="$currentpage.marker"/>
+      <xsl:text>@</xsl:text>
     </xsl:when>
     <xsl:otherwise>
-      <a>
-        <xsl:attribute name="href">
-          <xsl:choose>
-            <xsl:when test="@href">
-              <xsl:value-of select="@href"/>
-            </xsl:when>
-            <xsl:otherwise>
-              <xsl:value-of select="$relpath"/>
-              <xsl:value-of select="@dir"/>
-              <xsl:value-of select="$filename-prefix"/>
-              <xsl:value-of select="@filename"/>
-            </xsl:otherwise>
-          </xsl:choose>
-        </xsl:attribute>
+      <a href="{$relpath}{@dir}{$filename-prefix}{@filename}">
         <xsl:choose>
           <xsl:when test="titleabbrev">
             <xsl:apply-templates select="titleabbrev"/>
@@ -183,40 +170,14 @@
   <xsl:param name="relpath" select="''"/>
 
   <xsl:choose>
-    <xsl:when test="tocentry[descendant-or-self::*[@id=$pageid]]">
-      <xsl:call-template name="process-tocentry-children">
-        <xsl:with-param name="pageid" select="$pageid"/>
-        <xsl:with-param name="relpath" select="$relpath"/>
-      </xsl:call-template>
-    </xsl:when>
-    <xsl:otherwise>
-      <xsl:call-template name="process-toc-children">
-        <xsl:with-param name="pageid" select="$pageid"/>
-        <xsl:with-param name="relpath" select="$relpath"/>
-      </xsl:call-template>
-    </xsl:otherwise>
-  </xsl:choose>
-</xsl:template>
-
-<xsl:template name="process-tocentry-children">
-  <xsl:param name="pageid" select="@id"/>
-  <xsl:param name="relpath" select="''"/>
-
-  <xsl:choose>
     <xsl:when test="count(tocentry) &gt; $max.toc.width">
       <xsl:variable name="cur"
                     select="tocentry[descendant-or-self::*[@id=$pageid]]"/>
-
       <xsl:variable name="half" select="$max.toc.width div 2"/>
-
-      <xsl:variable name="all-nodes"
+      <xsl:variable name="nodes"
                     select="$cur/preceding-sibling::tocentry[position() &lt; $half]
                             | $cur
-                            | $cur/following-sibling::tocentry"/>
-
-      <xsl:variable name="nodes"
-                    select="$all-nodes[position() &lt; $max.toc.width]"/>
-
+                            | $cur/following-sibling::tocentry[position() &lt; $half]"/>
       <xsl:if test="count($cur/preceding-sibling::tocentry) &gt; $half">
         <xsl:text>...</xsl:text>
       </xsl:if>
@@ -224,7 +185,7 @@
         <xsl:with-param name="pageid" select="$pageid"/>
         <xsl:with-param name="relpath" select="$relpath"/>
       </xsl:apply-templates>
-      <xsl:if test="count($all-nodes) &gt; $max.toc.width">
+      <xsl:if test="count($cur/following-sibling::tocentry) &gt; $half">
         <xsl:text> | ...</xsl:text>
       </xsl:if>
     </xsl:when>
@@ -249,38 +210,6 @@
       </xsl:if>
     </xsl:for-each>
   </xsl:if>
-</xsl:template>
-
-<xsl:template name="process-toc-children">
-  <xsl:param name="pageid" select="@id"/>
-  <xsl:param name="relpath" select="''"/>
-
-  <xsl:choose>
-    <xsl:when test="count(tocentry) &gt; $max.toc.width">
-      <xsl:variable name="half" select="$max.toc.width div 2"/>
-
-      <xsl:variable name="all-nodes" select="tocentry"/>
-      <xsl:variable name="nodes"
-                    select="$all-nodes[position() &lt; $max.toc.width]"/>
-
-      <xsl:apply-templates select="$nodes">
-        <xsl:with-param name="pageid" select="$pageid"/>
-        <xsl:with-param name="relpath" select="$relpath"/>
-      </xsl:apply-templates>
-
-      <xsl:if test="count($all-nodes) &gt; $max.toc.width">
-        <xsl:text> | ...</xsl:text>
-      </xsl:if>
-    </xsl:when>
-    <xsl:otherwise>
-      <xsl:apply-templates select="tocentry">
-        <xsl:with-param name="pageid" select="$pageid"/>
-        <xsl:with-param name="relpath" select="$relpath"/>
-      </xsl:apply-templates>
-    </xsl:otherwise>
-  </xsl:choose>
-
-  <br/>
 </xsl:template>
 
 </xsl:stylesheet>
