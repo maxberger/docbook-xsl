@@ -41,10 +41,7 @@
           </xsl:call-template>
         </fo:inline>
         <fo:footnote-body font-family="{$body.font.family}"
-                          font-size="{$footnote.font.size}"
-                          font-weight="normal"
-                          font-style="normal"
-                          margin-left="0pc">
+                          font-size="{$footnote.font.size}">
           <xsl:apply-templates/>
         </fo:footnote-body>
       </fo:footnote>

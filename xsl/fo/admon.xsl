@@ -83,11 +83,9 @@
             </fo:block>
           </fo:list-item-label>
           <fo:list-item-body start-indent="body-start()">
-            <xsl:if test="$admon.textlabel != 0 or title">
-              <fo:block xsl:use-attribute-sets="admonition.title.properties">
-                <xsl:apply-templates select="." mode="object.title.markup"/>
-              </fo:block>
-            </xsl:if>
+            <fo:block xsl:use-attribute-sets="admonition.title.properties">
+              <xsl:apply-templates select="." mode="object.title.markup"/>
+            </fo:block>
             <fo:block xsl:use-attribute-sets="admonition.properties">
               <xsl:apply-templates/>
             </fo:block>
@@ -108,12 +106,10 @@
             start-indent="0.25in"
             end-indent="0.25in"
             id="{$id}">
-    <xsl:if test="$admon.textlabel != 0 or title">
-      <fo:block keep-with-next='always'
-                xsl:use-attribute-sets="admonition.title.properties">
-         <xsl:apply-templates select="." mode="object.title.markup"/>
-      </fo:block>
-    </xsl:if>
+    <fo:block keep-with-next='always'
+              xsl:use-attribute-sets="admonition.title.properties">
+      <xsl:apply-templates select="." mode="object.title.markup"/>
+    </fo:block>
 
     <fo:block xsl:use-attribute-sets="admonition.properties">
       <xsl:apply-templates/>

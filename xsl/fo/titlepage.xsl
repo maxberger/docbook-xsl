@@ -499,9 +499,9 @@
 
 <xsl:template match="revhistory" mode="titlepage.mode">
   <fo:table table-layout="fixed">
-    <fo:table-column column-number="1" column-width="proportional-column-width(1)"/>
-    <fo:table-column column-number="2" column-width="proportional-column-width(1)"/>
-    <fo:table-column column-number="3" column-width="proportional-column-width(1)"/>
+    <fo:table-column column-number="1" column-width="33%"/>
+    <fo:table-column column-number="2" column-width="33%"/>
+    <fo:table-column column-number="3" column-width="33%"/>
     <fo:table-body>
       <fo:table-row>
         <fo:table-cell number-columns-spanned="3">
@@ -622,7 +622,11 @@
     <xsl:if test="@id">
       <xsl:attribute name="id"><xsl:value-of select="@id"/></xsl:attribute>
     </xsl:if>
-    <xsl:apply-templates mode="titlepage.mode"/>
+    <xsl:call-template name="gentext">
+      <xsl:with-param name="key" select="'by'"/>
+    </xsl:call-template>
+    <xsl:text> </xsl:text>
+    <xsl:call-template name="person.name.list"/>
   </fo:block>
 </xsl:template>
 
@@ -658,21 +662,26 @@
       <xsl:with-param name="key" select="'by'"/>
     </xsl:call-template>
     <xsl:text> </xsl:text>
-    <xsl:call-template name="person.name.list">
-      <xsl:with-param name="person.list" select="author|corpauthor|editor"/>
-    </xsl:call-template>
+    <xsl:call-template name="person.name.list"/>
   </fo:block>
-  <xsl:apply-templates select="othercredit" mode="titlepage.mode"/>
 </xsl:template>
 
 <xsl:template match="bookinfo/author" mode="titlepage.mode" priority="2">
   <fo:block>
+    <xsl:call-template name="gentext">
+      <xsl:with-param name="key" select="'by'"/>
+    </xsl:call-template>
+    <xsl:text> </xsl:text>
     <xsl:call-template name="person.name"/>
   </fo:block>
 </xsl:template>
 
 <xsl:template match="bookinfo/corpauthor" mode="titlepage.mode" priority="2">
   <fo:block>
+    <xsl:call-template name="gentext">
+      <xsl:with-param name="key" select="'by'"/>
+    </xsl:call-template>
+    <xsl:text> </xsl:text>
     <xsl:apply-templates/>
   </fo:block>
 </xsl:template>

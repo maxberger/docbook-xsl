@@ -203,7 +203,7 @@ GlossEntry ::=
       <xsl:choose>
         <xsl:when test="$target">
           <a href="#{@otherterm}">
-            <xsl:apply-templates select="$target" mode="xref-to"/>
+            <xsl:apply-templates select="$target" mode="xref"/>
           </a>
         </xsl:when>
         <xsl:when test="$otherterm != '' and not($target)">
@@ -245,7 +245,7 @@ GlossEntry ::=
   <xsl:choose>
     <xsl:when test="$target">
       <a href="#{@otherterm}">
-        <xsl:apply-templates select="$target" mode="xref-to"/>
+        <xsl:apply-templates select="$target" mode="xref"/>
       </a>
     </xsl:when>
     <xsl:when test="$otherterm != '' and not($target)">
@@ -282,15 +282,6 @@ GlossEntry ::=
     <xsl:message>
       <xsl:text>Warning: processing automatic glossary </xsl:text>
       <xsl:text>without a glossary.collection file.</xsl:text>
-    </xsl:message>
-  </xsl:if>
-
-  <xsl:if test="not($collection) and $glossary.collection != ''">
-    <xsl:message>
-      <xsl:text>Warning: processing automatic glossary but unable to </xsl:text>
-      <xsl:text>open glossary.collection file '</xsl:text>
-      <xsl:value-of select="$glossary.collection"/>
-      <xsl:text>'</xsl:text>
     </xsl:message>
   </xsl:if>
 

@@ -7,7 +7,7 @@ PARAMSTRIP=.param.stripped
 include Makefile.param
 
 all: titlepage.templates.xsl param.xsl \
-     profile-docbook.xsl profile-chunk-code.xsl
+     profile-docbook.xsl profile-chunk.xsl profile-onechunk.xsl
 
 xml: param.xml
 
@@ -20,7 +20,7 @@ param.xml: param.xweb $(PARAMS)
 	../../cvstools/paramchk -m Makefile.param $<
 	$(XSLT) $< ../profiling/profile.xsl $(PARAMPROF) profile.condition=html
 	$(XSLT) $(PARAMPROF) ../profiling/strip-attributes.xsl $(PARAMSTRIP) attributes=condition
-	$(XSLT) $(PARAMSTRIP) ../../litprog/w2docbook.xsl $@
+	$(XSLT) $(PARAMSTRIP) ../../litprog/wdocbook.xsl $@
 	$(RM) $(PARAMPROF) $(PARAMSTRIP)
 
 param.xsl: param.xweb $(PARAMS)
@@ -40,7 +40,10 @@ Makefile.param:
 profile-docbook.xsl: docbook.xsl ../profiling/xsl2profile.xsl
 	$(XSLT) $< ../profiling/xsl2profile.xsl $@
 
-profile-chunk-code.xsl: chunk-code.xsl ../profiling/xsl2profile.xsl
+profile-chunk.xsl: chunk.xsl ../profiling/xsl2profile.xsl
+	$(XSLT) $< ../profiling/xsl2profile.xsl $@
+
+profile-onechunk.xsl: onechunk.xsl ../profiling/xsl2profile.xsl
 	$(XSLT) $< ../profiling/xsl2profile.xsl $@
 
 clean:

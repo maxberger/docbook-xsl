@@ -235,8 +235,6 @@
     </xsl:choose>
   </xsl:variable>
 
-  <xsl:variable name="depth.from.context" select="count(ancestor::*)-count($toc-context/ancestor::*)"/>
-
   <xsl:variable name="subtoc.list">
     <xsl:choose>
       <xsl:when test="$toc.dd.type = ''">
@@ -268,14 +266,12 @@
       <xsl:apply-templates select="." mode="title.markup"/>
     </a>
     <xsl:if test="$toc.listitem.type = 'li'
-                  and $toc.section.depth > $depth and count($nodes)&gt;0
-                  and $toc.max.depth > $depth.from.context">
+                  and $toc.section.depth > $depth and count($nodes)&gt;0">
       <xsl:copy-of select="$subtoc.list"/>
     </xsl:if>
   </xsl:element>
   <xsl:if test="$toc.listitem.type != 'li'
-                and $toc.section.depth > $depth and count($nodes)&gt;0
-                and $toc.max.depth > $depth.from.context">
+                and $toc.section.depth > $depth and count($nodes)&gt;0">
     <xsl:copy-of select="$subtoc.list"/>
   </xsl:if>
 </xsl:template>
@@ -311,7 +307,7 @@
 
   <xsl:call-template name="subtoc">
     <xsl:with-param name="toc-context" select="$toc-context"/>
-    <xsl:with-param name="nodes" select="section|sect1|glossary|bibliography|index
+    <xsl:with-param name="nodes" select="section|sect1
                                          |bridgehead[$bridgehead.in.toc != 0]"/>
   </xsl:call-template>
 </xsl:template>

@@ -70,7 +70,7 @@
 
   <div class="{name(.)}">
     <xsl:apply-templates select="$title"/>
-    <xsl:if test="contains($toc.params, 'toc') and $toc = '1'">
+    <xsl:if test="contains($toc.params, 'toc') and $toc != '0'">
       <xsl:call-template name="process.qanda.toc"/>
     </xsl:if>
     <xsl:apply-templates select="$preamble"/>
@@ -193,7 +193,7 @@
                               /@defaultlabel"/>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:value-of select="$qanda.defaultlabel"/>
+        <xsl:value-of select="qanda.defaultlabel"/>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:variable>

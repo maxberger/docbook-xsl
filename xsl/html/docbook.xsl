@@ -30,7 +30,6 @@
 <xsl:include href="../common/subtitles.xsl"/>
 <xsl:include href="../common/gentext.xsl"/>
 <xsl:include href="../common/targets.xsl"/>
-<xsl:include href="../common/pi.xsl"/>
 <xsl:include href="autotoc.xsl"/>
 <xsl:include href="autoidx.xsl"/>
 <xsl:include href="lists.xsl"/>
@@ -175,7 +174,7 @@ body { background-image: url('</xsl:text>
        /* I think that's just a bit too distracting for the reader... */
        /* background-attachment: fixed; */
        /* background-position: center center; */
-     }</xsl:text>
+</xsl:text>
     </style>
   </xsl:if>
   <xsl:apply-templates select="." mode="head.keywords.content"/>

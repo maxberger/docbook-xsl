@@ -1,7 +1,6 @@
 <?xml version='1.0'?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:fo="http://www.w3.org/1999/XSL/Format"
-                xmlns:axf="http://www.antennahouse.com/names/XSL/Extensions"
                 version='1.0'>
 
 <!-- ********************************************************************
@@ -49,30 +48,6 @@
     <xsl:if test="$pagewide != 0">
       <xsl:attribute name="span">all</xsl:attribute>
     </xsl:if>
-    <xsl:attribute name="hyphenation-character">
-      <xsl:call-template name="gentext">
-        <xsl:with-param name="key" select="'hyphenation-character'"/>
-      </xsl:call-template>
-    </xsl:attribute>
-    <xsl:attribute name="hyphenation-push-character-count">
-      <xsl:call-template name="gentext">
-        <xsl:with-param name="key" select="'hyphenation-push-character-count'"/>
-      </xsl:call-template>
-    </xsl:attribute>
-    <xsl:attribute name="hyphenation-remain-character-count">
-      <xsl:call-template name="gentext">
-        <xsl:with-param name="key" select="'hyphenation-remain-character-count'"/>
-      </xsl:call-template>
-    </xsl:attribute>
-    <xsl:if test="$axf.extensions != 0">
-      <xsl:attribute name="axf:outline-level">
-        <xsl:value-of select="count($node/ancestor::*)"/>
-      </xsl:attribute>
-      <xsl:attribute name="axf:outline-expand">false</xsl:attribute>
-      <xsl:attribute name="axf:outline-title">
-        <xsl:value-of select="$title"/>
-      </xsl:attribute>
-    </xsl:if>
     <xsl:copy-of select="$title"/>
   </fo:block>
 </xsl:template>
@@ -88,7 +63,8 @@
     <xsl:call-template name="select.pagemaster"/>
   </xsl:variable>
 
-  <fo:page-sequence hyphenate="{$hyphenate}"
+  <fo:page-sequence id="{$id}"
+                    hyphenate="{$hyphenate}"
                     master-reference="{$master-reference}">
     <xsl:attribute name="language">
       <xsl:call-template name="l10n.language"/>
@@ -112,21 +88,6 @@
         <xsl:attribute name="initial-page-number">auto-odd</xsl:attribute>
       </xsl:when>
     </xsl:choose>
-    <xsl:attribute name="hyphenation-character">
-      <xsl:call-template name="gentext">
-        <xsl:with-param name="key" select="'hyphenation-character'"/>
-      </xsl:call-template>
-    </xsl:attribute>
-    <xsl:attribute name="hyphenation-push-character-count">
-      <xsl:call-template name="gentext">
-        <xsl:with-param name="key" select="'hyphenation-push-character-count'"/>
-      </xsl:call-template>
-    </xsl:attribute>
-    <xsl:attribute name="hyphenation-remain-character-count">
-      <xsl:call-template name="gentext">
-        <xsl:with-param name="key" select="'hyphenation-remain-character-count'"/>
-      </xsl:call-template>
-    </xsl:attribute>
 
     <xsl:apply-templates select="." mode="running.head.mode">
       <xsl:with-param name="master-reference" select="$master-reference"/>
@@ -137,9 +98,7 @@
     </xsl:apply-templates>
 
     <fo:flow flow-name="xsl-region-body">
-      <fo:block id="{$id}">
-        <xsl:call-template name="dedication.titlepage"/>
-      </fo:block>
+      <xsl:call-template name="dedication.titlepage"/>
       <xsl:apply-templates/>
     </fo:flow>
   </fo:page-sequence>
@@ -162,7 +121,8 @@
     <xsl:call-template name="select.pagemaster"/>
   </xsl:variable>
 
-  <fo:page-sequence hyphenate="{$hyphenate}"
+  <fo:page-sequence id="{$id}"
+                    hyphenate="{$hyphenate}"
                     master-reference="{$master-reference}">
     <xsl:attribute name="language">
       <xsl:call-template name="l10n.language"/>
@@ -173,21 +133,6 @@
     <xsl:if test="$double.sided != 0">
       <xsl:attribute name="initial-page-number">auto-odd</xsl:attribute>
     </xsl:if>
-    <xsl:attribute name="hyphenation-character">
-      <xsl:call-template name="gentext">
-        <xsl:with-param name="key" select="'hyphenation-character'"/>
-      </xsl:call-template>
-    </xsl:attribute>
-    <xsl:attribute name="hyphenation-push-character-count">
-      <xsl:call-template name="gentext">
-        <xsl:with-param name="key" select="'hyphenation-push-character-count'"/>
-      </xsl:call-template>
-    </xsl:attribute>
-    <xsl:attribute name="hyphenation-remain-character-count">
-      <xsl:call-template name="gentext">
-        <xsl:with-param name="key" select="'hyphenation-remain-character-count'"/>
-      </xsl:call-template>
-    </xsl:attribute>
 
     <xsl:apply-templates select="." mode="running.head.mode">
       <xsl:with-param name="master-reference" select="$master-reference"/>
@@ -198,9 +143,7 @@
     </xsl:apply-templates>
 
     <fo:flow flow-name="xsl-region-body">
-      <fo:block id="{$id}">
-        <xsl:call-template name="colophon.titlepage"/>
-      </fo:block>
+      <xsl:call-template name="colophon.titlepage"/>
       <xsl:apply-templates/>
     </fo:flow>
   </fo:page-sequence>
@@ -221,7 +164,8 @@
     <xsl:call-template name="select.pagemaster"/>
   </xsl:variable>
 
-  <fo:page-sequence hyphenate="{$hyphenate}"
+  <fo:page-sequence id="{$id}"
+                    hyphenate="{$hyphenate}"
                     master-reference="{$master-reference}">
     <xsl:attribute name="language">
       <xsl:call-template name="l10n.language"/>
@@ -235,22 +179,6 @@
       <xsl:attribute name="initial-page-number">auto-odd</xsl:attribute>
     </xsl:if>
 
-    <xsl:attribute name="hyphenation-character">
-      <xsl:call-template name="gentext">
-        <xsl:with-param name="key" select="'hyphenation-character'"/>
-      </xsl:call-template>
-    </xsl:attribute>
-    <xsl:attribute name="hyphenation-push-character-count">
-      <xsl:call-template name="gentext">
-        <xsl:with-param name="key" select="'hyphenation-push-character-count'"/>
-      </xsl:call-template>
-    </xsl:attribute>
-    <xsl:attribute name="hyphenation-remain-character-count">
-      <xsl:call-template name="gentext">
-        <xsl:with-param name="key" select="'hyphenation-remain-character-count'"/>
-      </xsl:call-template>
-    </xsl:attribute>
-
     <xsl:apply-templates select="." mode="running.head.mode">
       <xsl:with-param name="master-reference" select="$master-reference"/>
     </xsl:apply-templates>
@@ -260,9 +188,7 @@
     </xsl:apply-templates>
 
     <fo:flow flow-name="xsl-region-body">
-      <fo:block id="{$id}">
-        <xsl:call-template name="preface.titlepage"/>
-      </fo:block>
+      <xsl:call-template name="preface.titlepage"/>
 
       <xsl:variable name="toc.params">
         <xsl:call-template name="find.path.params">
@@ -295,7 +221,8 @@
     <xsl:call-template name="select.pagemaster"/>
   </xsl:variable>
 
-  <fo:page-sequence hyphenate="{$hyphenate}"
+  <fo:page-sequence id="{$id}"
+                    hyphenate="{$hyphenate}"
                     master-reference="{$master-reference}">
     <xsl:attribute name="language">
       <xsl:call-template name="l10n.language"/>
@@ -319,22 +246,6 @@
       </xsl:when>
     </xsl:choose>
 
-    <xsl:attribute name="hyphenation-character">
-      <xsl:call-template name="gentext">
-        <xsl:with-param name="key" select="'hyphenation-character'"/>
-      </xsl:call-template>
-    </xsl:attribute>
-    <xsl:attribute name="hyphenation-push-character-count">
-      <xsl:call-template name="gentext">
-        <xsl:with-param name="key" select="'hyphenation-push-character-count'"/>
-      </xsl:call-template>
-    </xsl:attribute>
-    <xsl:attribute name="hyphenation-remain-character-count">
-      <xsl:call-template name="gentext">
-        <xsl:with-param name="key" select="'hyphenation-remain-character-count'"/>
-      </xsl:call-template>
-    </xsl:attribute>
-
     <xsl:apply-templates select="." mode="running.head.mode">
       <xsl:with-param name="master-reference" select="$master-reference"/>
     </xsl:apply-templates>
@@ -344,9 +255,7 @@
     </xsl:apply-templates>
 
     <fo:flow flow-name="xsl-region-body">
-      <fo:block id="{$id}">
-        <xsl:call-template name="chapter.titlepage"/>
-      </fo:block>
+      <xsl:call-template name="chapter.titlepage"/>
 
       <xsl:variable name="toc.params">
         <xsl:call-template name="find.path.params">
@@ -378,7 +287,8 @@
     <xsl:call-template name="select.pagemaster"/>
   </xsl:variable>
 
-  <fo:page-sequence hyphenate="{$hyphenate}"
+  <fo:page-sequence id="{$id}"
+                    hyphenate="{$hyphenate}"
                     master-reference="{$master-reference}">
     <xsl:attribute name="language">
       <xsl:call-template name="l10n.language"/>
@@ -402,22 +312,6 @@
       </xsl:when>
     </xsl:choose>
 
-    <xsl:attribute name="hyphenation-character">
-      <xsl:call-template name="gentext">
-        <xsl:with-param name="key" select="'hyphenation-character'"/>
-      </xsl:call-template>
-    </xsl:attribute>
-    <xsl:attribute name="hyphenation-push-character-count">
-      <xsl:call-template name="gentext">
-        <xsl:with-param name="key" select="'hyphenation-push-character-count'"/>
-      </xsl:call-template>
-    </xsl:attribute>
-    <xsl:attribute name="hyphenation-remain-character-count">
-      <xsl:call-template name="gentext">
-        <xsl:with-param name="key" select="'hyphenation-remain-character-count'"/>
-      </xsl:call-template>
-    </xsl:attribute>
-
     <xsl:apply-templates select="." mode="running.head.mode">
       <xsl:with-param name="master-reference" select="$master-reference"/>
     </xsl:apply-templates>
@@ -427,9 +321,7 @@
     </xsl:apply-templates>
 
     <fo:flow flow-name="xsl-region-body">
-      <fo:block id="{$id}">
-        <xsl:call-template name="appendix.titlepage"/>
-      </fo:block>
+      <xsl:call-template name="appendix.titlepage"/>
 
       <xsl:variable name="toc.params">
         <xsl:call-template name="find.path.params">
@@ -462,7 +354,8 @@
     <xsl:call-template name="select.pagemaster"/>
   </xsl:variable>
 
-  <fo:page-sequence hyphenate="{$hyphenate}"
+  <fo:page-sequence id="{$id}"
+                    hyphenate="{$hyphenate}"
                     master-reference="{$master-reference}">
     <xsl:attribute name="language">
       <xsl:call-template name="l10n.language"/>
@@ -487,22 +380,6 @@
       </xsl:when>
     </xsl:choose>
 
-    <xsl:attribute name="hyphenation-character">
-      <xsl:call-template name="gentext">
-        <xsl:with-param name="key" select="'hyphenation-character'"/>
-      </xsl:call-template>
-    </xsl:attribute>
-    <xsl:attribute name="hyphenation-push-character-count">
-      <xsl:call-template name="gentext">
-        <xsl:with-param name="key" select="'hyphenation-push-character-count'"/>
-      </xsl:call-template>
-    </xsl:attribute>
-    <xsl:attribute name="hyphenation-remain-character-count">
-      <xsl:call-template name="gentext">
-        <xsl:with-param name="key" select="'hyphenation-remain-character-count'"/>
-      </xsl:call-template>
-    </xsl:attribute>
-
     <xsl:apply-templates select="." mode="running.head.mode">
       <xsl:with-param name="master-reference" select="$master-reference"/>
     </xsl:apply-templates>
@@ -512,9 +389,7 @@
     </xsl:apply-templates>
 
     <fo:flow flow-name="xsl-region-body">
-      <fo:block id="{$id}">
-        <xsl:call-template name="article.titlepage"/>
-      </fo:block>
+      <xsl:call-template name="article.titlepage"/>
 
       <xsl:variable name="toc.params">
         <xsl:call-template name="find.path.params">

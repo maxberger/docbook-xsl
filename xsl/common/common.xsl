@@ -216,7 +216,6 @@ Defaults to the context node.</para>
     <xsl:when test="name($node)='sect5'">5</xsl:when>
     <xsl:when test="name($node)='section'">
       <xsl:choose>
-        <xsl:when test="$node/../../../../../../section">6</xsl:when>
         <xsl:when test="$node/../../../../../section">5</xsl:when>
         <xsl:when test="$node/../../../../section">4</xsl:when>
         <xsl:when test="$node/../../../section">3</xsl:when>
@@ -315,7 +314,7 @@ Defaults to the context node.</para>
                               /@defaultlabel"/>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:value-of select="$qanda.defaultlabel"/>
+        <xsl:value-of select="qanda.defaultlabel"/>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:variable>
@@ -552,7 +551,7 @@ Defaults to the context node.</para>
        John Doe, Jane Doe, and A. Nonymous
   -->
   <xsl:param name="person.list"
-             select="author|corpauthor|othercredit|editor"/>
+             select="./author|./corpauthor|./othercredit|./editor"/>
   <xsl:param name="person.count" select="count($person.list)"/>
   <xsl:param name="count" select="1"/>
 
@@ -908,13 +907,7 @@ recursive process.</para>
     
         <xsl:variable name="useobject">
           <xsl:choose>
-            <!-- The phrase is used only when contains TeX Math and output is FO -->
-            <xsl:when test="name($object)='textobject' and $object/phrase
-                            and $object/@role='tex' and $stylesheet.result.type = 'fo'
-                            and $tex.math.in.alt != ''">
-              <xsl:text>1</xsl:text> 
-            </xsl:when>
-            <!-- The phrase is never used -->
+          <!-- The phrase is never used -->
             <xsl:when test="name($object)='textobject' and $object/phrase">
               <xsl:text>0</xsl:text>
             </xsl:when>
@@ -928,14 +921,6 @@ recursive process.</para>
             <xsl:when test="name($object)='textobject'
 	                    and $object[not(@role) or @role!='tex']">
               <xsl:text>1</xsl:text>
-            </xsl:when>
-            <!-- don't use graphic when output is FO, TeX Math is used 
-                 and there is math in alt element -->
-            <xsl:when test="$object/ancestor::equation and 
-                            $object/ancestor::equation/alt[@role='tex']
-                            and $stylesheet.result.type = 'fo'
-                            and $tex.math.in.alt != ''">
-              <xsl:text>0</xsl:text>
             </xsl:when>
             <!-- If there's only one object, use it -->
             <xsl:when test="$count = 1 and count($olist) = 1">
@@ -1038,7 +1023,6 @@ object is recognized as a graphic.</para>
   </xsl:variable>
 
   <xsl:choose>
-    <xsl:when test="$use.svg = 0 and $format = 'SVG'">0</xsl:when>
     <xsl:when xmlns:svg="http://www.w3.org/2000/svg"
               test="$use.svg != 0 and $object/svg:*">1</xsl:when>
     <xsl:when test="$graphic.format = '1'">1</xsl:when>

@@ -16,7 +16,12 @@
 <!-- ==================================================================== -->
 
 <xsl:template match="glossary">
-  <xsl:call-template name="make-glossary"/>
+  <xsl:variable name="id">
+    <xsl:call-template name="object.id"/>
+  </xsl:variable>
+  <fo:block id="{$id}">
+    <xsl:call-template name="make-glossary"/>
+  </fo:block>
 </xsl:template>
 
 <xsl:template match="glossdiv/title"/>
@@ -32,10 +37,6 @@
                                            or self::subtitle
                                            or self::glossdiv
                                            or self::glossentry)]"/>
-
-  <xsl:variable name="id">
-    <xsl:call-template name="object.id"/>
-  </xsl:variable>
 
   <xsl:variable name="presentation">
     <xsl:call-template name="dbfo-attribute">
@@ -64,9 +65,7 @@
     </xsl:choose>
   </xsl:variable>
 
-  <fo:block id="{$id}">
-    <xsl:call-template name="glossary.titlepage"/>
-  </fo:block>
+  <xsl:call-template name="glossary.titlepage"/>
 
   <xsl:if test="$preamble">
     <xsl:apply-templates select="$preamble"/>
@@ -117,7 +116,8 @@
     <xsl:call-template name="select.pagemaster"/>
   </xsl:variable>
 
-  <fo:page-sequence hyphenate="{$hyphenate}"
+  <fo:page-sequence id="{$id}"
+                    hyphenate="{$hyphenate}"
                     master-reference="{$master-reference}">
     <xsl:attribute name="language">
       <xsl:call-template name="l10n.language"/>
@@ -128,22 +128,6 @@
     <xsl:if test="$double.sided != 0">
       <xsl:attribute name="initial-page-number">auto-odd</xsl:attribute>
     </xsl:if>
-
-    <xsl:attribute name="hyphenation-character">
-      <xsl:call-template name="gentext">
-        <xsl:with-param name="key" select="'hyphenation-character'"/>
-      </xsl:call-template>
-    </xsl:attribute>
-    <xsl:attribute name="hyphenation-push-character-count">
-      <xsl:call-template name="gentext">
-        <xsl:with-param name="key" select="'hyphenation-push-character-count'"/>
-      </xsl:call-template>
-    </xsl:attribute>
-    <xsl:attribute name="hyphenation-remain-character-count">
-      <xsl:call-template name="gentext">
-        <xsl:with-param name="key" select="'hyphenation-remain-character-count'"/>
-      </xsl:call-template>
-    </xsl:attribute>
 
     <xsl:apply-templates select="." mode="running.head.mode">
       <xsl:with-param name="master-reference" select="$master-reference"/>
@@ -221,7 +205,8 @@
 <!-- Glossary collection -->
 
 <xsl:template match="glossary[@role='auto']" priority="2">
-  <xsl:variable name="collection" select="document($glossary.collection, .)"/>
+  <xsl:variable name="id"><xsl:call-template name="object.id"/></xsl:variable>
+
   <xsl:if test="$glossary.collection = ''">
     <xsl:message>
       <xsl:text>Warning: processing automatic glossary </xsl:text>
@@ -229,16 +214,9 @@
     </xsl:message>
   </xsl:if>
 
-  <xsl:if test="not($collection) and $glossary.collection != ''">
-    <xsl:message>
-      <xsl:text>Warning: processing automatic glossary but unable to </xsl:text>
-      <xsl:text>open glossary.collection file '</xsl:text>
-      <xsl:value-of select="$glossary.collection"/>
-      <xsl:text>'</xsl:text>
-    </xsl:message>
-  </xsl:if>
-
-  <xsl:call-template name="make-auto-glossary"/>
+  <fo:block id="{$id}">
+    <xsl:call-template name="make-auto-glossary"/>
+  </fo:block>
 </xsl:template>
 
 <xsl:template name="make-auto-glossary">
@@ -248,10 +226,6 @@
                                            or self::subtitle
                                            or self::glossdiv
                                            or self::glossentry)]"/>
-
-  <xsl:variable name="id">
-    <xsl:call-template name="object.id"/>
-  </xsl:variable>
 
   <xsl:variable name="presentation">
     <xsl:call-template name="dbfo-attribute">
@@ -287,9 +261,7 @@
     </xsl:message>
   </xsl:if>
 
-  <fo:block id="{$id}">
-    <xsl:call-template name="glossary.titlepage"/>
-  </fo:block>
+  <xsl:call-template name="glossary.titlepage"/>
 
   <xsl:if test="$preamble">
     <xsl:apply-templates select="$preamble"/>
@@ -397,7 +369,8 @@
     </xsl:message>
   </xsl:if>
 
-  <fo:page-sequence hyphenate="{$hyphenate}"
+  <fo:page-sequence id="{$id}"
+                    hyphenate="{$hyphenate}"
                     master-reference="{$master-reference}">
     <xsl:attribute name="language">
       <xsl:call-template name="l10n.language"/>
@@ -408,22 +381,6 @@
     <xsl:if test="$double.sided != 0">
       <xsl:attribute name="initial-page-number">auto-odd</xsl:attribute>
     </xsl:if>
-
-    <xsl:attribute name="hyphenation-character">
-      <xsl:call-template name="gentext">
-        <xsl:with-param name="key" select="'hyphenation-character'"/>
-      </xsl:call-template>
-    </xsl:attribute>
-    <xsl:attribute name="hyphenation-push-character-count">
-      <xsl:call-template name="gentext">
-        <xsl:with-param name="key" select="'hyphenation-push-character-count'"/>
-      </xsl:call-template>
-    </xsl:attribute>
-    <xsl:attribute name="hyphenation-remain-character-count">
-      <xsl:call-template name="gentext">
-        <xsl:with-param name="key" select="'hyphenation-remain-character-count'"/>
-      </xsl:call-template>
-    </xsl:attribute>
 
     <xsl:apply-templates select="." mode="running.head.mode">
       <xsl:with-param name="master-reference" select="$master-reference"/>
@@ -609,7 +566,7 @@ GlossEntry ::=
     </xsl:call-template>
     <xsl:choose>
       <xsl:when test="$target">
-        <xsl:apply-templates select="$target" mode="xref-to"/>
+        <xsl:apply-templates select="$target" mode="xref"/>
       </xsl:when>
       <xsl:when test="$otherterm != '' and not($target)">
         <xsl:message>
@@ -653,7 +610,7 @@ GlossEntry ::=
 
   <xsl:choose>
     <xsl:when test="$target">
-      <xsl:apply-templates select="$target" mode="xref-to"/>
+      <xsl:apply-templates select="$target" mode="xref"/>
     </xsl:when>
     <xsl:when test="$otherterm != '' and not($target)">
       <xsl:message>
@@ -707,9 +664,7 @@ GlossEntry ::=
     <xsl:call-template name="object.id"/>
   </xsl:variable>
 
-  <fo:block xsl:use-attribute-sets="list.block.spacing"
- 	  keep-with-next.within-column="always" 
- 	  keep-together.within-column="always">
+  <fo:block xsl:use-attribute-sets="list.block.spacing">
     <xsl:call-template name="anchor">
       <xsl:with-param name="conditional">
         <xsl:choose>
@@ -784,7 +739,7 @@ GlossEntry ::=
   </xsl:call-template>
   <xsl:choose>
     <xsl:when test="$target">
-      <xsl:apply-templates select="$target" mode="xref-to"/>
+      <xsl:apply-templates select="$target" mode="xref"/>
     </xsl:when>
     <xsl:when test="$otherterm != '' and not($target)">
       <xsl:message>
@@ -827,7 +782,7 @@ GlossEntry ::=
 
   <xsl:choose>
     <xsl:when test="$target">
-      <xsl:apply-templates select="$target" mode="xref-to"/>
+      <xsl:apply-templates select="$target" mode="xref"/>
     </xsl:when>
     <xsl:when test="$otherterm != '' and not($target)">
       <xsl:message>

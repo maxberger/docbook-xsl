@@ -63,37 +63,21 @@ to be incomplete. Don't forget to read the source, too :-)</para>
   <xsl:param name="colnum" select="0"/>
 
   <xsl:variable name="rowsep">
-    <xsl:choose>
-      <!-- If this is the last row, rowsep never applies. -->
-      <xsl:when test="not(ancestor-or-self::row[1]/following-sibling::row
-                          or ancestor-or-self::thead/following-sibling::tbody
-                          or ancestor-or-self::tbody/preceding-sibling::tfoot)">
-        <xsl:value-of select="0"/>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:call-template name="inherited.table.attribute">
-          <xsl:with-param name="entry" select="NOT-AN-ELEMENT-NAME"/>
-          <xsl:with-param name="row" select="ancestor-or-self::row[1]"/>
-          <xsl:with-param name="colnum" select="$colnum"/>
-          <xsl:with-param name="attribute" select="'rowsep'"/>
-        </xsl:call-template>
-      </xsl:otherwise>
-    </xsl:choose>
+    <xsl:call-template name="inherited.table.attribute">
+      <xsl:with-param name="entry" select="NOT-AN-ELEMENT-NAME"/>
+      <xsl:with-param name="row" select="ancestor-or-self::row[1]"/>
+      <xsl:with-param name="colnum" select="$colnum"/>
+      <xsl:with-param name="attribute" select="'rowsep'"/>
+    </xsl:call-template>
   </xsl:variable>
 
   <xsl:variable name="colsep">
-    <xsl:choose>
-      <!-- If this is the last column, colsep never applies. -->
-      <xsl:when test="$colnum &gt;= ancestor::tgroup/@cols">0</xsl:when>
-      <xsl:otherwise>
-        <xsl:call-template name="inherited.table.attribute">
-          <xsl:with-param name="entry" select="NOT-AN-ELEMENT-NAME"/>
-          <xsl:with-param name="row" select="ancestor-or-self::row[1]"/>
-          <xsl:with-param name="colnum" select="$colnum"/>
-          <xsl:with-param name="attribute" select="'colsep'"/>
-        </xsl:call-template>
-      </xsl:otherwise>
-    </xsl:choose>
+    <xsl:call-template name="inherited.table.attribute">
+      <xsl:with-param name="entry" select="NOT-AN-ELEMENT-NAME"/>
+      <xsl:with-param name="row" select="ancestor-or-self::row[1]"/>
+      <xsl:with-param name="colnum" select="$colnum"/>
+      <xsl:with-param name="attribute" select="'colsep'"/>
+    </xsl:call-template>
   </xsl:variable>
 
   <fo:table-cell text-align="center"
@@ -329,21 +313,11 @@ to be incomplete. Don't forget to read the source, too :-)</para>
   </xsl:variable>
 
   <xsl:variable name="rowsep">
-    <xsl:choose>
-      <!-- If this is the last row, rowsep never applies. -->
-      <xsl:when test="not(ancestor-or-self::row[1]/following-sibling::row
-                          or ancestor-or-self::thead/following-sibling::tbody
-                          or ancestor-or-self::tbody/preceding-sibling::tfoot)">
-        <xsl:value-of select="0"/>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:call-template name="inherited.table.attribute">
-          <xsl:with-param name="entry" select="."/>
-          <xsl:with-param name="colnum" select="$entry.colnum"/>
-          <xsl:with-param name="attribute" select="'rowsep'"/>
-        </xsl:call-template>
-      </xsl:otherwise>
-    </xsl:choose>
+    <xsl:call-template name="inherited.table.attribute">
+      <xsl:with-param name="entry" select="."/>
+      <xsl:with-param name="colnum" select="$entry.colnum"/>
+      <xsl:with-param name="attribute" select="'rowsep'"/>
+    </xsl:call-template>
   </xsl:variable>
 
 <!--
@@ -351,17 +325,11 @@ to be incomplete. Don't forget to read the source, too :-)</para>
 -->
 
   <xsl:variable name="colsep">
-    <xsl:choose>
-      <!-- If this is the last column, colsep never applies. -->
-      <xsl:when test="$following.spans = ''">0</xsl:when>
-      <xsl:otherwise>
-        <xsl:call-template name="inherited.table.attribute">
-          <xsl:with-param name="entry" select="."/>
-          <xsl:with-param name="colnum" select="$entry.colnum"/>
-          <xsl:with-param name="attribute" select="'colsep'"/>
-        </xsl:call-template>
-      </xsl:otherwise>
-    </xsl:choose>
+    <xsl:call-template name="inherited.table.attribute">
+      <xsl:with-param name="entry" select="."/>
+      <xsl:with-param name="colnum" select="$entry.colnum"/>
+      <xsl:with-param name="attribute" select="'colsep'"/>
+    </xsl:call-template>
   </xsl:variable>
 
   <xsl:variable name="valign">
@@ -517,24 +485,10 @@ to be incomplete. Don't forget to read the source, too :-)</para>
         </xsl:choose>
       </xsl:variable>
 
-      <xsl:variable name="bgcolor">
-        <xsl:call-template name="dbfo-attribute">
-          <xsl:with-param name="pis"
-                          select="ancestor-or-self::entry/processing-instruction('dbfo')"/>
-          <xsl:with-param name="attribute" select="'bgcolor'"/>
-        </xsl:call-template>
-      </xsl:variable>
-
       <fo:table-cell xsl:use-attribute-sets="table.cell.padding">
         <xsl:if test="$xep.extensions != 0">
           <!-- Suggested by RenderX to workaround a bug in their implementation -->
           <xsl:attribute name="keep-together.within-column">always</xsl:attribute>
-        </xsl:if>
-
-        <xsl:if test="$bgcolor != ''">
-          <xsl:attribute name="background-color">
-            <xsl:value-of select="$bgcolor"/>
-          </xsl:attribute>
         </xsl:if>
 
         <xsl:call-template name="anchor"/>

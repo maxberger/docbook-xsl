@@ -26,7 +26,8 @@
         <xsl:call-template name="select.pagemaster"/>
       </xsl:variable>
 
-      <fo:page-sequence hyphenate="{$hyphenate}"
+      <fo:page-sequence id="{$id}"
+                        hyphenate="{$hyphenate}"
                         master-reference="{$master-reference}">
         <xsl:attribute name="language">
           <xsl:call-template name="l10n.language"/>
@@ -37,21 +38,6 @@
         <xsl:if test="$double.sided != 0">
           <xsl:attribute name="initial-page-number">auto-odd</xsl:attribute>
         </xsl:if>
-        <xsl:attribute name="hyphenation-character">
-          <xsl:call-template name="gentext">
-            <xsl:with-param name="key" select="'hyphenation-character'"/>
-          </xsl:call-template>
-        </xsl:attribute>
-        <xsl:attribute name="hyphenation-push-character-count">
-          <xsl:call-template name="gentext">
-            <xsl:with-param name="key" select="'hyphenation-push-character-count'"/>
-          </xsl:call-template>
-        </xsl:attribute>
-        <xsl:attribute name="hyphenation-remain-character-count">
-          <xsl:call-template name="gentext">
-            <xsl:with-param name="key" select="'hyphenation-remain-character-count'"/>
-          </xsl:call-template>
-        </xsl:attribute>
 
         <xsl:apply-templates select="." mode="running.head.mode">
           <xsl:with-param name="master-reference" select="$master-reference"/>
@@ -61,9 +47,7 @@
         </xsl:apply-templates>
 
         <fo:flow flow-name="xsl-region-body">
-          <fo:block id="{$id}">
-            <xsl:call-template name="bibliography.titlepage"/>
-          </fo:block>
+          <xsl:call-template name="bibliography.titlepage"/>
           <xsl:apply-templates/>
         </fo:flow>
       </fo:page-sequence>
@@ -74,8 +58,8 @@
                 space-before.optimum="1.5em"
                 space-before.maximum="2em">
         <xsl:call-template name="bibliography.titlepage"/>
+        <xsl:apply-templates/>
       </fo:block>
-      <xsl:apply-templates/>
     </xsl:otherwise>
   </xsl:choose>
 </xsl:template>

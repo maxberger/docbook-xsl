@@ -1,7 +1,6 @@
 <?xml version='1.0'?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:fo="http://www.w3.org/1999/XSL/Format"
-                xmlns:axf="http://www.antennahouse.com/names/XSL/Extensions"
                 version='1.0'>
 
 <!-- ********************************************************************
@@ -34,15 +33,6 @@
   <xsl:if test="$nodes">
     <fo:block id="toc...{$id}"
               xsl:use-attribute-sets="toc.margin.properties">
-      <xsl:if test="$axf.extensions != 0">
-        <xsl:attribute name="axf:outline-level">1</xsl:attribute>
-        <xsl:attribute name="axf:outline-expand">false</xsl:attribute>
-        <xsl:attribute name="axf:outline-title">
-          <xsl:call-template name="gentext">
-            <xsl:with-param name="key" select="'TableofContents'"/>
-          </xsl:call-template>
-        </xsl:attribute>
-      </xsl:if>
       <xsl:call-template name="table.of.contents.titlepage"/>
       <xsl:apply-templates select="$nodes" mode="toc">
         <xsl:with-param name="toc-context" select="$toc-context"/>
@@ -74,15 +64,6 @@
   <xsl:if test="$nodes">
     <fo:block id="toc...{$cid}"
               xsl:use-attribute-sets="toc.margin.properties">
-      <xsl:if test="$axf.extensions != 0">
-        <xsl:attribute name="axf:outline-level">1</xsl:attribute>
-        <xsl:attribute name="axf:outline-expand">false</xsl:attribute>
-        <xsl:attribute name="axf:outline-title">
-          <xsl:call-template name="gentext">
-            <xsl:with-param name="key" select="'TableofContents'"/>
-          </xsl:call-template>
-        </xsl:attribute>
-      </xsl:if>
       <xsl:call-template name="table.of.contents.titlepage"/>
       <xsl:apply-templates select="$nodes" mode="toc">
         <xsl:with-param name="toc-context" select="$toc-context"/>

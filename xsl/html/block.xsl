@@ -172,9 +172,7 @@
 <xsl:template match="epigraph">
   <div class="{name(.)}">
       <xsl:apply-templates select="para|simpara|formalpara|literallayout"/>
-    <div class="attribution">
-      <span>--<xsl:apply-templates select="attribution"/></span>
-    </div>
+    <span>--<xsl:apply-templates select="attribution"/></span>
   </div>
 </xsl:template>
 

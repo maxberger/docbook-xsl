@@ -31,7 +31,6 @@
 <xsl:include href="../common/titles.xsl"/>
 <xsl:include href="../common/subtitles.xsl"/>
 <xsl:include href="../common/gentext.xsl"/>
-<xsl:include href="../common/pi.xsl"/>
 <xsl:include href="autotoc.xsl"/>
 <xsl:include href="autoidx.xsl"/>
 <xsl:include href="lists.xsl"/>
@@ -69,7 +68,6 @@
 <xsl:include href="fop.xsl"/>
 <xsl:include href="passivetex.xsl"/>
 <xsl:include href="xep.xsl"/>
-<xsl:include href="axf.xsl"/>
 
 <xsl:param name="stylesheet.result.type" select="'fo'"/>
 
@@ -114,7 +112,10 @@
     </xsl:choose>
   </xsl:variable>
 
-  <fo:root xsl:use-attribute-sets="root.properties">
+  <fo:root font-family="{$body.font.family}"
+           font-size="{$body.font.size}"
+           text-align="{$alignment}"
+           line-height="{$line-height}">
     <xsl:attribute name="language">
       <xsl:call-template name="l10n.language">
         <xsl:with-param name="target" select="/*[1]"/>
@@ -123,9 +124,6 @@
 
     <xsl:if test="$xep.extensions != 0">
       <xsl:call-template name="xep-document-information"/>
-    </xsl:if>
-    <xsl:if test="$axf.extensions != 0">
-      <xsl:call-template name="axf-document-information"/>
     </xsl:if>
     <xsl:call-template name="setup.pagemasters"/>
     <xsl:choose>
