@@ -1,30 +1,25 @@
 #!/usr/bin/perl -- # --*-Perl-*--
 
-use strict;
 use Getopt::Std;
-use vars qw($opt_v);
-use Cwd;
 
-my $usage = "Usage: $0 [-v version]\n";
+$usage = "Usage: $0 [-v version]\n";
 
 die $usage if ! getopts('v:');
-my $version = $opt_v || &last_version();
+$version = $opt_v || &last_version();
+
+# .../docbook must be the current directory
 
 die "Cannot find ChangeLog.\n" if ! -f "ChangeLog";
 
-my $root = cwd();
-
-$root =~ s/^.*\/([^\/]+)$/$1/;
-
-my @dirs = ();
-my @ldirs = ('.');
+@dirs = ();
+@ldirs = ('.');
 while (@ldirs) {
-    my $dir = shift @ldirs;
+    $dir = shift @ldirs;
     push (@dirs, $dir);
 
     opendir (DIR, $dir);
-    while (my $name = readdir(DIR)) {
-	my $file = "$dir/$name";
+    while ($name = readdir(DIR)) {
+	$file = "$dir/$name";
 	next if $name =~ /^\.\.?$/;
 	next if ! -d $file;
 	next if $name eq 'CVS';
@@ -34,14 +29,12 @@ while (@ldirs) {
     closedir (DIR);
 }
 
-my $date = "";
-my $found = 0;
+$found = 0;
 open (F, "ChangeLog");
 while (<F>) {
     chop;
     $date = $1 if /^(\d+-\d+-\d+)/;
-    $found = 1 if /^\s+\* \S+: Version $version\s+/;
-    $found = 1 if /^\s+\* \S+: Version $version\s*$/;
+    $found = 1 if /^\s+\* \S+: Version $version/;
     last if $found;
 }
 
@@ -55,14 +48,14 @@ print "Changes since version $version ($date)\n\n";
 $date =~ /(\d+)-(\d+)-(\d+)/;
 $date = sprintf("%04d%02d%02d", $1, $2, $3);
 
-foreach my $dir (@dirs) {
+foreach $dir (@dirs) {
     $found = 0;
-    my @LINES = ();
+    @LINES = ();
     open(F, "$dir/ChangeLog");
     while (<F>) {
 	chop;
 	if (/^(\d+)-(\d+)-(\d+)/) {
-	    my $cdate = sprintf("%04d%02d%02d", $1, $2, $3);
+	    $cdate = sprintf("%04d%02d%02d", $1, $2, $3);
 	    $found = ($cdate <= $date);
 	}
 
@@ -74,10 +67,10 @@ foreach my $dir (@dirs) {
 
     next if !@LINES;
 
-    $dir =~ s/^\./$root/;
+    $dir =~ s/^\./docbook/;
     print "Changes to $dir/*\n\n";
 
-    my @entry = ();
+    @entry = ();
     foreach $_ (@LINES) {
 	if (/^\t/) {
 	    push (@entry, $_);
@@ -109,7 +102,7 @@ sub format {
 	if (/^(.{1,60})\s/) {
 	    print "  | \t$star $1\n";
 	    $star = " ";
-	    $_ = $'; # '
+	    $_ = $';
 	} else {
 	    print "  | \t$star $_\n";
 	    $_ = "";
@@ -129,33 +122,17 @@ sub last_version {
 
     if (/name=.VERSION.>(.*?)</s) {
 	$version = $1;
-    } elsif (/<fm:Version>(.*?)</s) {
-	$version = $1;
-    } elsif (/^([\d\.]+)/) {
-	$version = $1;
     } else {
 	die "Cannot find version in VERSION.\n";
     }
 
-    if ($version =~ /^(\d+)\.(\d+)$/) {
+    if ($version =~ /(\d+)\.(\d+)/) {
 	my $major = $1;
 	my $minor = $2;
 
 	$minor--;
 
 	return "$major.$minor";
-    } elsif ($version =~ /^(\d+)\.(\d+)\.(\d+)$/) {
-	my $major = $1;
-	my $middle = $2;
-	my $minor = $3;
-
-	if ($minor == 0) {
-	    die "Can\'t calculate preceding from $version.\n";
-	} else {
-	    $minor--;
-	}
-
-	return "$major.$middle.$minor";
     } else {
 	return $version;
     }

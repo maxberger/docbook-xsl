@@ -12,11 +12,12 @@ SSH_OPTS      =
 SCP           = scp
 SCP_OPTS      = -pr
 
-NCFTPPUT      = ncftpput
-NCFTPPUT_OPTS =
-
-REMOTEHOST    = upload.sourceforge.net
-REMOTEDIR     = /incoming
+# SITEHOST:    remote host to upload (scp) site content to
+# SITEBASE:    base path on remote host to upload content to
+# SITEBASEURL: URL corresponding to SITEHOST + SITEBASE
+SITEHOST      = atlantis.io.com
+SITEDOWNLOAD  = /virtual/customer/logopoeia.com/htdocs/docbook/download
+SITEDOC       = /virtual/customer/logopoeia.com/htdocs/docbook
 
 MAKE         = make
 EMACS        = emacs
@@ -61,7 +62,8 @@ dist:
 	mv $(DIRNAME)-$(VERSION).zip $(DIRNAME) )
 
 install:
-	$(NCFTPPUT) $(NCFTPPUT_OPTS) $(REMOTEHOST) $(REMOTEDIR) $(DIRNAME)-$(VERSION).zip
+	$(SCP) $(SCP_OPTS) $(DIRNAME)-$(VERSION).zip $(SITEHOST):$(SITEDOWNLOAD)/
+	$(SCP) $(SCP_OPTS) $(DOCS_DIR)/*             $(SITEHOST):$(SITEDOC)/
 
 clean: $(BYTE_FILES)
 	-rm $^

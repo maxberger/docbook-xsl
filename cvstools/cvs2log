@@ -6,16 +6,6 @@ $usage = "Usage: $0 [-l logfile] [-w] [-c date]\n";
 
 die $usage if ! getopts('c:l:w');
 
-# yes, the trailing blank is significant
-my %authorName = ('adicarlo' => 'Adam Di Carlo ',
-		  'bobstayton' => 'Robert Stayton ',
-		  'kosek' => 'Jirka Kosek ',
-		  'lmuellner' => 'Leonard Muellner ',
-		  'mrjohnson' => 'Mark Johnson ',
-		  'nikclayton' => 'Nik Clayton ',
-		  'nwalsh' => 'Norman Walsh ',
-		  'xmldoc' => 'Michael Smith ');
-
 # Open the log file...
 if ($opt_l) {
     open (LOG, "$opt_l");
@@ -67,6 +57,7 @@ foreach $dir (sort keys %{$log}) {
 
     $cutoff = $opt_c || "0000-00-00";
     if ($opt_w) {
+#	print "Writing $cl\n";
 	open (F, ">$cl");
     } else {
 	print "Would have written $cl\n";
@@ -78,23 +69,13 @@ foreach $dir (sort keys %{$log}) {
 	    print "\tStopping at cutoff date: $cutoff\n";
 	    last;
 	}
-
+	
+	print F "$date  Norman Walsh  <ndw\@nwalsh.com>\n\n";
 	$msgs = {};
-	$author = "";
-	$lastauthor = "";
 
 	foreach $file (sort keys %{$log->{$dir}->{$date}}) {
 	    foreach $rev (sort keys %{$log->{$dir}->{$date}->{$file}}) {
 		$logmsg = $log->{$dir}->{$date}->{$file}->{$rev}->{'logmsg'};
-		$author = $log->{$dir}->{$date}->{$file}->{$rev}->{'author'};
-
-		if ($author ne $lastauthor && $lastauthor ne '') {
-		    &show_messages($date, $lastauthor, $msgs);
-		    $msgs = {};
-		}
-
-		$lastauthor = $author;
-
 		if (exists $msgs->{$logmsg}) {
 		    $msgsnew->{$logmsg} = $msgsnew->{$logmsg}
 		        && $log->{$dir}->{$date}->{$file}->{$rev}->{'new'};
@@ -107,29 +88,19 @@ foreach $dir (sort keys %{$log}) {
 	    }
 	}
 
-	&show_messages($date, $author, $msgs);
-    }
-    close (F);
-}
+	foreach $msg (sort fnsort keys %{$msgs}) {
+	    $files = $msgs->{$msg};
+	    print F "\t* $files: ";
+	    print F "\n\t" if (length($files) > 50);
 
-sub show_messages {
-    my $date = shift;
-    my $author = shift;
-    my $msgs = shift;
-
-    print F "$date  ", $authorName{$author}, "<$author\@users.sourceforge.net>\n\n";
-
-    foreach $msg (sort fnsort keys %{$msgs}) {
-	$files = $msgs->{$msg};
-	print F "\t* $files: ";
-	print F "\n\t" if (length($files) > 50);
-
-	if ($msgsnew->{$msg}) {
-	    print F "New file.\n\n";
-	} else {
-	    print F "$msg\n";
+	    if ($msgsnew->{$msg}) {
+		print F "New file.\n\n";
+	    } else {
+		print F "$msg\n";
+	    }
 	}
     }
+    close (F);
 }
 
 sub fnsort {

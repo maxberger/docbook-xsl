@@ -1,12 +1,10 @@
 <!-- ====================================================================== -->
 <!-- JRefEntry DTD V1.1
-     Copyright (C) 2000, 2001 Norman Walsh
-     http://sourceforge.net/projects/docbook/
+     Copyright (C) 2000 Norman Walsh
+     http://nwalsh.com/docbook/jrefentry/
 
-     $Id$
-
-     Please direct all questions and comments about this DTD to the
-     DocBook Open Repository team.
+     Please direct all questions and comments about this DTD to
+     Norman Walsh, <ndw@nwalsh.com>.
 
      Common declaration:
 
@@ -197,6 +195,3 @@
 	%common.attrib;
 	role	CDATA	#IMPLIED
 >
-
-<!-- End of JRefEntry DTD V1.1 ............................................ -->
-<!-- ...................................................................... -->

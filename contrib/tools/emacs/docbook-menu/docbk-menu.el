@@ -6,11 +6,10 @@
 ;; Author: Michael Smith <smith@sideshowbarker.net>
 ;; Maintainer: Michael Smith <smith@sideshowbarker.net>
 ;; Created: 2003-11-04
-;; Version: 0.92
+;; Version: 0.90
 ;; Revision: $Revision$
 ;; Date: $Date$
 ;; RCS Id: $Id$
-;; X-URL: http://docbook.sf.net/projects/docbook-menu
 ;; Keywords: xml docbook
 
 ;; This file is NOT part of GNU emacs.
@@ -66,9 +65,9 @@
 ;;
 ;; To install and use this package:
 ;;
-;; 1. Go to the DocBook project download site:
+;; 1. Go to the docbook-menu download site:
 ;;
-;;      https://sourceforge.net/project/showfiles.php?group_id=21935 
+;;      http://www.logopoeia.com/docbook/download
 ;;
 ;;    And download the latest docbook-menu-N.NN.zip file
 ;;    (for example, docbook-menu-1.00.zip).
@@ -87,7 +86,7 @@
 ;;
 ;; 4. Add the following to your .emacs file exactly as shown:
 ;;
-;;      (require 'docbk-menu)
+;;      (require 'dbk-menu)
 ;;
 ;; ==================================================================
 ;; Note: The *.elc files included in this distribution are
@@ -348,12 +347,7 @@ Currently used only for finding DocBook mailing list search form.")
 (load-library "submenus/dbk-xsltcg.el")
 
 (defgroup docbook-menu nil
-  "Easy access to DocBook documentation and XSL stylesheet distro."
-  :group 'help
-  :link '(emacs-commentary-link "docbk-menu.el")
-  :link '(url-link "http://docbook.sf.net/projects/docbook-menu/")
-  :prefix "docbook-menu-"
-  )
+  "Customization group for `docbook-menu-mode' minor mode.")
 
 ;; *******************************************************************
 ;;; User customizable options
@@ -460,7 +454,7 @@ Not a URI -- instead must be just a filesystem pathname, e.g.,
   "*Absolute path to base DocBook XSL Stylesheets doc directory.
 Not a URI -- instead must be just a filesystem pathname, e.g.,
 
-  /usr/share/doc/docbook-xsl
+  /usr/share/doc/docbook-xsl/docsrc
    or
   c:/my-xml-stuff/docbook-xsl-1.62.4"
   :type 'string
