@@ -1,9 +1,7 @@
 <!-- ====================================================================== -->
-<!-- Website DTD Forms Module V1.7
-     Part of the Website DTD
-     http://nwalsh.com/website/
-
-     See COPYRIGHT for more information
+<!-- Website DTD Forms Module V2.0a1
+     Part of the Website distribution
+     http://sourceforge.net/projects/docbook/
 
      Please direct all questions and comments about this DTD to
      Norman Walsh, <ndw@nwalsh.com>.
@@ -27,6 +25,7 @@
 			|html:label|html:select|html:textarea)+>
 
 <!ATTLIST html:form
+	xmlns:html	CDATA	#FIXED "http://www.w3.org/1999/xhtml"
 	%common.attrib;
 	%events;
 	action		CDATA		#REQUIRED
@@ -40,6 +39,7 @@
 
 <!ELEMENT html:input EMPTY>
 <!ATTLIST html:input
+	xmlns:html	CDATA	#FIXED "http://www.w3.org/1999/xhtml"
 	%common.attrib;
 	%events;
 	type		%inputtype;	"text"
@@ -63,6 +63,7 @@
 
 <!ELEMENT html:button (%para.char.mix;)*>
 <!ATTLIST html:button
+	xmlns:html	CDATA	#FIXED "http://www.w3.org/1999/xhtml"
 	%common.attrib;
 	%events;
 	name		CDATA		#IMPLIED
@@ -77,6 +78,7 @@
 
 <!ELEMENT html:label (%para.char.mix;)*>
 <!ATTLIST html:label
+	xmlns:html	CDATA	#FIXED "http://www.w3.org/1999/xhtml"
 	%common.attrib;
 	%events;
 	for		IDREF		#IMPLIED
@@ -87,6 +89,7 @@
 
 <!ELEMENT html:select (html:option)+>
 <!ATTLIST html:select
+	xmlns:html	CDATA	#FIXED "http://www.w3.org/1999/xhtml"
 	%common.attrib;
 	%events;
 	name		CDATA		#IMPLIED
@@ -101,6 +104,7 @@
 
 <!ELEMENT html:option (#PCDATA)>
 <!ATTLIST html:option
+	xmlns:html	CDATA	#FIXED "http://www.w3.org/1999/xhtml"
 	%common.attrib;
 	%events;
 	selected    	(selected)	#IMPLIED
@@ -110,6 +114,7 @@
 
 <!ELEMENT html:textarea (#PCDATA)>
 <!ATTLIST html:textarea
+	xmlns:html	CDATA	#FIXED "http://www.w3.org/1999/xhtml"
 	%common.attrib;
 	%events;
 	name		CDATA		#IMPLIED
@@ -125,5 +130,5 @@
 	onchange	CDATA		#IMPLIED
 >
 
-<!-- End of forms.mod V1.7 ................................................ -->
+<!-- End of forms.mod V2.0a1 .............................................. -->
 <!-- ...................................................................... -->

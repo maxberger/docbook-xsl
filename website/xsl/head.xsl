@@ -4,10 +4,8 @@
 
 <xsl:template match="head" mode="head.mode">
   <xsl:variable name="nodes" select="*"/>
-  <xsl:variable name="global"
-                select="/website/homepage/head/*[@class='global']"/>
   <head>
-    <meta name="generator" content="Website XSL Stylesheet V{$WSVERSION}"/>
+    <meta name="generator" content="Website XSL Stylesheet V{$VERSION}"/>
     <xsl:if test="$html.stylesheet != ''">
       <link rel="stylesheet" href="{$html.stylesheet}" type="text/css">
 	<xsl:if test="$html.stylesheet.type != ''">
@@ -17,31 +15,13 @@
 	</xsl:if>
       </link>
     </xsl:if>
-    <xsl:apply-templates select="$nodes" mode="head.mode"/>
-    <xsl:if test="not(.=/website/homepage/head)">
-      <xsl:call-template name="process.globals">
-        <xsl:with-param name="nodelist" select="$global"/>
-      </xsl:call-template>
-    </xsl:if>
-    <!-- this is potentially slow -->
-    <xsl:if test="..//xlink[@role='dynamic']">
-      <script src="dynxbel.js" language="JavaScript"/>
-    </xsl:if>
-  </head>
-</xsl:template>
-
-<xsl:template name="process.globals">
-  <xsl:param name="nodelist"></xsl:param>
-  <xsl:if test="count($nodelist)>0">
-    <xsl:variable name="node" select="$nodelist[1]"/>
-    <xsl:variable name="rest" select="$nodelist[position()>1]"/>
-    <xsl:apply-templates select="$node" mode="head.mode">
-      <xsl:with-param name="current.page" select="ancestor-or-self::webpage"/>
+    <xsl:apply-templates select="$autolayout/autolayout/style
+                                 |$autolayout/autolayout/script"
+                         mode="head.mode">
+      <xsl:with-param name="webpage" select="ancestor::webpage"/>
     </xsl:apply-templates>
-    <xsl:call-template name="process.globals">
-      <xsl:with-param name="nodelist" select="$rest"/>
-    </xsl:call-template>
-  </xsl:if>
+    <xsl:apply-templates mode="head.mode"/>
+  </head>
 </xsl:template>
 
 <xsl:template match="title" mode="head.mode">
@@ -92,19 +72,18 @@
 	<xsl:attribute name="language">JavaScript</xsl:attribute>
       </xsl:otherwise>
     </xsl:choose>
-
     <xsl:apply-templates/>
-
   </script>
 </xsl:template>
 
-<xsl:template match="script[@src]" mode="head.mode">
-  <xsl:param name="current.page" select="ancestor-or-self::webpage"/>
+<xsl:template match="script[@src]" mode="head.mode" priority="2">
+  <xsl:param name="webpage" select="ancestor::webpage"/>
   <xsl:variable name="relpath">
     <xsl:call-template name="root-rel-path">
-      <xsl:with-param name="webpage" select="$current.page"/>
+      <xsl:with-param name="webpage" select="$webpage"/>
     </xsl:call-template>
   </xsl:variable>
+
   <xsl:variable name="language">
     <xsl:choose>
       <xsl:when test="@language">
@@ -113,7 +92,8 @@
       <xsl:otherwise>JavaScript</xsl:otherwise>
     </xsl:choose>
   </xsl:variable>
-  <script src="{$relpath}{@src}" language="{$language}"></script>
+
+  <script src="{$relpath}{@src}" language="{$language}"/>
 </xsl:template>
 
 <xsl:template match="style" mode="head.mode">
@@ -129,20 +109,34 @@
   </style>
 </xsl:template>
 
-<xsl:template match="style[@src]" mode="head.mode">
-  <xsl:param name="current.page" select="ancestor-or-self::webpage"/>
+<xsl:template match="style[@src]" mode="head.mode" priority="2">
+  <xsl:param name="webpage" select="ancestor::webpage"/>
   <xsl:variable name="relpath">
     <xsl:call-template name="root-rel-path">
-      <xsl:with-param name="webpage" select="$current.page"/>
+      <xsl:with-param name="webpage" select="$webpage"/>
     </xsl:call-template>
   </xsl:variable>
-  <link rel="stylesheet" href="{$relpath}{@src}" type="text/css">
-    <xsl:if test="@type">
-      <xsl:attribute name="type">
-	<xsl:value-of select="@type"/>
-      </xsl:attribute>
-    </xsl:if>
-  </link>
+
+  <xsl:choose>
+    <xsl:when test="starts-with(@src, '/')">
+      <link rel="stylesheet" href="{@src}">
+        <xsl:if test="@type">
+          <xsl:attribute name="type">
+            <xsl:value-of select="@type"/>
+          </xsl:attribute>
+        </xsl:if>
+      </link>
+    </xsl:when>
+    <xsl:otherwise>
+      <link rel="stylesheet" href="{$relpath}{@src}">
+        <xsl:if test="@type">
+          <xsl:attribute name="type">
+            <xsl:value-of select="@type"/>
+          </xsl:attribute>
+        </xsl:if>
+      </link>
+    </xsl:otherwise>
+  </xsl:choose>
 </xsl:template>
 
 <xsl:template match="abstract" mode="head.mode">
