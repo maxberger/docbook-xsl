@@ -1,5 +1,5 @@
 <!-- ...................................................................... -->
-<!-- DocBook document hierarchy module V4.1 ............................... -->
+<!-- DocBook document hierarchy module V4.0 ............................... -->
 <!-- File dbhier.mod ...................................................... -->
 
 <!-- Copyright 1992-2000 HaL Computer Systems, Inc.,
@@ -43,7 +43,7 @@
      declaration that uses the public identifier shown below:
 
      <!ENTITY % dbhier PUBLIC
-     "-//OASIS//ELEMENTS DocBook Document Hierarchy V4.1//EN">
+     "-//OASIS//ELEMENTS DocBook Document Hierarchy V4.0//EN">
      %dbhier;
 
      See the documentation for detailed information on the parameter
@@ -259,6 +259,12 @@ The Contents attribute will be removed from SetInfo
 <![ %book.content.module; [
 <!ENTITY % book.module "INCLUDE">
 <![ %book.module; [
+<!--FUTURE USE (V4.0):
+......................
+The %article.class; entity *may* be removed from the Book content model.
+(Article may be made part of a new top-level document hierarchy.)
+......................
+-->
 
 <!ENTITY % local.book.attrib "">
 <!ENTITY % book.role.attrib "%role.attrib;">
@@ -718,7 +724,7 @@ The Contents attribute will be removed from BookInfo
 <!ENTITY % part.module "INCLUDE">
 <![ %part.module; [
 
-<!-- Note that Part was to have its content model reduced in V4.1.  This
+<!-- Note that Part was to have its content model reduced in V4.0.  This
 change will not be made after all. -->
 
 <!ENTITY % local.part.attrib "">
@@ -2058,6 +2064,12 @@ change will not be made after all. -->
 <![ %article.module; [
 <!-- An Article is a chapter-level, stand-alone document that is often,
      but need not be, collected into a Book. -->
+<!--FUTURE USE (V4.0):
+......................
+The %nav.class; entity now allows ToC; ToCchap will be allowed instead.
+RefEntry will be removed from the main content of Article.
+......................
+-->
 
 <!ENTITY % local.article.attrib "">
 <!ENTITY % article.role.attrib "%role.attrib;">
@@ -2096,5 +2108,5 @@ change will not be made after all. -->
 <!--end of article.attlist-->]]>
 <!--end of article.module-->]]>
 
-<!-- End of DocBook document hierarchy module V4.1 ........................ -->
+<!-- End of DocBook document hierarchy module V4.0 ........................ -->
 <!-- ...................................................................... -->
