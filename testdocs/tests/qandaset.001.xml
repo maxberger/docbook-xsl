@@ -10,28 +10,26 @@
 </author>
 </articleinfo>
 
-<para>What about <xref linkend="Two"/>?</para>
-
   <qandaset defaultlabel='number'>
     <?dbhtml table-summary="summary"?>
-    <qandaentry id="qa1">
-      <question id="q1"><para>Question one.</para></question>
-      <answer id="a1">
+    <qandaentry>
+      <question><para>Question one.</para></question>
+      <answer>
 	<para>Answer one.
 See <xref linkend="faq-Two"/></para>
       </answer>
     </qandaentry>
 
-    <qandaentry id="Two">
+    <qandaentry>
       <question id="faq-Two"><para>Question two.</para></question>
-      <answer id="faa-Two">
+      <answer>
 	<para>Answer two.</para>
       </answer>
     </qandaentry>
 
-    <qandaentry id="Twoc">
+    <qandaentry>
       <question id="faq-Twoc"><para>Question two.</para></question>
-      <answer id="faa-Twoc">
+      <answer>
 	<orderedlist>
 	  <listitem><para>testing a list</para></listitem>
 	  <listitem><para>testing a list</para></listitem>

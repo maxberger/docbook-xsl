@@ -10,12 +10,8 @@
 </author>
 </articleinfo>
 
-<para>Just a normal paragraph with a footnote<footnote><para>This is the
-footnote.</para></footnote>.</para>
-
-<table frame="none">
-<title>Server machine minimum required
-software<footnote><para>Table title footnote test.</para></footnote></title>
+<table>
+<title>Server machine minimum required software</title>
 <indexterm>
 <primary>System requirements</primary>
 <secondary>Software</secondary>
@@ -24,7 +20,7 @@ software<footnote><para>Table title footnote test.</para></footnote></title>
 <colspec colname="col1" colnum="1" colwidth="2.50in"/>
 <thead valign="top">
 <row>
-<entry>Foo<footnote><para>Table cell footnote test.</para></footnote></entry>
+<entry>Foo</entry>
 </row>
 </thead>
 <tbody>

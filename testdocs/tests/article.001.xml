@@ -11,11 +11,6 @@
 </author>
 <author><firstname>Jane</firstname><surname>Doe</surname></author>
 </authorgroup>
-<abstract>
-<para>This is the abstract.</para>
-<para>It has several paras.</para>
-<para>It has several paras.</para>
-</abstract>
 </articleinfo>
 
 <para>This is an article tests.</para>
