@@ -32,7 +32,7 @@
 						   (gentext-element-name adm))))))
 	 (ttl-cell  (make element gi: "TH"
 			  attributes: '(("ALIGN" "LEFT")
-					("VALIGN" "MIDDLE"))
+					("VALIGN" "CENTER"))
 			  (make element gi: "B" adm-title)))
 	 (body-cell (make element gi: "TD"
 			  attributes: '(("ALIGN" "LEFT")

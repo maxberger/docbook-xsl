@@ -1298,33 +1298,23 @@
   ;; PURP Path to admonition graphics
   ;; DESC
   ;; Sets the path, probably relative to the directory where the HTML
-  ;; files are created, to the admonition graphics.  Must include
-  ;; trailing directory separator.
+  ;; files are created, to the admonition graphics.
   ;; /DESC
   ;; AUTHOR N/A
   ;; /REFENTRY
   "../images/")
 
-
-;; just for back compat, set it false to say its not set
-(define admon-graphic-default-extension #f)
-
-(define %admon-graphics-extension%
-  ;; REFENTRY admon-graphic-extension
+(define admon-graphic-default-extension
+  ;; REFENTRY admon-graphic-default-extension
   ;; PURP Admonition graphic file extension
   ;; DESC
-  ;; Identifies the extension for admonition graphics. This allows
+  ;; Identifies the default extension for admonition graphics. This allows
   ;; backends to select different images (e.g., EPS for print, PNG for
   ;; PDF, etc.)
-  ;;
-  ;; The older parameter, admon-graphic-default-extension, will be
-  ;; used if it is set, for backwards compatability.
   ;; /DESC
   ;; AUTHOR N/A
   ;; /REFENTRY
-  (if admon-graphic-default-extension
-      admon-graphic-default-extension
-      ".eps"))
+  ".eps")
 
 (define ($admon-graphic$ #!optional (nd (current-node)))
   ;; REFENTRY admon-graphic
@@ -1338,25 +1328,25 @@
   (cond ((equal? (gi nd) (normalize "tip"))
 	 (string-append %admon-graphics-path%
 			(string-append "tip"
-				       %admon-graphics-extension%)))
+				       admon-graphic-default-extension)))
 	((equal? (gi nd) (normalize "note"))
 	 (string-append %admon-graphics-path%
 			(string-append "note"
-				       %admon-graphics-extension%)))
+				       admon-graphic-default-extension)))
 
 	((equal? (gi nd) (normalize "important"))
 	 (string-append %admon-graphics-path%
 			(string-append "important"
-				       %admon-graphics-extension%)))
+				       admon-graphic-default-extension)))
 
 	((equal? (gi nd) (normalize "caution"))
 	 (string-append %admon-graphics-path%
 			(string-append "caution"
-				       %admon-graphics-extension%)))
+				       admon-graphic-default-extension)))
 	((equal? (gi nd) (normalize "warning"))
 	 (string-append %admon-graphics-path%
 			(string-append "warning"
-				       %admon-graphics-extension%)))
+				       admon-graphic-default-extension)))
 	(else (error (string-append (gi nd) " is not an admonition.")))))
 
 (define ($admon-graphic-width$ #!optional (nd (current-node)))

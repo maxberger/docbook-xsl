@@ -269,9 +269,6 @@
 (element informalexample
   ($informal-object$ %informalexample-rules% %informalexample-rules%))
 
-(element informalfigure
-  ($informal-object$ %informalfigure-rules% %informalfigure-rules%))
-
 (element (figure title) (empty-sosofo)) ; don't show caption below figure
 
 (element figure 

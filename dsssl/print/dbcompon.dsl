@@ -63,12 +63,16 @@
       (literal 
        (gentext-page)
        (if %page-number-restart%
-	   (if (or (equal? (gi component) (normalize "chapter"))
-		   (equal? (gi component) (normalize "appendix")))
-	       (string-append
-		(element-label component #t)
-		(gentext-intra-label-sep "_pagenumber"))
-	       "")
+	   (cond
+	    ((equal? (gi component) (normalize "appendix") ) 
+	     (string-append
+	      (element-label component #t)
+	      (gentext-intra-label-sep "_pagenumber")))
+	    ((equal? (gi component) (normalize "chapter"))
+	     (string-append
+	      (element-label component #t)
+	      (gentext-intra-label-sep "_pagenumber")))
+	    (else ""))
 	   ""))
       (page-number-sosofo))))
 
@@ -205,6 +209,7 @@
   (make simple-page-sequence
     page-n-columns: %page-n-columns%
     page-number-restart?: (or %page-number-restart% 
+			      (book-start?) 
 			      (first-chapter?))
     page-number-format: ($page-number-format$)
     use: default-text-style
@@ -255,13 +260,11 @@
 						  (normalize "bibliomisc")
 						  (normalize "biblioset")))))
 	 (parent-titles (select-elements (children (current-node)) (normalize "title")))
-	 (titles	(if (node-list-empty? parent-titles)
-			    (select-elements exp-children (normalize "title"))
+	 (info-titles   (select-elements exp-children (normalize "title")))
+	 (titles        (if (node-list-empty? parent-titles)
+			    info-titles
 			    parent-titles))
-	 (parent-subttl (select-elements (children (current-node)) (normalize "subtitle")))	    
-	 (subtitles	(if (node-list-empty? parent-subttl)
-			    (select-elements exp-children (normalize "subtitle"))
-			    parent-subttl)))
+	 (subtitles     (select-elements exp-children (normalize "subtitle"))))
     (make sequence
       (make paragraph
 	font-family-name: %title-font-family%
@@ -379,8 +382,6 @@
 (element preface ($component$))
 (element (preface title) (empty-sosofo))
 
-(element colophon ($component$))
-
 ;; Dedication is empty except in a special mode so that it can be
 ;; reordered (made to come before the TOCs)
 (element dedication (empty-sosofo))
@@ -432,7 +433,6 @@
 	       (generate-toc-in-front))
 	  (make simple-page-sequence
 	    page-n-columns: %page-n-columns%
-            ;; FIXME: page restarting here and below is ill-considered
 	    page-number-restart?: %article-page-number-restart%
 	    page-number-format: ($page-number-format$ (normalize "toc"))
 	    left-header:   ($left-header$ (normalize "toc"))

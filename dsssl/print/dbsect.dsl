@@ -185,9 +185,6 @@
 (define ($refsect2-info$ info) (empty-sosofo))
 (define ($refsect3-info$ info) (empty-sosofo))
 
-(element section ($section$))
-(element (section title) (empty-sosofo))
-
 (element sect1 ($section$))
 (element (sect1 title) (empty-sosofo))
 
