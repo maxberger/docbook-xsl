@@ -21,7 +21,10 @@
 <xsl:include href="toc.xsl"/>
 
 <xsl:output method="html"
-            indent="no"/>
+            indent="no"
+            doctype-public="-//W3C//DTD HTML 4.01 Transitional//EN"
+            doctype-system="http://www.w3.org/TR/html4/loose.dtd"
+/>
 
 <xsl:param name="autolayout" select="document($autolayout-file,/*[1])"/>
 
@@ -44,8 +47,7 @@
   <html>
     <xsl:apply-templates select="head" mode="head.mode"/>
     <xsl:apply-templates select="config" mode="head.mode"/>
-    <body class="website">
-      <xsl:call-template name="body.attributes"/>
+    <body xsl:use-attribute-sets="body.attributes">
 
       <div id="{$id}" class="{name(.)}">
         <a name="{$id}"/>
@@ -89,20 +91,7 @@
     <ul class="toc">
       <xsl:for-each select="$pages">
         <li>
-          <a>
-            <xsl:attribute name="href">
-              <xsl:choose>
-                <xsl:when test="@href">
-                  <xsl:value-of select="@href"/>
-                </xsl:when>
-                <xsl:otherwise>
-                  <xsl:value-of select="$relpath"/>
-                  <xsl:value-of select="@dir"/>
-                  <xsl:value-of select="$filename-prefix"/>
-                  <xsl:value-of select="@filename"/>
-                </xsl:otherwise>
-              </xsl:choose>
-            </xsl:attribute>
+          <a href="{$relpath}{@dir}{$filename-prefix}{@filename}">
             <xsl:apply-templates select="title"/>
           </a>
           <xsl:if test="summary">

@@ -17,7 +17,7 @@
 
 <!-- ==================================================================== -->
 
-<xsl:import href="http://docbook.sourceforge.net/release/xsl/current/html/docbook.xsl"/>
+<xsl:import href="http://docbook.sourceforge.net/release/xsl/snapshot/html/docbook.xsl"/>
 <xsl:import href="xbel.xsl"/>
 <xsl:include href="VERSION"/>
 <xsl:include href="param.xsl"/>
@@ -27,7 +27,10 @@
 <xsl:strip-space elements="website webpage"/>
 
 <xsl:output method="html"
-            indent="no"/>
+            indent="no"
+            doctype-public="-//W3C//DTD HTML 4.01 Transitional//EN"
+            doctype-system="http://www.w3.org/TR/html4/loose.dtd"
+/>
 
 <!-- ==================================================================== -->
 
@@ -85,9 +88,7 @@ node.</para>
   <xsl:variable name="page" select="."/>
   <xsl:variable name="rcsdate" select="$page/config[@param='rcsdate']/@value"/>
   <xsl:variable name="footers" select="$page/config[@param='footer']
-                                       |$page/config[@param='footlink']
-                                       |$autolayout/autolayout/config[@param='footer']
-                                       |$autolayout/autolayout/config[@param='footlink']"/>
+                                       |$page/config[@param='footlink']"/>
 
   <xsl:variable name="tocentry" select="$autolayout//*[@id=$page/@id]"/>
   <xsl:variable name="toc" select="($tocentry/ancestor-or-self::toc[1]
@@ -442,14 +443,6 @@ node.</para>
 
 <!-- ==================================================================== -->
 
-<xsl:template match="processing-instruction('php')">
-  <xsl:processing-instruction name="php">
-    <xsl:value-of select="."/>
-  </xsl:processing-instruction>
-</xsl:template>
-
-<!-- ==================================================================== -->
-
 <xsl:template match="rddl:*" xmlns:rddl='http://www.rddl.org/'>
   <xsl:element name="{name(.)}">
     <xsl:apply-templates select="@*" mode="copy"/>
@@ -563,18 +556,14 @@ node.</para>
 
 <!-- ==================================================================== -->
 
-<xsl:template name="page.uri">
-  <xsl:param name="href" select="''"/>
+<xsl:template name="link.to.page">
   <xsl:param name="page" select="ancestor-or-self::tocentry"/>
+  <xsl:param name="linktext" select="'???'"/>
   <xsl:param name="relpath">
     <xsl:call-template name="toc-rel-path">
       <xsl:with-param name="pageid" select="$page/@id"/>
     </xsl:call-template>
   </xsl:param>
-
-<!--
-  <xsl:message><xsl:value-of select="$page/@id"/>: <xsl:value-of select="$relpath"/></xsl:message>
--->
 
   <xsl:variable name="dir">
     <xsl:choose>
@@ -587,39 +576,7 @@ node.</para>
     </xsl:choose>
   </xsl:variable>
 
-  <xsl:variable name="html.href">
-    <xsl:choose>
-      <xsl:when test="$href != ''">
-        <xsl:value-of select="$href"/>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:value-of select="concat($relpath,$dir,$filename-prefix)"/>
-        <xsl:value-of select="$page/@filename"/>
-      </xsl:otherwise>
-    </xsl:choose>
-  </xsl:variable>
-
-  <xsl:value-of select="$html.href"/>
-</xsl:template>
-
-<xsl:template name="link.to.page">
-  <xsl:param name="href" select="''"/>
-  <xsl:param name="page" select="ancestor-or-self::tocentry"/>
-  <xsl:param name="relpath">
-    <xsl:call-template name="toc-rel-path">
-      <xsl:with-param name="pageid" select="$page/@id"/>
-    </xsl:call-template>
-  </xsl:param>
-  <xsl:param name="linktext" select="'???'"/>
-
-  <a>
-    <xsl:attribute name="href">
-      <xsl:call-template name="page.uri">
-        <xsl:with-param name="href" select="$href"/>
-        <xsl:with-param name="page" select="$page"/>
-        <xsl:with-param name="relpath" select="$relpath"/>
-      </xsl:call-template>
-    </xsl:attribute>
+  <a href="{$relpath}{$dir}{$filename-prefix}{$page/@filename}">
     <xsl:if test="summary">
       <xsl:attribute name="title">
         <xsl:value-of select="summary"/>
@@ -628,6 +585,7 @@ node.</para>
     <xsl:copy-of select="$linktext"/>
   </a>
 </xsl:template>
+
 
 <xsl:template name="next.page">
   <xsl:param name="page" select="ancestor-or-self::webpage"/>
@@ -676,53 +634,6 @@ node.</para>
     </xsl:choose>
   </xsl:variable>
   <xsl:value-of select="$previd"/>
-</xsl:template>
-
-<xsl:template name="top.page">
-  <xsl:param name="page" select="ancestor-or-self::webpage"/>
-  <xsl:variable name="id" select="$page/@id"/>
-  <xsl:variable name="tocentry"
-                select="$autolayout//*[@id=$id]"/>
-
-  <xsl:value-of select="$tocentry/ancestor::toc/@id"/>
-</xsl:template>
-
-<xsl:template name="up.page">
-  <xsl:param name="page" select="ancestor-or-self::webpage"/>
-  <xsl:variable name="id" select="$page/@id"/>
-  <xsl:variable name="tocentry"
-                select="$autolayout//*[@id=$id]"/>
-
-  <xsl:choose>
-    <xsl:when test="$tocentry/ancestor::tocentry">
-      <xsl:value-of select="$tocentry/ancestor::tocentry[1]/@id"/>
-    </xsl:when>
-    <xsl:when test="$tocentry/ancestor::toc">
-      <xsl:value-of select="$tocentry/ancestor::toc[1]/@id"/>
-    </xsl:when>
-    <xsl:otherwise></xsl:otherwise>
-  </xsl:choose>
-</xsl:template>
-
-<xsl:template name="first.page">
-  <xsl:param name="page" select="ancestor-or-self::webpage"/>
-  <xsl:variable name="id" select="$page/@id"/>
-  <xsl:variable name="tocentry"
-                select="$autolayout//*[@id=$id]"/>
-
-  <xsl:value-of select="$tocentry/preceding-sibling::tocentry[last()]/@id"/>
-</xsl:template>
-
-<xsl:template name="last.page">
-  <xsl:param name="page" select="ancestor-or-self::webpage"/>
-  <xsl:variable name="id" select="$page/@id"/>
-  <xsl:variable name="tocentry"
-                select="$autolayout//*[@id=$id]"/>
-
-  <xsl:variable name="prev-sibling"
-                select="$tocentry/preceding-sibling::tocentry[1]"/>
-
-  <xsl:value-of select="$tocentry/following-sibling::tocentry[last()]/@id"/>
 </xsl:template>
 
 </xsl:stylesheet>

@@ -3,8 +3,8 @@
                 version="1.0">
 
 <xsl:output method="xml" indent="no"
-            doctype-public="-//Norman Walsh//DTD Website Autolayout V2.2//EN"
-            doctype-system="http://docbook.sourceforge.net/release/website/2.2/autolayout.dtd"
+            doctype-public="-//Norman Walsh//DTD Website Auto Layout V1.0//EN"
+            doctype-system="http://docbook.sourceforge.net/release/website/current/autolayout.dtd"
 />
 
 <xsl:strip-space elements="toc tocentry layout copyright"/>
@@ -58,64 +58,6 @@
 </xsl:template>
 
 <xsl:template name="tocentry">
-  <xsl:if test="@revisionflag">
-    <xsl:attribute name="revisionflag">
-      <xsl:value-of select="@revisionflag"/>
-    </xsl:attribute>
-  </xsl:if>
-  <xsl:choose>
-    <xsl:when test="@href">
-      <xsl:call-template name="tocentry.href"/>
-    </xsl:when>
-    <xsl:otherwise>
-      <xsl:call-template name="tocentry.page"/>
-    </xsl:otherwise>
-  </xsl:choose>
-</xsl:template>
-
-<xsl:template name="tocentry.href">
-  <xsl:if test="not(@href)">
-    <xsl:message terminate="yes">
-      <xsl:text>All toc entries must have an href attribute.</xsl:text>
-    </xsl:message>
-  </xsl:if>
-
-  <xsl:if test="not(@id)">
-    <xsl:message terminate="yes">
-      <xsl:text>All href toc entries must have an id attribute.</xsl:text>
-    </xsl:message>
-  </xsl:if>
-
-  <xsl:message>
-    <xsl:text>off site: </xsl:text>
-    <xsl:value-of select="@href"/>
-  </xsl:message>
-
-  <xsl:attribute name="id">
-    <xsl:value-of select="@id"/>
-  </xsl:attribute>
-  <xsl:attribute name="href">
-    <xsl:value-of select="@href"/>
-  </xsl:attribute>
-  <xsl:if test="@tocskip = '1'">
-    <xsl:attribute name="tocskip">
-      <xsl:value-of select="@tocskip"/>
-    </xsl:attribute>
-  </xsl:if>
-
-  <xsl:if test="not(title)">
-    <xsl:message terminate="yes">
-      <xsl:text>Off-site links must provide a title.</xsl:text>
-    </xsl:message>
-  </xsl:if>
-
-  <xsl:text>&#10;</xsl:text>
-  <xsl:apply-templates select="title|titleabbrev|summary" mode="copy"/>
-  <xsl:text>&#10;</xsl:text>
-  <xsl:apply-templates select="tocentry"/>
-</xsl:template>
-
-<xsl:template name="tocentry.page">
   <xsl:if test="not(@page)">
     <xsl:message terminate="yes">
       <xsl:text>All toc entries must have a page attribute.</xsl:text>
@@ -185,48 +127,33 @@
     </xsl:attribute>
   </xsl:if>
 
-  <xsl:text>&#10;</xsl:text>
-  <xsl:choose>
-    <xsl:when test="title">
-      <xsl:apply-templates select="title" mode="copy"/>
-    </xsl:when>
-    <xsl:otherwise>
-      <title>
+  <title>
+    <xsl:choose>
+      <xsl:when test="$page/*[1]/head/titleabbrev">
+        <xsl:apply-templates select="$page/*[1]/head/titleabbrev"/>
+      </xsl:when>
+      <xsl:otherwise>
         <xsl:apply-templates select="$page/*[1]/head/title"/>
-      </title>
-    </xsl:otherwise>
-  </xsl:choose>
+      </xsl:otherwise>
+    </xsl:choose>
+  </title>
   <xsl:text>&#10;</xsl:text>
 
-  <xsl:if test="titleabbrev or $page/*[1]/head/titleabbrev">
-    <xsl:choose>
-      <xsl:when test="titleabbrev">
-        <xsl:apply-templates select="titleabbrev" mode="copy"/>
-      </xsl:when>
-      <xsl:otherwise>
-        <titleabbrev>
-          <xsl:apply-templates select="$page/*[1]/head/titleabbrev"/>
-        </titleabbrev>
-      </xsl:otherwise>
-    </xsl:choose>
+  <xsl:if test="$page/*[1]/head/titleabbrev">
+    <titleabbrev>
+      <xsl:apply-templates select="$page/*[1]/head/titleabbrev"/>
+    </titleabbrev>
     <xsl:text>&#10;</xsl:text>
   </xsl:if>
 
-  <xsl:if test="summary or $page/*[1]/head/summary">
-    <xsl:choose>
-      <xsl:when test="summary">
-        <xsl:apply-templates select="summary" mode="copy"/>
-      </xsl:when>
-      <xsl:otherwise>
-        <summary>
-          <xsl:apply-templates select="$page/*[1]/head/summary"/>
-        </summary>
-      </xsl:otherwise>
-    </xsl:choose>
+  <xsl:if test="$page/*[1]/head/summary">
+    <summary>
+      <xsl:apply-templates select="$page/*[1]/head/summary"/>
+    </summary>
     <xsl:text>&#10;</xsl:text>
   </xsl:if>
 
-  <xsl:apply-templates select="tocentry"/>
+  <xsl:apply-templates/>
 </xsl:template>
 
 <xsl:template match="*" mode="calculate-dir">

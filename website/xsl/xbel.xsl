@@ -28,12 +28,10 @@
 </xsl:template>
 
 <xsl:template match="folder">
-  <li>
-    <xsl:apply-templates select="title"/>
-    <ul>
-      <xsl:apply-templates select="folder|bookmark"/>
-    </ul>
-  </li>
+  <li><xsl:apply-templates select="title"/></li>
+  <ul>
+    <xsl:apply-templates select="folder|bookmark"/>
+  </ul>
 </xsl:template>
 
 <xsl:template match="folder/title">
@@ -64,12 +62,10 @@
 </xsl:template>
 
 <xsl:template match="folder" mode="dynamic">
-  <li>
-    <xsl:apply-templates select="title" mode="dynamic"/>
-    <ul style="display:none" id="{@id}">
-      <xsl:apply-templates select="folder|bookmark" mode="dynamic"/>
-    </ul>
-  </li>
+  <li><xsl:apply-templates select="title" mode="dynamic"/></li>
+  <ul style="display:none" id="{@id}">
+    <xsl:apply-templates select="folder|bookmark" mode="dynamic"/>
+  </ul>
 </xsl:template>
 
 <xsl:template match="folder/title" mode="dynamic">

@@ -38,14 +38,12 @@
 <!--
   <xsl:apply-templates select="." mode="calculate-dir"/>
 -->
-  <xsl:if test="@filename">
-    <xsl:value-of select="@dir"/>
-    <xsl:value-of select="$prefix"/>
-    <xsl:value-of select="@filename"/>
-    <xsl:text>: </xsl:text>
-    <xsl:value-of select="@page"/>
-    <xsl:text>&#10;</xsl:text>
-  </xsl:if>
+  <xsl:value-of select="@dir"/>
+  <xsl:value-of select="$prefix"/>
+  <xsl:value-of select="@filename"/>
+  <xsl:text>: </xsl:text>
+  <xsl:value-of select="@page"/>
+  <xsl:text>&#10;</xsl:text>
 </xsl:template>
 
 <xsl:template match="toc" mode="all">
@@ -63,12 +61,10 @@
 <!--
   <xsl:apply-templates select="." mode="calculate-dir"/>
 -->
-  <xsl:if test="@filename">
-    <xsl:value-of select="@dir"/>
-    <xsl:value-of select="$prefix"/>
-    <xsl:value-of select="@filename"/>
-    <xsl:text> </xsl:text>
-  </xsl:if>
+  <xsl:value-of select="@dir"/>
+  <xsl:value-of select="$prefix"/>
+  <xsl:value-of select="@filename"/>
+  <xsl:text> </xsl:text>
 </xsl:template>
 
 <xsl:template match="*" mode="calculate-dir">

@@ -1,5 +1,5 @@
 autolayout.xml
 *.html
-.tabular
-.textonly
+depends.tabular
+depends.textonly
 

@@ -14,6 +14,7 @@
             doctype-system="http://www.w3.org/TR/html4/loose.dtd"
 />
 
+<xsl:param name="autolayout-file" select="'autolayout.xml'"/>
 <xsl:param name="autolayout" select="document($autolayout-file, /*)"/>
 
 <!-- ==================================================================== -->
@@ -36,17 +37,7 @@
   <xsl:attribute name="align">left</xsl:attribute>
   <!-- width is set with $navotocwidth -->
   <xsl:attribute name="bgcolor">
-    <xsl:choose>
-      <xsl:when test="/webpage/config[@param='navbgcolor']/@value[. != '']">
-        <xsl:value-of select="/webpage/config[@param='navbgcolor']/@value"/>
-      </xsl:when>
-      <xsl:when test="$autolayout/autolayout/config[@param='navbgcolor']/@value[. != '']">
-        <xsl:value-of select="$autolayout/autolayout/config[@param='navbgcolor']/@value"/>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:value-of select="$navbgcolor"/>
-      </xsl:otherwise>
-    </xsl:choose>
+    <xsl:value-of select="$navbgcolor"/>
   </xsl:attribute>
 </xsl:attribute-set>
 
@@ -59,8 +50,6 @@
   </xsl:attribute>
 </xsl:attribute-set>
 
-<xsl:param name="body.columns" select="2"/>
-
 <!-- ==================================================================== -->
 
 <xsl:template match="/">
@@ -68,23 +57,11 @@
 </xsl:template>
 
 <xsl:template name="home.navhead">
-  <xsl:text>Navhead</xsl:text>
+<xsl:text>Navhead</xsl:text>
 </xsl:template>
 
 <xsl:template name="home.navhead.upperright">
-  <xsl:text>Upper-right</xsl:text>
-</xsl:template>
-
-<xsl:template name="home.navhead.cell">
-  <td width="50%" valign="middle" align="left">
-    <xsl:call-template name="home.navhead"/>
-  </td>
-</xsl:template>
-
-<xsl:template name="home.navhead.upperright.cell">
-  <td width="50%" valign="middle" align="right">
-    <xsl:call-template name="home.navhead.upperright"/>
-  </td>
+<xsl:text>Upper-right</xsl:text>
 </xsl:template>
 
 <xsl:template name="home.navhead.separator">
@@ -113,8 +90,7 @@
   <html>
     <xsl:apply-templates select="head" mode="head.mode"/>
     <xsl:apply-templates select="config" mode="head.mode"/>
-    <body class="tabular">
-      <xsl:call-template name="body.attributes"/>
+    <body xsl:use-attribute-sets="body.attributes">
 
       <div id="{$id}" class="{name(.)}">
         <a name="{$id}"/>
@@ -129,17 +105,7 @@
             <td xsl:use-attribute-sets="table.navigation.cell.properties">
               <xsl:if test="$navtocwidth != ''">
                 <xsl:attribute name="width">
-                  <xsl:choose>
-                    <xsl:when test="/webpage/config[@param='navtocwidth']/@value[. != '']">
-                      <xsl:value-of select="/webpage/config[@param='navtocwidth']/@value"/>
-                    </xsl:when>
-                    <xsl:when test="$autolayout/autolayout/config[@param='navtocwidth']/@value[. != '']">
-                      <xsl:value-of select="$autolayout/autolayout/config[@param='navtocwidth']/@value"/>
-                    </xsl:when>
-                    <xsl:otherwise>
-                      <xsl:value-of select="$navtocwidth"/>
-                    </xsl:otherwise>
-                  </xsl:choose>
+                  <xsl:value-of select="$navtocwidth"/>
                 </xsl:attribute>
               </xsl:if>
               <xsl:choose>
@@ -154,8 +120,6 @@
               </xsl:choose>
             </td>
 
-            <xsl:call-template name="hspacer"/>
-
             <td xsl:use-attribute-sets="table.body.cell.properties">
               <xsl:if test="$navbodywidth != ''">
                 <xsl:attribute name="width">
@@ -167,8 +131,12 @@
                 <table border="0" summary="home page extra headers"
                        cellpadding="0" cellspacing="0" width="100%">
                   <tr>
-                    <xsl:call-template name="home.navhead.cell"/>
-                    <xsl:call-template name="home.navhead.upperright.cell"/>
+                    <td width="50%" valign="middle" align="left">
+                      <xsl:call-template name="home.navhead"/>
+                    </td>
+                    <td width="50%" valign="middle" align="right">
+                      <xsl:call-template name="home.navhead.upperright"/>
+                    </td>
                   </tr>
                 </table>
                 <xsl:call-template name="home.navhead.separator"/>
@@ -192,10 +160,6 @@
 
     </body>
   </html>
-</xsl:template>
-
-<xsl:template name="hspacer">
-  <!-- nop -->
 </xsl:template>
 
 <xsl:template match="config[@param='filename']" mode="head.mode">

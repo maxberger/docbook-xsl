@@ -326,7 +326,7 @@ will be used to indent the TOC.</para>
 </xsl:attribute-set>
 
 <doc:attribute-set name="body.attributes" xmlns="">
-<refpurpose>DEPRECATED</refpurpose>
+<refpurpose></refpurpose>
 <refdescription>
 <para></para>
 </refdescription>
@@ -335,7 +335,7 @@ will be used to indent the TOC.</para>
 <!-- ==================================================================== -->
 <xsl:param name="sequential.links" select="'0'"/>
 
-<doc:param name="sequential.links" xmlns="">
+<doc:param name="" xmlns="">
 <refpurpose></refpurpose>
 <refdescription>
 <para></para>
@@ -343,9 +343,8 @@ will be used to indent the TOC.</para>
 </doc:param>
 
 <!-- ==================================================================== -->
-<xsl:param name="currentpage.marker" select="'@'"/>
 
-<doc:param name="currentpage.marker" xmlns="">
+<doc:param name="" xmlns="">
 <refpurpose></refpurpose>
 <refdescription>
 <para></para>

@@ -44,15 +44,15 @@
               <xsl:value-of select="$homebanner/@altval"/>
             </xsl:attribute>
           </img>
-          <xsl:value-of select="$currentpage.marker"/>
+          <xsl:text>@</xsl:text>
         </xsl:when>
         <xsl:when test="$homebannertext">
           <xsl:value-of select="$homebannertext/@value"/>
-          <xsl:value-of select="$currentpage.marker"/>
+          <xsl:text>@</xsl:text>
         </xsl:when>
         <xsl:otherwise>
           <xsl:text>Home</xsl:text>
-          <xsl:value-of select="$currentpage.marker"/>
+          <xsl:text>@</xsl:text>
         </xsl:otherwise>
       </xsl:choose>
     </xsl:when>
@@ -107,23 +107,10 @@
           <xsl:apply-templates select="title"/>
         </xsl:otherwise>
       </xsl:choose>
-      <xsl:value-of select="$currentpage.marker"/>
+      <xsl:text>@</xsl:text>
     </xsl:when>
     <xsl:otherwise>
-      <a>
-        <xsl:attribute name="href">
-          <xsl:choose>
-            <xsl:when test="@href">
-              <xsl:value-of select="@href"/>
-            </xsl:when>
-            <xsl:otherwise>
-              <xsl:value-of select="$relpath"/>
-              <xsl:value-of select="@dir"/>
-              <xsl:value-of select="$filename-prefix"/>
-              <xsl:value-of select="@filename"/>
-            </xsl:otherwise>
-          </xsl:choose>
-        </xsl:attribute>
+      <a href="{$relpath}{@dir}{$filename-prefix}{@filename}">
         <xsl:choose>
           <xsl:when test="titleabbrev">
             <xsl:apply-templates select="titleabbrev"/>
