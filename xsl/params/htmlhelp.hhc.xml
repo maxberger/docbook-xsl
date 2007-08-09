@@ -15,13 +15,14 @@
 
 <refsynopsisdiv>
 <src:fragment xml:id="htmlhelp.hhc.frag">
-<xsl:param name="htmlhelp.hhc">toc.hhc</xsl:param>
+<xsl:param name="htmlhelp.hhc" select="'toc.hhc'"/>
 </src:fragment>
 </refsynopsisdiv>
 
 <refsection><info><title>Description</title></info>
 
-<para>Set the name of the TOC file. The default is <filename>toc.hhc</filename>.</para>
+<para>Change this parameter if you want different name of TOC file
+than toc.hhc.</para>
 
 </refsection>
 </refentry>

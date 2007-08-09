@@ -14,8 +14,7 @@
 processed</refpurpose> 
 </refnamediv> 
 <refsynopsisdiv> <src:fragment xml:id="current.docid.frag">
-<xsl:param name="current.docid"/>
-</src:fragment> 
+<xsl:param name="current.docid" select="''"/> </src:fragment> 
 </refsynopsisdiv> 
 <refsection><info><title>Description</title></info> 
  

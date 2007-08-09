@@ -15,14 +15,14 @@
 
 <refsynopsisdiv>
 <src:fragment xml:id="annotation.graphic.open.frag">
-<xsl:param name="annotation.graphic.open">http://docbook.sourceforge.net/release/images/annot-open.png</xsl:param>
+<xsl:param name="annotation.graphic.open" select="'http://docbook.sourceforge.net/release/images/annot-open.png'"/>
 </src:fragment>
 </refsynopsisdiv>
 
 <refsection><info><title>Description</title></info>
 
 <para>This image is used inline to identify the location of
-annotations. It may be replaced by a user provided graphic. The size should be approximately 10x10 pixels.</para>
+annotations.</para>
 
 </refsection>
 </refentry>

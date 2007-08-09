@@ -14,15 +14,13 @@
 </refnamediv>
 
 <refsynopsisdiv>
-<src:fragment xml:id="link.mailto.url.frag">
-<xsl:param name="link.mailto.url"></xsl:param>
-</src:fragment>
+<src:fragment xml:id="link.mailto.url.frag"><xsl:param name="link.mailto.url"/></src:fragment>
 </refsynopsisdiv>
 
 <refsection><info><title>Description</title></info>
 
 <para>If not the empty string, this address will be used for the
-rel=made <literal>link</literal> element in the html <literal>head</literal>
+REL=made <tag>LINK</tag> element in the HTML <tag>HEAD</tag>.
 </para>
 
 </refsection>

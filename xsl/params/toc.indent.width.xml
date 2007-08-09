@@ -15,8 +15,7 @@
 
 <refsynopsisdiv>
 <src:fragment xml:id="toc.indent.width.frag">
-<xsl:param name="toc.indent.width">24</xsl:param>
-<!-- inconsistant point specification? -->
+<xsl:param name="toc.indent.width" select="24"/>
 </src:fragment>
 </refsynopsisdiv>
 

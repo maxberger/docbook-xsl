@@ -15,7 +15,7 @@
 
 <refsynopsisdiv>
 <src:fragment xml:id="slides.js.frag">
-<xsl:param name="slides.js" >slides.js</xsl:param>
+<xsl:param name="slides.js" select="'slides.js'"/>
 </src:fragment>
 </refsynopsisdiv>
 

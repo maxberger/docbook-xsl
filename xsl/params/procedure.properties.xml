@@ -15,9 +15,7 @@
 
 <refsynopsisdiv>
 <src:fragment xml:id="procedure.properties.frag">
-<xsl:attribute-set name="procedure.properties" use-attribute-sets="formal.object.properties">
-  <xsl:attribute name="keep-together.within-column">auto</xsl:attribute>
-</xsl:attribute-set>
+<xsl:attribute-set name="procedure.properties" use-attribute-sets="formal.object.properties"/>
 </src:fragment>
 </refsynopsisdiv>
 

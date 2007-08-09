@@ -25,8 +25,9 @@
 
 <refsection><info><title>Description</title></info>
 
-<para>If non-zero then prefaces will be numbered using the parameter
-value as the number format if the value matches one of the following:
+<para>If zero (default), then prefaces will not be numbered.
+Otherwise prefaces will be numbered, using the parameter value
+as the number format if the value matches one of the following:
 </para>
 
 <variablelist>

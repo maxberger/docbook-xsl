@@ -19,36 +19,37 @@
 </xsl:template>
 
 <xsl:template match='xslthl:string'>
-  <b class="hl-string"><i style="color:red"><xsl:apply-templates/></i></b>
+  <b class="hl-string"><i><font color='red'><xsl:apply-templates/></font></i></b>
 </xsl:template>
 
 <xsl:template match='xslthl:comment'>
-  <i class="hl-comment" style="color: silver"><xsl:apply-templates/></i>
+  <i class="hl-comment"><font color='silver'><xsl:apply-templates/></font></i>
 </xsl:template>
 
 <xsl:template match='xslthl:tag'>
-  <b class="hl-tag" style="color: blue"><xsl:apply-templates/></b>
+  <b class="hl-tag"><font color='blue'><xsl:apply-templates/></font></b>
 </xsl:template>
 
 <xsl:template match='xslthl:attribute'>
-  <span class="hl-attribute" style="color: blue"><xsl:apply-templates/></span>
+  <span class="hl-attribute"><font color='blue'><xsl:apply-templates/></font></span>
 </xsl:template>
 
 <xsl:template match='xslthl:value'>
-  <span class="hl-value" style="color: blue"><xsl:apply-templates/></span>
+  <span class="hl-value"><font color='blue'><xsl:apply-templates/></font></span>
 </xsl:template>
 
 <xsl:template match='xslthl:html'>
-  <b><i style="color: red"><xsl:apply-templates/></i></b>
+  <b><i><font color='red'><xsl:apply-templates/></font></i></b>
 </xsl:template>
 
 <xsl:template match='xslthl:xslt'>
-  <b style="color: blue"><xsl:apply-templates/></b>
+  <b><font color='blue'><xsl:apply-templates/></font></b>
 </xsl:template>
 
 <xsl:template match='xslthl:section'>
   <b><xsl:apply-templates/></b>
 </xsl:template>
+
 
 </xsl:stylesheet>
 

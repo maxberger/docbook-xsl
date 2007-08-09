@@ -21,9 +21,7 @@
 </refnamediv>
 
 <refsynopsisdiv>
-<src:fragment xml:id="default.units.frag">
-<xsl:param name="default.units">pt</xsl:param>
-</src:fragment>
+<src:fragment xml:id="default.units.frag"><xsl:param name="default.units" select="'pt'"/></src:fragment>
 </refsynopsisdiv>
 
 <refsection><info><title>Description</title></info>

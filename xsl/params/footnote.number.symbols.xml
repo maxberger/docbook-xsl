@@ -15,7 +15,7 @@
 
 <refsynopsisdiv>
 <src:fragment xml:id="footnote.number.symbols.frag">
-<xsl:param name="footnote.number.symbols"></xsl:param>
+<xsl:param name="footnote.number.symbols" select="''"/>
 </src:fragment>
 </refsynopsisdiv>
 

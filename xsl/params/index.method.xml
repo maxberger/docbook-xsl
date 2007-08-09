@@ -18,7 +18,7 @@
 
 <refsynopsisdiv>
 <src:fragment xml:id="index.method.frag">
-<xsl:param name="index.method">basic</xsl:param>
+<xsl:param name="index.method" select="'basic'"/>
 </src:fragment>
 </refsynopsisdiv>
 

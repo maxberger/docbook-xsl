@@ -14,9 +14,7 @@
 </refnamediv>
 
 <refsynopsisdiv>
-<src:fragment xml:id="callout.defaultcolumn.frag">
-<xsl:param name="callout.defaultcolumn">60</xsl:param>
-</src:fragment>
+<src:fragment xml:id="callout.defaultcolumn.frag"><xsl:param name="callout.defaultcolumn" select="'60'"/></src:fragment>
 </refsynopsisdiv>
 
 <refsection><info><title>Description</title></info>

@@ -15,7 +15,7 @@
 
 <refsynopsisdiv>
 <src:fragment xml:id="text.next.frag">
-<xsl:param name="text.next">Next</xsl:param>
+<xsl:param name="text.next" select="'Next'"/>
 </src:fragment>
 </refsynopsisdiv>
 

@@ -14,9 +14,7 @@
 </refnamediv>
 
 <refsynopsisdiv>
-<src:fragment xml:id="admon.graphics.extension.frag">
-<xsl:param name="admon.graphics.extension">.png</xsl:param>
-</src:fragment>
+<src:fragment xml:id="admon.graphics.extension.frag"><xsl:param name="admon.graphics.extension" select="'.png'"/></src:fragment>
 </refsynopsisdiv>
 
 <refsection><info><title>Description</title></info>

@@ -15,7 +15,7 @@
 
 <refsynopsisdiv>
 <src:fragment xml:id="script.dir.frag">
-<xsl:param name="script.dir"></xsl:param>
+<xsl:param name="script.dir" select="''"/>
 </src:fragment>
 </refsynopsisdiv>
 

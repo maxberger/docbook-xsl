@@ -26,9 +26,7 @@
 
 <refsection><info><title>Description</title></info>
 
-<para>Selects the direction in which a float should be placed. for
-xsl-fo this is before, for html it is left. For Western texts, the
-before direction is the top of the page.</para>
+<para>FIXME:</para>
 
 </refsection>
 </refentry>

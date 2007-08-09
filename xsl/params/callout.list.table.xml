@@ -14,9 +14,7 @@
 </refnamediv>
 
 <refsynopsisdiv>
-<src:fragment xml:id="callout.list.table.frag">
-<xsl:param name="callout.list.table" select="1"/>
-</src:fragment>
+<src:fragment xml:id="callout.list.table.frag"><xsl:param name="callout.list.table" select="'1'"/></src:fragment>
 </refsynopsisdiv>
 
 <refsection><info><title>Description</title></info>

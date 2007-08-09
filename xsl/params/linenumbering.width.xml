@@ -14,9 +14,7 @@
 </refnamediv>
 
 <refsynopsisdiv>
-<src:fragment xml:id="linenumbering.width.frag">
-<xsl:param name="linenumbering.width">3</xsl:param>
-</src:fragment>
+<src:fragment xml:id="linenumbering.width.frag"><xsl:param name="linenumbering.width" select="'3'"/></src:fragment>
 </refsynopsisdiv>
 
 <refsection><info><title>Description</title></info>

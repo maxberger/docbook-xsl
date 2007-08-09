@@ -15,7 +15,7 @@
 
 <refsynopsisdiv>
 <src:fragment xml:id="punct.honorific.frag">
-<xsl:param name="punct.honorific">.</xsl:param>
+<xsl:param name="punct.honorific" select="'.'"/>
 </src:fragment>
 </refsynopsisdiv>
 

@@ -16,15 +16,12 @@
 </refnamediv>
 
 <refsynopsisdiv>
-<src:fragment xml:id="page.orientation.frag">
-<xsl:param name="page.orientation">portrait</xsl:param>
-</src:fragment>
+<src:fragment xml:id="page.orientation.frag"><xsl:param name="page.orientation" select="'portrait'"/></src:fragment>
 </refsynopsisdiv>
 
 <refsection><info><title>Description</title></info>
 
-<para> Select one from portrait or landscape.
-In portrait orientation, the short edge is horizontal; in
+<para>In portrait orientation, the short edge is horizontal; in
 landscape orientation, it is vertical.
 </para>
 

@@ -17,7 +17,7 @@
 
 <refsynopsisdiv>
 <src:fragment xml:id="section.container.element.frag">
-<xsl:param name="section.container.element">block</xsl:param>
+<xsl:param name="section.container.element" select="'block'"/>
 </src:fragment>
 </refsynopsisdiv>
 

@@ -20,7 +20,8 @@
 <refsection><info><title>Description</title></info>
 
 <para>
-If non-zero, footer navigation will be suppressed.</para>
+If <literal>suppress.footer.navigation</literal> is turned on, footer
+navigation will be suppressed.</para>
 
 </refsection>
 </refentry>

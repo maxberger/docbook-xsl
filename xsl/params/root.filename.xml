@@ -14,9 +14,7 @@
 </refnamediv>
 
 <refsynopsisdiv>
-<src:fragment xml:id="root.filename.frag">
-<xsl:param name="root.filename">index</xsl:param>
-</src:fragment>
+<src:fragment xml:id="root.filename.frag"><xsl:param name="root.filename" select="'index'"/></src:fragment>
 </refsynopsisdiv>
 
 <refsection><info><title>Description</title></info>

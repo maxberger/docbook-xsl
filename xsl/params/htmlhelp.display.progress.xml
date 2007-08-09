@@ -21,8 +21,8 @@
 
 <refsection><info><title>Description</title></info>
 
-<para>Set to non-zero to to display compile progress
-</para>
+<para>You can swith off display of compile progress by setting this
+parameter to 0.</para>
 
 </refsection>
 </refentry>

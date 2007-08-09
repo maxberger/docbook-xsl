@@ -14,8 +14,7 @@
 
 </refnamediv> 
 <refsynopsisdiv> <src:fragment xml:id="olink.lang.fallback.sequence.frag">
-<xsl:param name="olink.lang.fallback.sequence"></xsl:param>
-</src:fragment> 
+<xsl:param name="olink.lang.fallback.sequence" select="''"/> </src:fragment> 
 </refsynopsisdiv> 
 <refsection><info><title>Description</title></info> 
  
