@@ -10,7 +10,7 @@
 </refmeta>
 <refnamediv>
 <refname>htmlhelp.show.favorities</refname>
-<refpurpose>Should the Favorites tab be shown?</refpurpose>
+<refpurpose>Should be favorities tab shown?</refpurpose>
 </refnamediv>
 
 <refsynopsisdiv>
@@ -21,8 +21,7 @@
 
 <refsection><info><title>Description</title></info>
 
-<para>Set to non-zero to include a Favorites tab in the navigation pane 
-of the help window.</para>
+<para>Set to non-zero for advanced search features in your help.</para>
 
 </refsection>
 </refentry>

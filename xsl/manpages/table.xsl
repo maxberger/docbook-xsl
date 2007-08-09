@@ -254,6 +254,7 @@
     </xsl:for-each>
   </xsl:template>
 
+
   <!-- * ============================================================== -->
   <!-- *    Output the tbl(1)-formatted contents of each cell.            -->
   <!-- * ============================================================== -->
@@ -321,12 +322,10 @@
     </xsl:param>
     <xsl:param  name="cell-data-sorted">
       <!-- * Sort the cells so that the dummy cells get put where we -->
-      <!-- * need them in the structure. Note that we need to specify -->
-      <!-- * data-type="number" here because the default sorting method -->
-      <!-- * for xsl:sort is "text" (alphabetical). -->
+      <!-- * need them in the structure. -->
       <xsl:for-each select="exsl:node-set($cell-data-unsorted)/cell">
-        <xsl:sort select="@row" data-type="number"/>
-        <xsl:sort select="@slot" data-type="number"/>
+        <xsl:sort select="@row"/>
+        <xsl:sort select="@slot"/>
         <xsl:copy-of select="."/>
       </xsl:for-each>
     </xsl:param>

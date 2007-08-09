@@ -10,7 +10,7 @@
   </refmeta>
   <refnamediv>
     <refname>textinsert.extension</refname>
-    <refpurpose>Enables the textinsert extension element</refpurpose>
+    <refpurpose>Insert the contents of a file</refpurpose>
   </refnamediv>
   <refsynopsisdiv>
     <src:fragment xml:id="textinsert.extension.frag">
