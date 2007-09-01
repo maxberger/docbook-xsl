@@ -11,11 +11,7 @@ DISTRIB_DEPENDS =
 
 # value of ZIP_DEPENDS is a space-separated list of any targets
 # for this distro's "zip" target to depend on
-ZIP_DEPENDS =
-
-# value of INSTALL_DEPENDS is a space-separated list of any
-# targets for this distro's "install" target to depend on
-INSTALL_DEPENDS = release tag
+ZIP_DEPENDS = tag release
 
 # value of ZIP_EXCLUDES is a space-separated list of any file or
 # directory names (shell wildcards OK) that should be excluded
