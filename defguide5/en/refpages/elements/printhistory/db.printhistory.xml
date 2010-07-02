@@ -18,14 +18,19 @@
 <?tdg-refsynopsisdiv?>
 
 <refsection condition="ref.description">
-<title>Description</title><para>The <tag>printhistory</tag> of a document identifies when
-      various editions and revisions were printed.</para>
+<title>Description</title>
 
-      <refsection><info><title>Processing expectations</title></info>
-        
 
-        <para>Formatted as a displayed block. Sometimes suppressed.</para>
+<para>The <tag>printhistory</tag> of a document identifies when various editions
+and revisions were printed.
+</para>
+
+<refsection><title>Processing expectations</title>
+<para><?tdg gentext='format.block'?>
+<?tdg gentext='format.csuppress'?>
+</para>
 </refsection>
+
 
 <?tdg-attributes?>
 <?tdg-parents?>

@@ -1,4 +1,4 @@
-<!DOCTYPE book SYSTEM "../docbook.dtd">
+<!DOCTYPE book SYSTEM "../output.dtd">
 <book>
 <info>
   <title>Book title</title>

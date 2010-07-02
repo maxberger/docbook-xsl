@@ -18,15 +18,16 @@
 <?tdg-refsynopsisdiv?>
 
 <refsection condition="ref.description">
-<title>Description</title><para>The <tag>taskprerequisites</tag> element is used to
-      describe preparations that must be made before a task is
-      attempted.</para>
+<title>Description</title>
 
-      <refsection><info><title>Processing expectations</title></info>
-        
 
-        <para>Formatted as a displayed block.</para>
+<para>The <tag>taskprerequisites</tag> element is used to
+describe preparations that must be made before a task is attempted.</para>
+
+<refsection><title>Processing expectations</title>
+<para><?tdg gentext='format.block'?></para>
 </refsection>
+
 
 <?tdg-attributes?>
 <?tdg-parents?>

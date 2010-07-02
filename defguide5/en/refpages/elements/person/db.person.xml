@@ -18,14 +18,15 @@
 <?tdg-refsynopsisdiv?>
 
 <refsection condition="ref.description">
-<title>Description</title><para>A <tag>person</tag> associates a personal name with other
-      information about an individual.</para>
+<title>Description</title>
 
-      <refsection><info><title>Processing expectations</title></info>
-        
+<para>A <tag>person</tag> associates a personal name with other information
+about an individual.
+</para>
 
-        <para>May be formatted inline or as a displayed block, depending on
-        context.</para>
+<refsection><title>Processing expectations</title>
+<para><?tdg gentext='format.context'?>
+</para>
 </refsection>
 
 <?tdg-attributes?>

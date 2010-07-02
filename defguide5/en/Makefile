@@ -31,7 +31,7 @@ endif
 
 .PHONY: refpages
 
-all: chunks
+all: book.xml
 
 test: book.xml
 	jing ../../docbook/relaxng/docbook/docbook.rng $<
@@ -59,10 +59,13 @@ book.xml: tdg-p.xml
 refpages:
 	make -C refpages
 
+bookinfo.xml: VERSION.xml
+	$(XSLT) $< $< $@
+
 chunks: $(SOURCE) $(SSTITLEPG) book.xml
 	$(XSLT) $(MEMORYOPT) $(SOURCE) $(SSCHUNK) /dev/null base.dir=$(BASEDIR) html.ext=$(HTMLEXT) $(STYLEOPT)
-	cd $(BASEDIR) && $(TIDY) *.html
 	$(XSLT) $(MEMORYOPT) $(SOURCE) $(SSCHUNK) /dev/null base.dir=$(BASEDIR) html.ext=$(HTMLEXT) rootid=index $(STYLEOPT)
+	cd $(BASEDIR) && $(TIDY) *.html
 
 chunk: $(SOURCE) $(SSTITLEPG) book.xml
 	$(XSLT) $(MEMORYOPT) $(SOURCE) $(SSCHUNK) /dev/null base.dir=$(BASEDIR) html.ext=$(HTMLEXT) $(ROOTIDPARAM) $(STYLEOPT)
@@ -92,6 +95,10 @@ tdg.pdf: tdg.fo
 
 clean:
 	rm -f tdg.{html,fo,pdf} tdg.xml tdgex.xml tdg-p.xml
+
+freshmeat:
+	$(XSLT) VERSION.xml VERSION.xml /tmp/fm-docbook-tdg freshmeat=1
+	grep -v "<?xml" /tmp/fm-docbook-tdg | freshmeat-submit $(FMGO)
 
 WhatsNew:
 	$(CVS2LOG) -w

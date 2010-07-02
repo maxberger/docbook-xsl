@@ -18,16 +18,19 @@
 <?tdg-refsynopsisdiv?>
 
 <refsection condition="ref.description">
-<title>Description</title><para>A <tag>dedication</tag> is a page or section, most often
-      at the very beginning of a book (before any other body matter),
-      containing a tribute to something (frequently someone) in connection
-      with the writing or publication of the <tag>book</tag>.</para>
+<title>Description</title>
 
-      <refsection><info><title>Processing expectations</title></info>
-        
+<para>A <tag>dedication</tag> is a page or section, most often at the very
+beginning of a book (before any other body matter), containing a
+tribute to something (frequently someone) in connection with the
+writing or publication of the <tag>book</tag>.
+</para>
 
-        <para>Formatted as a displayed block. Frequently appears on a page by
-        itself at the beginning of a book.</para>
+<refsection><title>Processing expectations</title>
+<para><?tdg gentext='format.block'?>
+Frequently appears on a page by itself at the beginning
+of a book.
+</para>
 </refsection>
 
 <?tdg-attributes?>

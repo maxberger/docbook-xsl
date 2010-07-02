@@ -18,19 +18,21 @@
 <?tdg-refsynopsisdiv?>
 
 <refsection condition="ref.description">
-<title>Description</title><para>The <tag>msginfo</tag> element provides additional
-      information about a <tag>msg</tag> in a
-      <tag>msgentry</tag>.</para>
+<title>Description</title>
 
-      <refsection><info><title>Processing expectations</title></info>
-        
+<para>The <tag>msginfo</tag> element provides additional information
+about a <tag>msg</tag> in a <tag>msgentry</tag>.
+</para>
 
-        <para>May be formatted inline or as a displayed block, depending on
-        context. Sometimes suppressed.</para>
+<refsection><title>Processing expectations</title>
+<para><?tdg gentext='format.context'?>
+<?tdg gentext='format.csuppress'?>
+</para>
 
-        <para>On the whole, the semantics of <tag>msgset</tag> are not
-        clearly defined.</para>
-      </refsection>
+<para>On the whole, the semantics of <tag>msgset</tag> are not clearly
+defined.
+</para>
+</refsection>
 
 <?tdg-attributes?>
 <?tdg-parents?>

@@ -18,14 +18,19 @@
 <?tdg-refsynopsisdiv?>
 
 <refsection condition="ref.description">
-<title>Description</title><para>A <tag>guibutton</tag> identifies the text that appears on
-      a button in a graphical user interface.</para>
+<title>Description</title>
 
-      <refsection><info><title>Processing expectations</title></info>
-        
 
-        <para>Formatted inline.</para>
+<para>A <tag>guibutton</tag> identifies the text that appears on a
+button in a graphical user interface.
+</para>
+
+<refsection><title>Processing expectations</title>
+<para><?tdg gentext='format.inline'?>
+
+</para>
 </refsection>
+
 
 <?tdg-attributes?>
 <?tdg-parents?>

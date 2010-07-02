@@ -18,15 +18,19 @@
 <?tdg-refsynopsisdiv?>
 
 <refsection condition="ref.description">
-<title>Description</title><para>The <tag>date</tag> element identifies a date.</para>
+<title>Description</title>
 
-      <refsection><info><title>Processing expectations</title></info>
-        
 
-        <para>Formatted inline.</para>
+<para>The <tag>date</tag> element identifies a date.
+</para>
 
-        <para>DocBook does not specify the format of the date.</para>
+<refsection><title>Processing expectations</title>
+<para><?tdg gentext='format.inline'?>
+</para>
+<para>DocBook does not specify the format of the date.
+</para>
 </refsection>
+
 
 <?tdg-attributes?>
 <?tdg-parents?>

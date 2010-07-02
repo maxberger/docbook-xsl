@@ -18,16 +18,19 @@
 <?tdg-refsynopsisdiv?>
 
 <refsection condition="ref.description">
-<title>Description</title><para>This element contains one or more MathML elements.</para>
+<title>Description</title>
 
-      <refsection xml:id="dbreproc.imagedata.mathml"><info><title>Processing expectations</title></info>
-        
+<para>This element contains one or more MathML elements.
+</para>
 
-        <para>Render the image. May be formatted inline or as a displayed
-        block, depending on <phrase role="keep-together">context</phrase>.</para>
+<refsection xml:id="dbreproc.imagedata.mathml">
+<title>Processing expectations</title>
 
-        <para>See <tag>imagedata</tag> for more details about the
-        processing expectations.</para>
+<para>Render the image. <?tdg gentext='format.context'?>
+</para>
+
+<para>See <tag>imagedata</tag> for more details about the processing
+expectations.</para>
 </refsection>
 
 <?tdg-attributes?>

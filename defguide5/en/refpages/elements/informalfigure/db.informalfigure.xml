@@ -18,15 +18,17 @@
 <?tdg-refsynopsisdiv?>
 
 <refsection condition="ref.description">
-<title>Description</title><para>An <tag>informalfigure</tag> is a figure without a title.
-      Figures often contain <tag>mediaobject</tag>s, or other large
-      display elements.</para>
+<title>Description</title>
 
-      <refsection><info><title>Processing expectations</title></info>
-        
 
-        <para>Formatted as a displayed block.</para>
+<para>An <tag>informalfigure</tag> is a figure without a title. Figures often
+contain <tag>mediaobject</tag>s, or other large display elements.
+</para>
+
+<refsection><title>Processing expectations</title>
+<para><?tdg gentext='format.block'?></para>
 </refsection>
+
 
 <?tdg-attributes?>
 <?tdg-parents?>

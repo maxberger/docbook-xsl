@@ -18,13 +18,14 @@
 <?tdg-refsynopsisdiv?>
 
 <refsection condition="ref.description">
-<title>Description</title><para>A <tag>citebiblioid</tag> identifies a citation to another
-      work by bibliographic identifier.</para>
+<title>Description</title>
 
-      <refsection><info><title>Processing expectations</title></info>
-        
 
-        <para>Formatted inline.</para>
+<para>A <tag>citebiblioid</tag> identifies a citation to
+another work by bibliographic identifier.</para>
+
+<refsection><title>Processing expectations</title>
+<para><?tdg gentext='format.inline'?></para>
 </refsection>
 
 <?tdg-attributes?>

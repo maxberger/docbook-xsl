@@ -18,15 +18,18 @@
 <?tdg-refsynopsisdiv?>
 
 <refsection condition="ref.description">
-<title>Description</title><para>An <tag>epigraph</tag> is a short inscription, often a
-      quotation or poem, set at the beginning of a document or component.
-      Epigraphs are usually related somehow to the content that follows them
-      and may help set the tone for the component.</para>
+<title>Description</title>
 
-      <refsection><info><title>Processing expectations</title></info>
-        
 
-        <para>Formatted as a displayed block.</para>
+<para>An <tag>epigraph</tag> is a short inscription, often a quotation or poem, set at the
+beginning of a document or component.  Epigraphs are usually related
+somehow to the content that follows them and may help set the tone for
+the component.
+</para>
+
+<refsection><title>Processing expectations</title>
+<para><?tdg gentext='format.block'?>
+</para>
 </refsection>
 
 <?tdg-attributes?>

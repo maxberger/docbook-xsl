@@ -18,19 +18,20 @@
 <?tdg-refsynopsisdiv?>
 
 <refsection condition="ref.description">
-<title>Description</title><para>The <tag>msgtext</tag> is the actual content of the
-      message in a <tag>msgmain</tag>, <tag>msgsub</tag>, or
-      <tag>msgrel</tag>.</para>
+<title>Description</title>
 
-      <refsection><info><title>Processing expectations</title></info>
-        
 
-        <para>May be formatted inline or as a displayed block, depending on
-        context.</para>
+<para>The <tag>msgtext</tag> is the actual content of the message in a
+<tag>msgmain</tag>, <tag>msgsub</tag>, or <tag>msgrel</tag>.
+</para>
 
-        <para>On the whole, the semantics of <tag>msgset</tag> are not
-        clearly defined.</para>
-      </refsection>
+<refsection><title>Processing expectations</title>
+<para><?tdg gentext='format.context'?>
+</para>
+<para>On the whole, the semantics of <tag>msgset</tag>
+are not clearly defined.
+</para>
+</refsection>
 
 <?tdg-attributes?>
 <?tdg-parents?>

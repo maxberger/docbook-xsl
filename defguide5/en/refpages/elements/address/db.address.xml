@@ -18,16 +18,18 @@
 <?tdg-refsynopsisdiv?>
 
 <refsection condition="ref.description">
-<title>Description</title><para>An address is generally a postal address, although it does contain
-      elements for <tag>fax</tag> and <tag>email</tag>
-      addresses as well as the catchall <tag>otheraddr</tag>.</para>
+<title>Description</title>
 
-      <refsection><info><title>Processing expectations</title></info>
-        
 
-        <para>Formatted as a displayed block. This element is displayed
-        “verbatim”; whitespace and line breaks within this element are
-        significant.</para>
+<para>An address is generally a postal address, although it does contain
+elements for <tag>fax</tag> and <tag>email</tag> addresses as well 
+as the catch-all <tag>otheraddr</tag>.
+</para>
+
+<refsection><title>Processing expectations</title>
+<para><?tdg gentext='format.block'?>
+<?tdg gentext='pexp.linespecific'?>
+</para>
 </refsection>
 
 <?tdg-attributes?>

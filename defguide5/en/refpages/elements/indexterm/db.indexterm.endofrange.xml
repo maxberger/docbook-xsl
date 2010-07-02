@@ -18,15 +18,19 @@
 <?tdg-refsynopsisdiv?>
 
 <refsection condition="ref.description">
-<title>Description</title><para>An “end of range” <tag>indexterm</tag> marks the end of a
-      range. It must have an associated “start of range”
-      <tag>indexterm</tag>. The resultant index entry applies to the
-      entire range. See <xref linkend="element.db.indexterm.singular"/>.</para>
+<title>Description</title>
 
-      <refsection><info><title>Processing expectations</title></info>
-        
+<para>An “end of range” <tag>indexterm</tag> marks the end of a range.
+It must have an associated “start of range” <tag>indexterm</tag>.
+The resulting index entry applies to the entire range.
+See <xref linkend="element.db.indexterm.singular"/>.
+</para>
 
-        <para>See <xref linkend="element.db.indexterm.singular"/>.</para>
+<refsection><title>Processing expectations</title>
+
+<para>See <xref linkend="element.db.indexterm.singular"/>.
+</para>
+
 </refsection>
 
 <?tdg-attributes?>
@@ -38,4 +42,3 @@
 <?tdg-seealso?>
 
 </refentry>
-

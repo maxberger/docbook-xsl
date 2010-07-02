@@ -18,19 +18,21 @@
 <?tdg-refsynopsisdiv?>
 
 <refsection condition="ref.description">
-<title>Description</title><para>An <tag>areaset</tag> contains one or more
-      <tag>area</tag>s. These <tag>area</tag>s are bound in a
-      set in order to associate them with a single <tag>callout</tag>
-      description. See <tag>area</tag> for a more complete description
-      of the areas.</para>
+<title>Description</title>
 
-      <para>For a complete description of callouts, see
-      <tag>callout</tag>.</para>
 
-      <refsection><info><title>Processing expectations</title></info>
-        
+<para>An <tag>areaset</tag> contains one or more <tag>area</tag>s.  These
+areas are bound in a set in order to associate them with a single
+<tag>callout</tag> description.  See <tag>area</tag> for a more
+complete description of the areas.
+</para>
 
-        <para>Suppressed.</para>
+<para>For a complete description of callouts, see <tag>callout</tag>.
+</para>
+
+<refsection><title>Processing expectations</title>
+<para><?tdg gentext='format.suppress'?>
+</para>
 </refsection>
 
 <?tdg-attributes?>

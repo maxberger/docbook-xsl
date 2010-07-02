@@ -18,14 +18,16 @@
 <?tdg-refsynopsisdiv?>
 
 <refsection condition="ref.description">
-<title>Description</title><para>A <tag>year</tag> element identifies a year. It is used in
-      <tag>copyright</tag> to identify the year or years in which
-      copyright is asserted.</para>
+<title>Description</title>
 
-      <refsection><info><title>Processing expectations</title></info>
-        
 
-        <para>Formatted inline.</para>
+<para>A <tag>year</tag> element identifies a year. It is used in <tag>copyright</tag> 
+to identify the year or years in which copyright is asserted.
+</para>
+
+<refsection><title>Processing expectations</title>
+<para><?tdg gentext='format.inline'?>
+</para>
 </refsection>
 
 <?tdg-attributes?>

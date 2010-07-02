@@ -18,16 +18,20 @@
 <?tdg-refsynopsisdiv?>
 
 <refsection condition="ref.description">
-<title>Description</title><para>This element holds the page numbers of an article as published.
-      Its content is not intended to influence the page numbers used by a
-      presentation system formatting the parent
-      <tag>article</tag>.</para>
+<title>Description</title>
 
-      <refsection><info><title>Processing expectations</title></info>
-        
 
-        <para>Formatted inline. Sometimes suppressed.</para>
+<para>This element holds the page numbers of an article as published. Its content
+is not intended to influence the page numbers used by a presentation system
+formatting the parent <tag>article</tag>.
+</para>
+
+<refsection><title>Processing expectations</title>
+<para><?tdg gentext='format.inline'?>
+<?tdg gentext='format.csuppress'?>
+</para>
 </refsection>
+
 
 <?tdg-attributes?>
 <?tdg-parents?>

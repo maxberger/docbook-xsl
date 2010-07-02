@@ -18,15 +18,18 @@
 <?tdg-refsynopsisdiv?>
 
 <refsection condition="ref.description">
-<title>Description</title><para>The <tag>issuenum</tag> contains the issue number of a
-      periodical.</para>
+<title>Description</title>
 
-      <refsection><info><title>Processing expectations</title></info>
-        
 
-        <para>May be formatted inline or as a displayed block, depending on
-        context. Sometimes suppressed.</para>
+<para>The <tag>issuenum</tag> contains the issue number of a periodical.
+</para>
+
+<refsection><title>Processing expectations</title>
+<para><?tdg gentext='format.context'?>
+<?tdg gentext='format.csuppress'?>
+</para>
 </refsection>
+
 
 <?tdg-attributes?>
 <?tdg-parents?>

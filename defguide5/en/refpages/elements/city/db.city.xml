@@ -18,14 +18,19 @@
 <?tdg-refsynopsisdiv?>
 
 <refsection condition="ref.description">
-<title>Description</title><para>The name of a city in an <tag>address</tag>.</para>
+<title>Description</title>
 
-      <refsection><info><title>Processing expectations</title></info>
-        
 
-        <para>Formatted inline. In an <tag>address</tag>, this element
-        may inherit the verbatim qualities of an address.</para>
+<para>The name of a city in an <tag>address</tag>.
+</para>
+
+<refsection><title>Processing expectations</title>
+<para><?tdg gentext='format.inline'?>
+In an <tag>address</tag>, this element may inherit
+the verbatim qualities of an address.
+</para>
 </refsection>
+
 
 <?tdg-attributes?>
 <?tdg-parents?>

@@ -18,36 +18,46 @@
 <?tdg-refsynopsisdiv?>
 
 <refsection condition="ref.description">
-<title>Description</title><para>The use of <tag>see</tag> in an
-      <tag>indexterm</tag> indicates that the reader should be
-      directed elsewhere in the index when encountering this term.</para>
+<title>Description</title>
 
-      <para>The content of <tag>see</tag> identifies another term in
-      the index which the reader should consult <emphasis>instead</emphasis>
-      of the current term.</para>
+<para>The use of <tag>see</tag> in an <tag>indexterm</tag> indicates that
+the reader should be directed elsewhere in the index when encountering
+this term.
+</para>
 
-      <refsection><info><title>Processing expectations</title></info>
-        
+<para>The content of <tag>see</tag> identifies another term in the
+index which the reader should consult <emphasis>instead</emphasis> of
+the current term.
+</para>
 
-        <para>Suppressed. This element provides data for processing but it is
-        not rendered in the primary flow of text.</para>
+<refsection><title>Processing expectations</title>
 
-        <para>It is possible for multiple <tag>indexterm</tag>s, taken
-        together, to form an illogical index. For example, given the following
-        <tag>indexterm</tag>s:</para>
+<para><?tdg gentext='format.suppress'?>
+This element provides data for processing but it
+is not rendered in the primary flow of text.
+</para>
 
-        <screen>&lt;indexterm&gt;&lt;primary&gt;Extensible Markup Language&lt;/primary&gt;
+<para>It is possible for multiple <tag>indexterm</tag>s, taken together,
+to form an illogical index.  For example, given the following
+<tag>indexterm</tag>s:
+
+<screen>
+
+&lt;indexterm&gt;&lt;primary&gt;Extensible Markup Language&lt;/primary&gt;
   &lt;see&gt;XML&lt;/see&gt;&lt;/indexterm&gt;
 &lt;indexterm&gt;&lt;primary&gt;Extensible Markup Language&lt;/primary&gt;
   &lt;secondary&gt;definition of&lt;/secondary&gt;
-&lt;/indexterm&gt;</screen>
+&lt;/indexterm&gt;
 
-        <para>there’s no way to construct a logical index because an entry in
-        the index should never have both a <tag>see</tag> and other
-        content.</para>
-
-        <para>DocBook cannot detect these errors. You will have to rely on an
-        external process to find them.</para>
+</screen>
+</para>
+<para>there's no way to construct a logical index because an entry in
+the index should never have both a <tag>see</tag> and other
+content.
+</para>
+<para>DocBook cannot detect these errors. You will have to rely on an
+external process to find them.
+</para>
 </refsection>
 
 <?tdg-attributes?>

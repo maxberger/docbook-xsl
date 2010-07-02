@@ -18,16 +18,20 @@
 <?tdg-refsynopsisdiv?>
 
 <refsection condition="ref.description">
-<title>Description</title><para>This element identifies a collaborative partner in a document. It
-      associates the name of a collaborator with his or her
-      <tag>affiliation</tag>.</para>
+<title>Description</title>
 
-      <refsection><info><title>Processing expectations</title></info>
-        
 
-        <para>May be formatted inline or as a displayed block, depending on
-        context. Sometimes suppressed.</para>
+<para>This element identifies a collaborative partner in a document.
+It associates the name of
+a collaborator with his or her <tag>affiliation</tag>.
+</para>
+
+<refsection><title>Processing expectations</title>
+<para><?tdg gentext='format.context'?>
+<?tdg gentext='format.csuppress'?>
+</para>
 </refsection>
+
 
 <?tdg-attributes?>
 <?tdg-parents?>

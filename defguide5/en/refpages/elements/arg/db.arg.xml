@@ -18,15 +18,18 @@
 <?tdg-refsynopsisdiv?>
 
 <refsection condition="ref.description">
-<title>Description</title><para>Used in <tag>cmdsynopsis</tag> for command arguments. See
-      <tag>cmdsynopsis</tag> for more information and examples.</para>
+<title>Description</title>
 
-      <refsection><info><title>Processing expectations</title></info>
-        
 
-        <para>May be formatted inline or as a displayed block, depending on
-        context.</para>
+<para>Used in <tag>cmdsynopsis</tag> for command arguments.
+See <tag>cmdsynopsis</tag> for more information and examples.
+</para>
+
+<refsection><title>Processing expectations</title>
+<para><?tdg gentext='format.context'?>
+</para>
 </refsection>
+
 
 <?tdg-attributes?>
 <?tdg-parents?>

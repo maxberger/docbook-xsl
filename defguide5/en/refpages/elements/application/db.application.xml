@@ -18,16 +18,20 @@
 <?tdg-refsynopsisdiv?>
 
 <refsection condition="ref.description">
-<title>Description</title><para>The appellation “application” is usually reserved for larger
-      software packages. For example, <application>WordPerfect</application>
-      is an application, but <command>grep</command> is not. In some domains,
-      <tag>application</tag> may also apply to a piece of
-      hardware.</para>
+<title>Description</title>
 
-      <refsection><info><title>Processing expectations</title></info>
-        
 
-        <para>Formatted inline.</para>
+<para>The appellation “application” is usually reserved for larger
+software packages.  For example,
+<application>WordPerfect</application> is an application, but
+<command>grep</command> is not.  In some domains,
+<tag>application</tag> may also apply to a piece of hardware.
+</para>
+
+<refsection><title>Processing expectations</title>
+<para><?tdg gentext='format.inline'?>
+
+</para>
 </refsection>
 
 <?tdg-attributes?>

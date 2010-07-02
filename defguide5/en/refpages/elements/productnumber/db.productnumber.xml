@@ -18,19 +18,23 @@
 <?tdg-refsynopsisdiv?>
 
 <refsection condition="ref.description">
-<title>Description</title><para>A <tag>productnumber</tag> identifies a <quote>product
-      number</quote> in some unspecified numbering scheme. It’s possible that
-      product numbers for different products might not even come from the same
-      scheme.</para>
+<title>Description</title>
 
-      <refsection><info><title>Processing expectations</title></info>
-        
 
-        <para>Formatted inline. Sometimes suppressed.</para>
+<para>An <tag>productnumber</tag> identifies a <quote>product number</quote> in
+some unspecified numbering scheme. It's possible that product numbers
+for different products might not even come from the same scheme.
+</para>
 
-        <para>DocBook does not control, or specify, the numbering scheme used
-        for products.</para>
+<refsection><title>Processing expectations</title>
+<para><?tdg gentext='format.inline'?>
+<?tdg gentext='format.csuppress'?>
+</para>
+<para>DocBook does not control, or specify, the 
+numbering scheme used for products.
+</para>
 </refsection>
+
 
 <?tdg-attributes?>
 <?tdg-parents?>

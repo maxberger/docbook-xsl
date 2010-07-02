@@ -18,16 +18,21 @@
 <?tdg-refsynopsisdiv?>
 
 <refsection condition="ref.description">
-<title>Description</title><para>A <tag>modifier</tag> identifies additional information
-      about some identifier—for example, the public or private nature of an
-      <tag>ooclass</tag> name, or information about a static or
-      synchronized nature of a <tag>methodsynopsis</tag>.</para>
+<title>Description</title>
 
-      <refsection><info><title>Processing expectations</title></info>
-        
 
-        <para>Formatted inline.</para>
+<para>A <tag>modifier</tag> identifies additional information about
+some identifier. For example, the public or private nature of a
+<tag>ooclass</tag>
+name, or information about a static or synchronized nature of a
+<tag>methodsynopsis</tag>.
+</para>
+
+<refsection><title>Processing expectations</title>
+<para><?tdg gentext='format.inline'?>
+</para>
 </refsection>
+
 
 <?tdg-attributes?>
 <?tdg-parents?>

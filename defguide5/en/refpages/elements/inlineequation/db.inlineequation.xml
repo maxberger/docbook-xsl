@@ -18,13 +18,15 @@
 <?tdg-refsynopsisdiv?>
 
 <refsection condition="ref.description">
-<title>Description</title><para>An <tag>inlineequation</tag>s is an expression (usually
-      mathematical) that occurs in the text flow.</para>
+<title>Description</title>
 
-      <refsection><info><title>Processing expectations</title></info>
-        
+<para>An <tag>inlineequation</tag>s are expressions (usually
+mathematical) that occur in the text flow.
+</para>
 
-        <para>Formatted inline.</para>
+<refsection><title>Processing expectations</title>
+<para><?tdg gentext='format.inline'?>
+</para>
 </refsection>
 
 <?tdg-attributes?>

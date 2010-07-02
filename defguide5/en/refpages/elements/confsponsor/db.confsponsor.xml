@@ -18,17 +18,18 @@
 <?tdg-refsynopsisdiv?>
 
 <refsection condition="ref.description">
-<title>Description</title><para>See <tag>confgroup</tag>.</para>
+<title>Description</title>
 
-      <?dbfo-need height=”1in”
-?>
 
-      <refsection><info><title>Processing expectations</title></info>
-        
+<para>See <tag>confgroup</tag>.
+</para>
 
-        <para>May be formatted inline or as a displayed block, depending on
-        context. Sometimes suppressed.</para>
+<refsection><title>Processing expectations</title>
+<para><?tdg gentext='format.context'?>
+<?tdg gentext='format.csuppress'?>
+</para>
 </refsection>
+
 
 <?tdg-attributes?>
 <?tdg-parents?>

@@ -6,9 +6,9 @@ SRCS = docbookxi.rnc
 
 BINARY = docbookxi.rnd
 
-all:: docbookxi.rng docbookxi.rnc
+all:: docbookxi.rng docbookxi.rnc docbookxi.dtd
 
-clean:: ; rm -f docbookxi.rng docbookxi.rnc
+clean:: ; rm -f docbookxi.rng docbookxi.rnc docbookxi.dtd
 
 $(_OUTTOP)/docbookxi/docbookxi.rng: src/annotations.rnc src/bibliography.rnc \
              src/callouts.rnc src/calstbl.rnc dbforms/htmlform.rnc \
@@ -17,7 +17,7 @@ $(_OUTTOP)/docbookxi/docbookxi.rng: src/annotations.rnc src/bibliography.rnc \
              src/index.rnc src/math.rnc src/mathml.rnc \
              src/msgset.rnc src/pool.rnc src/qandaset.rnc \
              src/refentry.rnc src/refsect1.rnc src/sect1.rnc \
-             src/svg.rnc src/tasks.rnc src/toc.rnc src/topic.rnc \
+             src/svg.rnc src/tasks.rnc src/toc.rnc \
              docbookxi/xinclude.rnc src/xlink.rnc
 
 include _footer.mak
@@ -27,3 +27,6 @@ docbookxi.rng: $(basename $(docbookxi_BINARY)).rnx
 
 docbookxi.rnc: docbookxi.rng
 	$(RUNTRANG) $< $@
+
+docbookxi.dtd: $(basename $(docbookxi_BINARY)).dtx docbookxi.rnc
+	$(XSLTPROC) -output $@ $(TOOLS)/xml2dtd.xsl $<

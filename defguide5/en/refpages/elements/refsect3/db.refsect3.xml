@@ -18,19 +18,25 @@
 <?tdg-refsynopsisdiv?>
 
 <refsection condition="ref.description">
-<title>Description</title><para>A <tag>refsect3</tag> is a third-level section in a
-      <tag>refentry</tag>, analogous to a <tag>sect3</tag>
-      elsewhere in the document. See <tag>refsect1</tag>.</para>
+<title>Description</title>
 
-      <para>In DocBook, <tag>refsect3</tag> is the lowest-level
-      section allowed in a <tag>refentry</tag>. There is no element
-      analogous to a <tag>sect4</tag>.</para>
 
-      <refsection><info><title>Processing expectations</title></info>
-        
+<para>A <tag>refsect3</tag> is a third level section in a
+<tag>refentry</tag>, analogous to a <tag>sect3</tag> elsewhere
+in the document. See <tag>refsect1</tag>.
+</para>
 
-        <para>Formatted as a displayed block.</para>
+<para>In DocBook, <tag>refsect3</tag> is the lowest-level section allowed in a 
+<tag>refentry</tag>.  There is no element analogous to a <tag>sect4</tag>.
+</para>
+
+<refsection><title>Processing expectations</title>
+<para><?tdg gentext='format.block'?>
+</para>
 </refsection>
+
+
+
 
 <?tdg-attributes?>
 <?tdg-parents?>
