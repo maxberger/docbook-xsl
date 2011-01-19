@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Usage:
+    Building 'The Definitive Guide (5.0)' - all
+        $ ant
+
+    Building 'The Definitive Guide (5.0)' - en(html, chm & pdf)
+        $ ant en
+
+    Building 'The Definitive Guide (5.0)' - zh(html, chm & pdf)
+        $ ant zh
+
+Dependency(en):
+    *) ant 1.7
+    *) beanshell 2.0b4
+    *) libxml2 2.6.30
+    *) xsltproc 1.1.22
+    *) jdk 1.4.2
+    *) saxon 6.5 & 8.9
+    *) DocBook v5 XSL
+    *) RELAX NG Support(jing)
+    *) fop 0.20.5, pdf only
+    *) For windows user, you can download gettext & xsltproc binary from:
+        http://i18n-zh.googlecode.com/files/gettext_0.16.1_xsltproc_1.1.22.tar.bz2
+
+Dependency(zh only):
+    *) python 2.4
+    *) python-libxml2 2.6.27
+    *) gettext 0.16
+    *) chinese font files, pdf only
+
+TODO:
+    *) Adjust XSL for output
+    *) ...
+-->
+<project default="all" name="defguide5">
+
+    <property file="build-common.properties"/>
+    <import file="build-common.xml"/>
+
+    <target name="properties" description="Print runtime properties">
+        <echo message="Print runtime properties"/>
+        <echo message="ant.java.version: ${ant.java.version}"/>
+        <echo message="ant.version: ${ant.version}"/>
+        <echo message="ant.file: ${ant.file}"/>
+        <echo message="ant.project.name: ${ant.project.name}"/>
+        <echo message="os.name: ${os.name}"/>
+        <echo message="os.arch: ${os.arch}"/>
+        <echo message="os.version: ${os.version}"/>
+        <echo message="file.encoding: ${file.encoding}"/>
+        <echo message="file.separator: ${file.separator}"/>
+        <echo message="path.separator: ${path.separator}"/>
+        <echo message="user.home: ${user.home}"/>
+        <echo message="basedir: ${basedir}"/>
+    </target>
+
+    <target name="usage">
+        <echo message="Use the -projecthelp option instead"/>
+    </target>
+
+    <target name="clean" description="Clean the build directory">
+        <ant dir="en" target="clean"/>
+        <ant dir="zh" target="clean"/>
+    </target>
+
+    <target name="init" depends="init-avail" description="Check runtime configuration">
+        <echo message="java.version: ${java.version}"/>
+
+        <fail>
+            <condition>
+                <not><available file="build-common.properties"/></not>
+            </condition>
+            Please create your build-common.properties from build-common.tmpl.properties !
+        </fail>
+    </target>
+
+    <target name="validate" depends="init" description="Validate source document">
+        <ant dir="en" target="validate"/>
+        <ant dir="zh" target="validate"/>
+    </target>
+
+    <target name="en" depends="init" description="Generate document - en">
+        <echo message="Building 'The Definitive Guide (5.0)' - en ..."/>
+        <ant dir="en"/>
+    </target>
+
+    <target name="zh" depends="init" description="Generate document - zh">
+        <echo message="Building 'The Definitive Guide (5.0)' - zh ..."/>
+        <ant dir="zh"/>
+    </target>
+
+    <target name="all" description="Generate document - en,zh">
+        <antcall target="en"/>
+        <antcall target="zh"/>
+    </target>
+</project>
