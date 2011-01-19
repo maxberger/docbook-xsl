@@ -40,8 +40,6 @@
     </xsl:if>
 
     <xsl:apply-templates/>
-
-    <xsl:call-template name="t:process-footnotes"/>
   </div>
 </xsl:template>
 

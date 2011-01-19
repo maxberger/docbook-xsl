@@ -19,9 +19,8 @@
 		select="$titlepages/*[node-name(.) = node-name(current())
 			              and @t:side='verso'][1]"/>
 
-  <div>
-    <xsl:apply-templates select="." mode="m:html-attributes"/>
-
+  <div class="{local-name(.)}">
+    <xsl:call-template name="id"/>
     <xsl:call-template name="titlepage">
       <xsl:with-param name="content" select="$recto"/>
     </xsl:call-template>
@@ -44,9 +43,8 @@
 		select="$titlepages/*[node-name(.) = node-name(current())
 			              and @t:side='verso'][1]"/>
 
-  <div>
-    <xsl:apply-templates select="." mode="m:html-attributes"/>
-
+  <div class="{local-name(.)}">
+    <xsl:call-template name="id"/>
     <xsl:call-template name="titlepage">
       <xsl:with-param name="content" select="$recto"/>
     </xsl:call-template>
@@ -62,43 +60,167 @@
 </xsl:template>
 
 <xsl:template match="db:bibliolist">
-  <xsl:variable name="titlepage"
-		select="$titlepages/*[node-name(.)=node-name(current())][1]"/>
+  <xsl:variable name="recto"
+		select="$titlepages/*[node-name(.) = node-name(current())
+			              and @t:side='recto'][1]"/>
+  <xsl:variable name="verso"
+		select="$titlepages/*[node-name(.) = node-name(current())
+			              and @t:side='verso'][1]"/>
 
-  <div>
-    <xsl:apply-templates select="." mode="m:html-attributes"/>
-
+  <div class="{local-name(.)}">
+    <xsl:call-template name="id"/>
     <xsl:call-template name="titlepage">
-      <xsl:with-param name="content" select="$titlepage"/>
+      <xsl:with-param name="content" select="$recto"/>
     </xsl:call-template>
+
+    <xsl:if test="not(empty($verso))">
+      <xsl:call-template name="titlepage">
+	<xsl:with-param name="content" select="$verso"/>
+      </xsl:call-template>
+    </xsl:if>
 
     <xsl:apply-templates/>
   </div>
 </xsl:template>
 
 <xsl:template match="db:biblioentry|db:bibliomixed">
-  <xsl:param name="label" select="f:biblioentry-label(.)"/>
+  <xsl:param name="label">
+    <xsl:call-template name="biblioentry-label"/>
+  </xsl:param>
 
-  <!-- N.B. The bibliography entry is expanded using $bibliography.collection -->
-  <!-- during *normalization*, not here... -->
+  <xsl:variable name="id" select="f:node-id(.)"/>
 
-  <div>
-    <xsl:apply-templates select="." mode="m:html-attributes"/>
-
-    <p>
-      <xsl:text>[</xsl:text>
-      <xsl:copy-of select="$label"/>
-      <xsl:text>] </xsl:text>
+  <xsl:choose>
+    <xsl:when test="string(.) = ''">
+      <xsl:variable name="bib" select="document($bibliography.collection,.)"/>
+      <xsl:variable name="entry" select="$bib/bibliography/*[@xml:id=$id][1]"/>
       <xsl:choose>
-	<xsl:when test="self::db:biblioentry">
-	  <xsl:apply-templates mode="m:biblioentry"/>
+        <xsl:when test="$entry">
+	  <xsl:choose>
+	    <xsl:when test="$bibliography.numbered != 0">
+	      <xsl:apply-templates select="$entry">
+		<xsl:with-param name="label" select="$label"/>
+	      </xsl:apply-templates>
+	    </xsl:when>
+	    <xsl:otherwise>
+	      <xsl:choose>
+		<xsl:when test="self::db:biblioentry">
+		  <xsl:apply-templates select="$entry" mode="m:biblioentry"/>
+		</xsl:when>
+		<xsl:otherwise>
+		  <xsl:apply-templates select="$entry" mode="m:bibliomixed"/>
+		</xsl:otherwise>
+	      </xsl:choose>
+	    </xsl:otherwise>
+	  </xsl:choose>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:message>
+            <xsl:text>No bibliography entry: </xsl:text>
+            <xsl:value-of select="$id"/>
+            <xsl:text> found in </xsl:text>
+            <xsl:value-of select="$bibliography.collection"/>
+          </xsl:message>
+          <div class="{local-name(.)}">
+            <xsl:call-template name="id"/>
+            <xsl:call-template name="class"/>
+            <p>
+	      <xsl:copy-of select="$label"/>
+              <xsl:text>Error: no bibliography entry: </xsl:text>
+              <xsl:value-of select="$id"/>
+              <xsl:text> found in </xsl:text>
+              <xsl:value-of select="$bibliography.collection"/>
+            </p>
+          </div>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:when>
+    <xsl:otherwise>
+      <div class="{local-name(.)}">
+        <xsl:call-template name="id"/>
+        <xsl:call-template name="class"/>
+	<p>
+	  <xsl:copy-of select="$label"/>
+	  <xsl:choose>
+	    <xsl:when test="self::db:biblioentry">
+	      <xsl:apply-templates mode="m:biblioentry"/>
+	    </xsl:when>
+	    <xsl:otherwise>
+	      <xsl:apply-templates mode="m:bibliomixed"/>
+	    </xsl:otherwise>
+	  </xsl:choose>
+	</p>
+      </div>
+    </xsl:otherwise>
+  </xsl:choose>
+</xsl:template>
+
+<!-- ============================================================ -->
+
+<doc:template name="biblioentry-label" xmlns="http://docbook.org/ns/docbook">
+<refpurpose>Returns the label for a bibliography entry</refpurpose>
+
+<refdescription>
+<para>This template formats the label for a bibliography entry
+(<tag>biblioentry</tag> or <tag>bibliomixed</tag>).</para>
+</refdescription>
+
+<refparameter>
+<variablelist>
+<varlistentry><term>node</term>
+<listitem>
+<para>The node containing the bibliography entry, defaults to the current
+context node.</para>
+</listitem>
+</varlistentry>
+</variablelist>
+</refparameter>
+
+<refreturn>
+<para>The bibliography entry label.</para>
+</refreturn>
+</doc:template>
+
+<xsl:template name="biblioentry-label">
+  <xsl:param name="node" select="."/>
+
+  <xsl:variable name="context" select="(ancestor::db:bibliography
+                                        |ancestor::db:bibliolist)[last()]"/>
+
+  <xsl:choose>
+    <xsl:when test="$bibliography.numbered != 0">
+      <xsl:text>[</xsl:text>
+      <xsl:choose>
+	<xsl:when test="$context/self::db:bibliography">
+	  <xsl:number from="db:bibliography"
+		      count="db:biblioentry|db:bibliomixed"
+		      level="any" format="1"/>
 	</xsl:when>
 	<xsl:otherwise>
-	  <xsl:apply-templates mode="m:bibliomixed"/>
+	  <xsl:number from="db:bibliolist"
+		      count="db:biblioentry|db:bibliomixed"
+		      level="any" format="1"/>
 	</xsl:otherwise>
       </xsl:choose>
-    </p>
-  </div>
+      <xsl:text>] </xsl:text>
+    </xsl:when>
+    <xsl:when test="$node/*[1]/self::db:abbrev">
+      <xsl:text>[</xsl:text>
+      <xsl:apply-templates select="$node/db:abbrev[1]"/>
+      <xsl:text>] </xsl:text>
+    </xsl:when>
+    <xsl:when test="$node/@xreflabel">
+      <xsl:text>[</xsl:text>
+      <xsl:value-of select="$node/@xreflabel"/>
+      <xsl:text>] </xsl:text>
+    </xsl:when>
+    <xsl:when test="$node/@id">
+      <xsl:text>[</xsl:text>
+      <xsl:value-of select="$node/@id"/>
+      <xsl:text>] </xsl:text>
+    </xsl:when>
+    <xsl:otherwise><!-- nop --></xsl:otherwise>
+  </xsl:choose>
 </xsl:template>
 
 <!-- ============================================================ -->
@@ -124,11 +246,11 @@ for the content of a bibliography entry.</para>
   </xsl:if>
 </xsl:template>
 
-<xsl:template match="db:bibliomset/db:title|db:bibliomset/db:citetitle"
+<xsl:template match="db:bibliomset/db:title|db:bibliomset/db:citetitle" 
 	      mode="m:bibliomixed">
   <xsl:variable name="relation" select="../@relation"/>
 
-  <xsl:call-template name="t:simple-xlink">
+  <xsl:call-template name="simple-xlink">
     <xsl:with-param name="content">
       <xsl:choose>
 	<xsl:when test="$relation='article' or @pubwork='article'">
@@ -147,7 +269,7 @@ for the content of a bibliography entry.</para>
 </xsl:template>
 
 <xsl:template match="db:citetitle|db:title" mode="m:bibliomixed">
-  <xsl:call-template name="t:simple-xlink">
+  <xsl:call-template name="simple-xlink">
     <xsl:with-param name="content">
       <span class="{name(.)}">
 	<xsl:choose>
@@ -221,8 +343,7 @@ for the content of a bibliography entry.</para>
 		     |db:titleabbrev
 		     |db:volumenum"
 	      mode="m:bibliomixed">
-  <span>
-    <xsl:apply-templates select="." mode="m:html-attributes"/>
+  <span class="{local-name(.)}">
     <xsl:apply-templates mode="m:bibliomixed"/>
   </span>
 </xsl:template>
@@ -250,8 +371,7 @@ for the content of a bibliography entry.</para>
 </xsl:template>
 
 <xsl:template match="db:biblioset" mode="m:biblioentry">
-  <span>
-    <xsl:apply-templates select="." mode="m:html-attributes"/>
+  <span class="{local-name(.)}">
     <xsl:apply-templates mode="m:biblioentry"/>
   </span>
 </xsl:template>
@@ -262,11 +382,10 @@ for the content of a bibliography entry.</para>
   </xsl:if>
 </xsl:template>
 
-<xsl:template match="db:biblioset/db:title|db:biblioset/db:citetitle
-                     |db:bibliomset/db:title|db:bibliomset/db:citetitle"
+<xsl:template match="db:bibliomset/db:title|db:bibliomset/db:citetitle" 
 	      mode="m:biblioentry">
   <xsl:variable name="relation" select="../@relation"/>
-  <xsl:call-template name="t:simple-xlink">
+  <xsl:call-template name="simple-xlink">
     <xsl:with-param name="content">
       <xsl:choose>
 	<xsl:when test="$relation='article' or @pubwork='article'">
@@ -286,7 +405,7 @@ for the content of a bibliography entry.</para>
 </xsl:template>
 
 <xsl:template match="db:citetitle|db:title" mode="m:biblioentry">
-  <xsl:call-template name="t:simple-xlink">
+  <xsl:call-template name="simple-xlink">
     <xsl:with-param name="content">
       <span class="{name(.)}">
 	<xsl:choose>
@@ -307,53 +426,8 @@ for the content of a bibliography entry.</para>
   <xsl:text>. </xsl:text>
 </xsl:template>
 
-<xsl:template match="db:address" mode="m:biblioentry">
-  <xsl:variable name="addr" as="element(h:div)">
-    <xsl:apply-templates select="."/>
-  </xsl:variable>
-
-  <span>
-    <xsl:apply-templates select="." mode="m:html-attributes"/>
-    <!-- Now $addr is a div containing lines with BRs -->
-    <xsl:for-each select="$addr/node()">
-      <xsl:variable name="node" select="."/>
-      <xsl:choose>
-        <xsl:when test="$node/self::h:br">
-          <xsl:if test="position() &lt; last()"> / </xsl:if>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:sequence select="$node"/>
-        </xsl:otherwise>
-      </xsl:choose>
-    </xsl:for-each>
-
-    <xsl:if test="not(ends-with(string($addr), '.'))">.</xsl:if>
-  </span>
-  <xsl:text> </xsl:text>
-</xsl:template>
-
-<xsl:template match="db:collab" mode="m:biblioentry">
-  <xsl:variable name="content">
-    <xsl:for-each select="*[not(self::db:affiliation)]">
-      <xsl:if test="position() &gt; 1">, </xsl:if>
-      <xsl:apply-templates select="."/>
-    </xsl:for-each>
-  </xsl:variable>
-  <xsl:copy-of select="$content"/>
-  <xsl:if test="not(ends-with(string($content), '.'))">.</xsl:if>
-  <xsl:text> </xsl:text>
-</xsl:template>
-
-<xsl:template match="db:confgroup|db:publisher" mode="m:biblioentry">
-  <xsl:apply-templates mode="m:biblioentry"/>
-</xsl:template>
-
-<xsl:template match="db:printhistory|db:revhistory" mode="m:biblioentry">
+<xsl:template match="db:revhistory" mode="m:biblioentry">
   <!-- suppressed; how could this be represented? -->
-</xsl:template>
-
-<xsl:template match="db:titleabbrev|db:abstract" mode="m:biblioentry">
-  <!-- suppressed -->
 </xsl:template>
 
 </xsl:stylesheet>

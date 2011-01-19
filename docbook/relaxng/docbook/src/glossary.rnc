@@ -28,11 +28,9 @@
 # ======================================================================
 
 namespace rng  = "http://relaxng.org/ns/structure/1.0"
-namespace s = "http://purl.oclc.org/dsdl/schematron"
+namespace s = "http://www.ascc.net/xml/schematron"
 namespace db = "http://docbook.org/ns/docbook"
 default namespace = "http://docbook.org/ns/docbook"
-
-start |= db.glossary | db.glossdiv | db.glosslist
 
 db.publishing.inlines |= db.glossary.inlines
 db.list.blocks |= db.glosslist
@@ -41,10 +39,6 @@ db.navigation.components |= db.glossary
 db.glossary.inlines =
    db.firstterm
  | db.glossterm
- | db._firstterm
- | db._glossterm
-
-db.ubiq.inlines |= db._firstterm | db._glossterm
 
 # ======================================================================
 
@@ -84,7 +78,7 @@ div {
 
 [
    db:refname [ "glossentry" ]
-   db:refpurpose [ "An entry in a glossary or glosslist" ]
+   db:refpurpose [ "An entry in a Glossary or GlossList" ]
 ]
 div {
 
@@ -117,7 +111,7 @@ div {
 
 [
    db:refname [ "glossdef" ]
-   db:refpurpose [ "A definition in a glossentry" ]
+   db:refpurpose [ "A definition in a GlossEntry" ]
 ]
 div {
 
@@ -186,7 +180,7 @@ div {
 
 [
    db:refname [ "glossseealso" ]
-   db:refpurpose [ "A cross-reference from one glossentry to another" ]
+   db:refpurpose [ "A cross-reference from one GlossEntry to another" ]
 ]
 div {
 
@@ -260,41 +254,6 @@ div {
 # ======================================================================
 
 [
-   db:refname [ "firstterm" ]
-   db:refpurpose [ "The first occurrence of a term, with limited content" ]
-]
-div {
-
-   db._firstterm.role.attribute = attribute role { text }
-
-   db._firstterm.attlist =
-      db._firstterm.role.attribute?
-    & db.common.attributes
-    & db.common.linking.attributes
-    & db.baseform.attribute
-
-   db._firstterm =
-      [
-         s:pattern [
-            name = "Glossary 'firstterm' type constraint"
-            s:rule [
-               context = "db:firstterm[@linkend]"
-               s:assert [
-                  test = "local-name(//*[@xml:id=current()/@linkend]) = 'glossentry' and namespace-uri(//*[@xml:id=current()/@linkend]) = 'http://docbook.org/ns/docbook'"
-                  "@linkend on firstterm must point to a glossentry."
-               ]
-            ]
-         ]
-      ]
-      element firstterm {
-         db._firstterm.attlist,
-         db._text
-      }
-}
-
-# ======================================================================
-
-[
    db:refname [ "glossterm" ]
    db:refpurpose [ "A glossary term" ]
 ]
@@ -324,41 +283,6 @@ div {
       element glossterm {
          db.glossterm.attlist,
          db.all.inlines*
-      }
-}
-
-# ======================================================================
-
-[
-   db:refname [ "glossterm" ]
-   db:refpurpose [ "A glossary term" ]
-]
-div {
-
-   db._glossterm.role.attribute = attribute role { text }
-
-   db._glossterm.attlist =
-      db._glossterm.role.attribute?
-    & db.common.attributes
-    & db.common.linking.attributes
-    & db.baseform.attribute
-
-   db._glossterm =
-      [
-         s:pattern [
-            name = "Glossary 'glossterm' type constraint"
-            s:rule [
-               context = "db:glossterm[@linkend]"
-               s:assert [
-                  test = "local-name(//*[@xml:id=current()/@linkend]) = 'glossentry' and namespace-uri(//*[@xml:id=current()/@linkend]) = 'http://docbook.org/ns/docbook'"
-                  "@linkend on glossterm must point to a glossentry."
-               ]
-            ]
-         ]
-      ]
-      element glossterm {
-         db._glossterm.attlist,
-         db._text
       }
 }
 
@@ -397,7 +321,7 @@ div {
 
 [
    db:refname [ "glossdiv" ]
-   db:refpurpose [ "A division in a glossary" ]
+   db:refpurpose [ "A division in a Glossary" ]
 ]
 div {
 

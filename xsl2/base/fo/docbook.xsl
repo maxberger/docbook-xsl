@@ -6,8 +6,7 @@
 		xmlns:m="http://docbook.org/xslt/ns/mode"
 		xmlns:fn="http://www.w3.org/2005/xpath-functions"
 		xmlns:db="http://docbook.org/ns/docbook"
-                xmlns:xs="http://www.w3.org/2001/XMLSchema"
-		exclude-result-prefixes="f m fn db t xs"
+		exclude-result-prefixes="f m fn db t"
                 version="2.0">
 
   <xsl:include href="param.xsl"/>
@@ -15,7 +14,8 @@
   <xsl:include href="../common/spspace.xsl"/>
   <xsl:include href="../common/gentext.xsl"/>
   <xsl:include href="../common/normalize.xsl"/>
-  <xsl:include href="../common/control.xsl"/>
+  <xsl:include href="../common/root.xsl"/>
+  <xsl:include href="../common/verbatim.xsl"/>
   <xsl:include href="../common/functions.xsl"/>
   <xsl:include href="../common/common.xsl"/>
   <xsl:include href="../common/titlepages.xsl"/>
@@ -25,38 +25,34 @@
 <!--  <xsl:include href="../common/olink.xsl"/>-->
   <xsl:include href="pagesetup.xsl"/>
   <xsl:include href="titlepages.xsl"/>
+  <xsl:include href="titlepage.xsl"/>
   <xsl:include href="autotoc.xsl"/>
+<!--
   <xsl:include href="division.xsl"/>
+-->
   <xsl:include href="component.xsl"/>
-  <xsl:include href="fo.xsl"/>
 <!--
   <xsl:include href="refentry.xsl"/>
   <xsl:include href="synopsis.xsl"/>
--->
-  <xsl:include href="sections.xsl"/>
+  <xsl:include href="section.xsl"/>
   <xsl:include href="biblio.xsl"/>
   <xsl:include href="pi.xsl"/>
   <xsl:include href="info.xsl"/>
+-->
   <xsl:include href="glossary.xsl"/>
-  <xsl:include href="lists.xsl"/>
 <!--
+  <xsl:include href="table.xsl"/>
+  <xsl:include href="lists.xsl"/>
   <xsl:include href="task.xsl"/>
   <xsl:include href="callouts.xsl"/>
--->
-
-<!-- PARTIALLY DONE
-  <xsl:include href="table.xsl"/>
   <xsl:include href="formal.xsl"/>
 -->
-
   <xsl:include href="blocks.xsl"/>
   <xsl:include href="graphics.xsl"/>
 <!--
   <xsl:include href="footnotes.xsl"/>
   <xsl:include href="admonitions.xsl"/>
--->
   <xsl:include href="verbatim.xsl"/>
-<!--
   <xsl:include href="qandaset.xsl"/>
 -->
   <xsl:include href="inlines.xsl"/>
@@ -69,52 +65,53 @@
   <xsl:include href="chunker.xsl"/>
 -->
 
-<xsl:output method="xml" encoding="utf-8" indent="no"/>
+  <xsl:param name="save.normalized.xml" select="0"/>
 
-<xsl:param name="stylesheet.result.type" select="'fo'"/>
+  <xsl:output method="xml" encoding="utf-8" indent="yes"/>
 
-<xsl:param name="body.fontset" as="xs:string">
-  <xsl:variable name="fontlist" as="xs:string+">
-    <xsl:value-of select="$body.font.family"/>
-    <xsl:if test="$symbol.font.family != ''">
-      <xsl:value-of select="$symbol.font.family"/>
+  <xsl:param name="stylesheet.result.type" select="'fo'"/>
+  <xsl:param name="input" select="/"/>
+
+  <xsl:template match="*" mode="m:root">
+    <xsl:variable name="document.element" select="self::*"/>
+
+    <xsl:call-template name="t:root-messages"/>
+
+    <xsl:if test="$save.normalized.xml != 0">
+      <xsl:message>Saving normalized xml.</xsl:message>
+      <xsl:result-document href="normalized.xml">
+	<xsl:copy-of select="."/>
+      </xsl:result-document>
     </xsl:if>
-  </xsl:variable>
-  <xsl:value-of select="$fontlist" separator=","/>
-</xsl:param>
 
-<xsl:template match="/">
-  <xsl:variable name="normalized" as="document-node()"
-		select="f:cleanup-docbook(/)"/>
+    <xsl:variable name="title">
+      <xsl:choose>
+	<xsl:when test="$document.element/db:info/db:title[1]">
+	  <xsl:value-of select="$document.element/db:info/db:title[1]"/>
+	</xsl:when>
+	<xsl:otherwise>Could not find document title.</xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
 
-  <xsl:variable name="root" as="element()"
-		select="f:docbook-root-element($normalized,$rootid)"/>
-
-  <xsl:if test="$verbosity &gt; 3">
-    <xsl:message>Styling...</xsl:message>
-  </xsl:if>
-
-  <xsl:variable name="title" select="f:title($root)"/>
-
-  <xsl:result-document>
-    <!-- Include all id values in XEP output -->
-    <!--
+    <xsl:result-document>
+      <!-- Include all id values in XEP output -->
+      <!--
       <xsl:if test="$fo.processor = 'xep'">
 	<xsl:processing-instruction name="xep-pdf-drop-unused-destinations"
 				    select="'false'"/>
       </xsl:if>
-    -->
+      -->
 
-    <fo:root xsl:use-attribute-sets="root.properties">
-      <!--
+      <fo:root xsl:use-attribute-sets="root.properties">
+	<!--
 	<xsl:attribute name="language">
 	  <xsl:call-template name="l10n.language">
 	    <xsl:with-param name="target" select="/*[1]"/>
 	  </xsl:call-template>
 	</xsl:attribute>
-      -->
+	-->
 
-      <!--
+	<!--
 	<xsl:if test="$fo.processor = 'xep'">
 	  <xsl:call-template name="xep-pis"/>
 	  <xsl:call-template name="xep-document-information"/>
@@ -123,18 +120,18 @@
 	<xsl:if test="$fo.processor = 'axf'">
 	  <xsl:call-template name="axf-document-information"/>
 	</xsl:if>
-      -->
+	-->
 
-      <xsl:call-template name="t:setup-pagemasters"/>
+	<xsl:call-template name="t:setup-pagemasters"/>
 
-      <!--
+	<!--
 	<xsl:if test="$fo.processor = 'fop'">
-	  <xsl:apply-templates select="$root" mode="fop.outline"/>
+	  <xsl:apply-templates select="$document.element" mode="fop.outline"/>
 	</xsl:if>
 
 	<xsl:if test="$fo.processor = 'fop1'">
 	  <xsl:variable name="bookmarks">
-	    <xsl:apply-templates select="$root" 
+	    <xsl:apply-templates select="$document.element" 
 				 mode="fop1.outline"/>
 	  </xsl:variable>
 	  <xsl:if test="string($bookmarks) != ''">
@@ -146,7 +143,7 @@
 
 	<xsl:if test="$fo.processor = 'xep'">
 	  <xsl:variable name="bookmarks">
-	    <xsl:apply-templates select="$root" mode="xep.outline"/>
+	    <xsl:apply-templates select="$document.element" mode="xep.outline"/>
 	  </xsl:variable>
 	  <xsl:if test="string($bookmarks) != ''">
 	    <rx:outline xmlns:rx="http://www.renderx.com/XSL/Extensions">
@@ -154,35 +151,36 @@
 	    </rx:outline>
 	  </xsl:if>
 	</xsl:if>
-      -->
+	-->
 
-      <xsl:apply-templates select="$root"/>
-    </fo:root>
-  </xsl:result-document>
-</xsl:template>
+	<xsl:apply-templates select="$document.element"/>
 
-<xsl:template match="*">
-  <fo:block>
-    <xsl:call-template name="id"/>
-    <fo:inline color="red">
-      <xsl:text>&lt;</xsl:text>
-      <xsl:value-of select="name(.)"/>
-      <xsl:for-each select="@*">
-	<xsl:text> </xsl:text>
+      </fo:root>
+    </xsl:result-document>
+  </xsl:template>
+
+  <xsl:template match="*">
+    <fo:block>
+      <xsl:call-template name="id"/>
+      <fo:inline color="red">
+	<xsl:text>&lt;</xsl:text>
 	<xsl:value-of select="name(.)"/>
-	<xsl:text>="</xsl:text>
-	<xsl:value-of select="."/>
-	<xsl:text>"</xsl:text>
-      </xsl:for-each>
-      <xsl:text>&gt;</xsl:text>
-    </fo:inline>
-    <xsl:apply-templates/>
-    <fo:inline color="red">
-      <xsl:text>&lt;/</xsl:text>
-      <xsl:value-of select="name(.)"/>
-      <xsl:text>&gt;</xsl:text>
-    </fo:inline>
-  </fo:block>
-</xsl:template>
+	<xsl:for-each select="@*">
+	  <xsl:text> </xsl:text>
+	  <xsl:value-of select="name(.)"/>
+	  <xsl:text>="</xsl:text>
+	  <xsl:value-of select="."/>
+	  <xsl:text>"</xsl:text>
+	</xsl:for-each>
+	<xsl:text>&gt;</xsl:text>
+      </fo:inline>
+      <xsl:apply-templates/>
+      <fo:inline color="red">
+	<xsl:text>&lt;/</xsl:text>
+	<xsl:value-of select="name(.)"/>
+	<xsl:text>&gt;</xsl:text>
+      </fo:inline>
+    </fo:block>
+  </xsl:template>
 
 </xsl:stylesheet>

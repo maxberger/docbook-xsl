@@ -4,9 +4,9 @@ SRCS = dbits.rnc
 
 BINARY = dbits.rnd
 
-all:: dbits.rng dbits.rnc
+all:: dbits.rng dbits.rnc dbits.dtd
 
-clean:: ; rm -f dbits.rng dbits.rnc
+clean:: ; rm -f dbits.rng dbits.rnc dbits.dtd
 
 $(_OUTTOP)/its/dbits.rng: its/its.rnc \
              src/annotations.rnc src/bibliography.rnc \
@@ -27,3 +27,5 @@ dbits.rng: $(basename $(dbits_BINARY)).rnx
 dbits.rnc: dbits.rng
 	$(RUNTRANG) $< $@
 
+dbits.dtd: $(basename $(dbits_BINARY)).dtx dbits.rnc
+	$(XSLTPROC) -output $@ $(TOOLS)/xml2dtd.xsl $<

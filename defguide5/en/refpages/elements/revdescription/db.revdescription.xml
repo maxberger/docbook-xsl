@@ -18,18 +18,20 @@
 <?tdg-refsynopsisdiv?>
 
 <refsection condition="ref.description">
-<title>Description</title><para>The <tag>revdescription</tag> associated with a revision
-      is a summary of the changes made in that revision. A
-      <tag>revdescription</tag> is intended for long, complete
-      summaries. For a simple text-only summary, see
-      <tag>revremark</tag>.</para>
+<title>Description</title>
 
-      <refsection><info><title>Processing expectations</title></info>
-        
+<para>The <tag>revdescription</tag> associated with a revision is a
+summary of the changes made in that revision. A <tag>revdescription</tag>
+is intended for long, complete summaries. For a simple text-only summary,
+see <tag>revremark</tag>.
+</para>
 
-        <para>May be formatted inline or as a displayed block, depending on
-        context. Sometimes suppressed.</para>
+<refsection><title>Processing expectations</title>
+<para><?tdg gentext='format.context'?>
+<?tdg gentext='format.csuppress'?>
+</para>
 </refsection>
+
 
 <?tdg-attributes?>
 <?tdg-parents?>

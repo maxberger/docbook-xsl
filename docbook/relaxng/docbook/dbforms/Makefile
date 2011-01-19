@@ -4,9 +4,9 @@ SRCS = dbforms.rnc
 
 BINARY = dbforms.rnd
 
-all:: dbforms.rng dbforms.rnc
+all:: dbforms.rng dbforms.rnc dbforms.dtd
 
-clean:: ; rm -f dbforms.rng dbforms.rnc
+clean:: ; rm -f dbforms.rng dbforms.rnc dbforms.dtd
 
 $(_OUTTOP)/dbforms/dbforms.rng: dbforms/htmlform.rnc \
              src/annotations.rnc src/bibliography.rnc \
@@ -26,3 +26,6 @@ dbforms.rng: $(basename $(dbforms_BINARY)).rnx
 
 dbforms.rnc: dbforms.rng
 	$(RUNTRANG) $< $@
+
+dbforms.dtd: $(basename $(dbforms_BINARY)).dtx dbforms.rnc
+	$(XSLTPROC) -output $@ $(TOOLS)/xml2dtd.xsl $<

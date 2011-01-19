@@ -139,6 +139,7 @@
 <gentext key="in" text="în"/>
 <gentext key="lastlistcomma" text=","/>
 <gentext key="listcomma" text=","/>
+<gentext key="nonexistantelement" text="element inexistent"/>
 <gentext key="notes" text="Note"/>
 <gentext key="Notes" text="Note"/>
 <gentext key="Pgs" text="Pagini"/>
@@ -176,7 +177,6 @@
 <gentext key="above" text="deasupra"/>
 <gentext key="below" text="sub"/>
 <gentext key="index symbols" text="Simboluri"/>
-<gentext key="writing-mode" text="lr-tb"/>
 
 <gentext key="lowercase.alpha" text="aăâbcdefghiîjklmnopqrsștșuvwxyz"/>
 <gentext key="uppercase.alpha" text="AĂÂBCDEFGHIÎJKLMNOPQRSȘTȚUVWXYZ"/>
@@ -476,9 +476,8 @@
 </context>
 
 <context name="glossary">
-<template name="see"><GlossSee/> %t.</template>
-<template name="seealso"><GlossSeeAlso/> %t.</template>
-<template name="seealso-separator">, </template>
+<template name="see"><GlossSee/> %t</template>
+<template name="seealso"><GlossSeeAlso/> %t</template>
 </context>
 
 <context name="msgset">

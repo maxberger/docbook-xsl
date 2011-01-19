@@ -1,9 +1,9 @@
-include $(DOCBOOK_SVN)/buildtools/Makefile.incl
+include ../../../buildtools/Makefile.incl
 
 XSLTPROC=xsltproc
 XSLTPROC_OPTS=
 
-HTML2XHTML=../../xhtml/html2xhtml.xsl
+HTML2XHTML=../../../xsl/xhtml/html2xhtml.xsl
 
 all: xsl-files
 

@@ -88,10 +88,15 @@
     </xsl:when>
     <xsl:otherwise>
       <p>
-        <xsl:apply-templates select="." mode="m:html-attributes">
-          <xsl:with-param name="suppress-local-name-class" select="true()"/>
-          <xsl:with-param name="class" select="$class"/>
-        </xsl:apply-templates>
+	<xsl:call-template name="id"/>
+	<xsl:choose>
+	  <xsl:when test="$class = ''">
+	    <xsl:call-template name="class"/>
+	  </xsl:when>
+	  <xsl:otherwise>
+	    <xsl:attribute name="class" select="$class"/>
+	  </xsl:otherwise>
+	</xsl:choose>
 
 	<xsl:copy-of select="$runin"/>
 	<xsl:apply-templates/>
@@ -117,7 +122,6 @@
   </xsl:variable>
 
   <div class="{local-name(.)}">
-    <xsl:call-template name="id"/>
     <xsl:apply-templates select="db:indexterm"/>
     <xsl:apply-templates select="db:para">
       <xsl:with-param name="runin" select="$title/node()" tunnel="yes"/>
@@ -195,6 +199,15 @@
   </div>
 </xsl:template>
 
+<xsl:template match="db:sidebar/db:info/db:title"
+	      mode="m:titlepage-mode">
+  <div class="title">
+    <strong>
+      <xsl:apply-templates/>
+    </strong>
+  </div>
+</xsl:template>
+
 <!-- ==================================================================== -->
 
 <xsl:template match="db:annotation" mode="m:annotation">
@@ -215,11 +228,13 @@
   </div>
 </xsl:template>
 
-<!-- ==================================================================== -->
-
-<!-- FIXME: this can't be right... -->
-<xsl:template match="db:acknowledgements">
-  <xsl:apply-templates/>
+<xsl:template match="db:annotation/db:info/db:title"
+	      mode="m:titlepage-mode">
+  <div class="title">
+    <strong>
+      <xsl:apply-templates/>
+    </strong>
+  </div>
 </xsl:template>
 
 </xsl:stylesheet>

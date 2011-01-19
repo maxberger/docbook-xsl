@@ -6,9 +6,9 @@
 </appendixinfo>
 <title>DocBook Versions</title>
 <para>
-<indexterm><primary>DocBook DTD</primary>
+<indexterm id="versionsDocBookappc" class="startofrange"><primary>DocBook DTD</primary>
   <secondary>versions</secondary></indexterm>
-<indexterm><primary>versions</primary>
+<indexterm id="DocBookversionsappc" class="startofrange"><primary>versions</primary>
   <secondary>DocBook DTD</secondary></indexterm>
 <indexterm><primary>OASIS</primary>
   <secondary>DocBook Technical Committee</secondary></indexterm>

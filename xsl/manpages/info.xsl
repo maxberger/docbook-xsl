@@ -79,9 +79,9 @@
   <!-- * The make.roff.metatada.author template and metadata.author -->
   <!-- * mode are used only for populating the Author field in the -->
   <!-- * metadata "top comment" we embed in roff source of each page. -->
+
   <xsl:template name="make.roff.metadata.author">
     <xsl:param name="info"/>
-    <xsl:param name="refname"/>
     <xsl:choose>
       <xsl:when test="$info//author">
         <xsl:apply-templates
@@ -123,125 +123,7 @@
             select="(($info[//publishername])[last()]//publishername)[1]"
             mode="metadata.author"/>
       </xsl:when>
-      <xsl:otherwise>
-        <!-- * otherwise, we need to check to see if we have an "Author" -->
-        <!-- * or "Authors" section in the refentry -->
-        <xsl:variable name="gentext.author">
-          <xsl:text>"</xsl:text>
-          <xsl:call-template name="gentext">
-            <xsl:with-param name="key" select="'Author'"/>
-          </xsl:call-template>
-          <xsl:text>"</xsl:text>
-        </xsl:variable>
-        <xsl:variable name="gentext.AUTHOR">
-          <xsl:if test="not($gentext.author = '')">
-            <xsl:call-template name="string.upper">
-              <xsl:with-param name="string" select="$gentext.author"/>
-            </xsl:call-template>
-          </xsl:if>
-        </xsl:variable>
-        <xsl:variable name="gentext.authors">
-          <xsl:text>"</xsl:text>
-          <xsl:call-template name="gentext">
-            <xsl:with-param name="key" select="'Authors'"/>
-          </xsl:call-template>
-          <xsl:text>"</xsl:text>
-        </xsl:variable>
-        <xsl:variable name="gentext.AUTHORS">
-          <xsl:if test="not($gentext.authors = '')">
-            <xsl:call-template name="string.upper">
-              <xsl:with-param name="string" select="$gentext.authors"/>
-            </xsl:call-template>
-          </xsl:if>
-        </xsl:variable>
-        <!-- * get all refentry/refsect1/title & refentry/refsection/title -->
-        <!-- * instances, delimit each with double quotes, and put them -->
-        <!-- * into a single refsect1.titles string -->
-        <xsl:variable name="refsect1.titles">
-          <xsl:for-each select="refsect1/title">
-            <xsl:text>"</xsl:text>
-            <xsl:value-of select="normalize-space(.)"/>
-            <xsl:text>"</xsl:text>
-            <xsl:text> </xsl:text>
-          </xsl:for-each>
-          <xsl:for-each select="refsection/title">
-            <xsl:text>"</xsl:text>
-            <xsl:value-of select="normalize-space(.)"/>
-            <xsl:text>"</xsl:text>
-            <xsl:text> </xsl:text>
-          </xsl:for-each>
-        </xsl:variable>
-        <xsl:variable name="author.section.title">
-          <xsl:choose>
-            <xsl:when test="not($gentext.authors = '') and
-              contains($refsect1.titles,$gentext.authors)">
-              <xsl:value-of select="$gentext.authors"/>
-            </xsl:when>
-            <xsl:when test="not($gentext.AUTHORS = '') and
-              contains($refsect1.titles,$gentext.AUTHORS)">
-              <xsl:value-of select="$gentext.AUTHORS"/>
-            </xsl:when>
-            <xsl:when test="not($gentext.author = '') and
-              contains($refsect1.titles,$gentext.author)">
-              <xsl:value-of select="$gentext.author"/>
-            </xsl:when>
-            <xsl:when test="not($gentext.AUTHOR = '') and
-              contains($refsect1.titles,$gentext.AUTHOR)">
-              <xsl:value-of select="$gentext.AUTHOR"/>
-            </xsl:when>
-            <!-- * git docs (for one) use "DOCUMENTATION" for their authors section -->
-            <xsl:when test="contains($refsect1.titles,'Documentation')">
-              <xsl:text>Documentation</xsl:text>
-            </xsl:when>
-            <xsl:when test="contains($refsect1.titles,'DOCUMENTATION')">
-              <xsl:text>DOCUMENTATION</xsl:text>
-            </xsl:when>
-            <xsl:otherwise/> <!-- * otherwise, leave empty -->
-          </xsl:choose>
-        </xsl:variable>
-        <xsl:choose>
-          <xsl:when test="not($author.section.title = '')">
-            <!-- * if we have a non-empty $author.section.title value, -->
-            <!-- * then reference that title (instead of putting a -->
-            <!-- * specific author name) -->
-            <xsl:text>[see the </xsl:text>
-            <xsl:value-of select="$author.section.title"/>
-            <xsl:text> section]</xsl:text>
-          </xsl:when>
-          <xsl:otherwise>
-            <!-- * otherwise we have no info/author content and no Author -->
-            <!-- * or Authors section, so we insert a fixme and report -->
-            <!-- * the problem to the user -->
-            <xsl:text>[FIXME: author] [see http://docbook.sf.net/el/author]</xsl:text>
-            <xsl:if test="$refentry.meta.get.quietly = 0">
-              <xsl:call-template name="log.message">
-                <xsl:with-param name="level">Warn</xsl:with-param>
-                <xsl:with-param name="source" select="$refname"/>
-                <xsl:with-param name="context-desc">meta author</xsl:with-param>
-                <xsl:with-param name="message">
-                  <xsl:text>no refentry/info/author</xsl:text>
-                </xsl:with-param>
-              </xsl:call-template>
-              <xsl:call-template name="log.message">
-                <xsl:with-param name="level">Note</xsl:with-param>
-                <xsl:with-param name="source" select="$refname"/>
-                <xsl:with-param name="context-desc">meta author</xsl:with-param>
-                <xsl:with-param name="message">
-                  <xsl:text>see http://docbook.sf.net/el/author</xsl:text>
-                </xsl:with-param>
-              </xsl:call-template>
-              <xsl:call-template name="log.message">
-                <xsl:with-param name="level">Warn</xsl:with-param>
-                <xsl:with-param name="source" select="$refname"/>
-                <xsl:with-param name="context-desc">meta author</xsl:with-param>
-                <xsl:with-param name="message">
-                  <xsl:text>no author data, so inserted a fixme</xsl:text>
-                </xsl:with-param>
-              </xsl:call-template>
-            </xsl:if>
-          </xsl:otherwise>
-        </xsl:choose>
-      </xsl:otherwise>
+      <xsl:otherwise/> <!-- * do nothing, no author info found -->
     </xsl:choose>
   </xsl:template>
 
@@ -320,19 +202,16 @@
                       $info//othercredit)">
           </xsl:value-of>
         </xsl:variable>
-        <xsl:call-template name="make.subheading">
-          <xsl:with-param name="title">
-            <xsl:call-template name="make.authorsecttitle">
-              <xsl:with-param name="authorcount" select="$authorcount"/>
-            </xsl:call-template>
-          </xsl:with-param>
+        <xsl:text>.SH "</xsl:text>
+        <xsl:call-template name="make.authorsecttitle">
+          <xsl:with-param name="authorcount" select="$authorcount"/>
         </xsl:call-template>
         <!-- * Now output all the actual author, editor, etc. content -->
         <xsl:for-each
-          select="$info//author|$info//editor|$info//collab|
-          $info//corpauthor|$info//corpcredit|
-          $info//othercredit|$info/orgname|
-          $info/publishername|$info/publisher">
+            select="$info//author|$info//editor|$info//collab|
+                    $info//corpauthor|$info//corpcredit|
+                    $info//othercredit|$info/orgname|
+                    $info/publishername|$info/publisher">
           <xsl:apply-templates select="." mode="authorsect"/>
         </xsl:for-each>
       </xsl:when>
@@ -354,11 +233,16 @@
         </xsl:otherwise>
       </xsl:choose>
     </xsl:param>
-    <xsl:call-template name="gentext">
-      <xsl:with-param name="key" select="$authorsecttitle"/>
+    <xsl:call-template name="string.upper">
+      <xsl:with-param name="string">
+        <xsl:call-template name="gentext">
+          <xsl:with-param name="key" select="$authorsecttitle"/>
+        </xsl:call-template>
+      </xsl:with-param>
     </xsl:call-template>
+    <xsl:text>"&#10;</xsl:text>
   </xsl:template>
-
+  
   <xsl:template match="author|editor|othercredit" mode="authorsect">
     <xsl:variable name="person-name">
       <xsl:call-template name="person.name.normalized"/>
@@ -386,9 +270,7 @@
     <!-- * Display direct-child addresses on separate lines -->
     <xsl:apply-templates select="address" mode="authorsect"/>
     <!-- * Call template for handling various attribution possibilities -->
-    <xsl:call-template name="attribution">
-      <xsl:with-param name="person-name" select="$person-name"/>
-    </xsl:call-template>
+    <xsl:call-template name="attribution"/>
   </xsl:template>
 
   <xsl:template match="collab" mode="authorsect">
@@ -433,7 +315,8 @@
 
   <xsl:template name="publisher.attribution">
     <xsl:text>&#10;</xsl:text>
-    <xsl:text>.RS</xsl:text> 
+    <xsl:text>.sp -1n&#10;</xsl:text>
+    <xsl:text>.IP ""</xsl:text> 
     <xsl:if test="not($blurb-indent = '')">
       <xsl:text> </xsl:text>
       <xsl:value-of select="$blurb-indent"/>
@@ -443,7 +326,6 @@
       <xsl:with-param name="key" select="'Publisher'"/>
     </xsl:call-template>
     <xsl:text>.&#10;</xsl:text>
-    <xsl:text>.RE&#10;</xsl:text> 
   </xsl:template>
 
   <xsl:template match="email|address/otheraddr/ulink" mode="authorsect">
@@ -546,8 +428,6 @@
   </xsl:template>
 
   <xsl:template name="attribution">
-    <xsl:param name="person-name"/>
-    <xsl:param name="refname" select="ancestor::refentry/refnamediv[1]/refname[1]"/>
     <!-- * Determine appropriate attribution for a particular person's role. -->
     <xsl:choose>
       <!-- * if we have a *blurb or contrib, just use that -->
@@ -555,101 +435,63 @@
         <xsl:apply-templates select="contrib|personblurb|authorblurb" mode="authorsect"/>
         <xsl:text>&#10;</xsl:text>
       </xsl:when>
-      <xsl:otherwise>
-        <!-- * otherwise we have no attribution information to use... -->
-        <xsl:if test="not($person-name = '')">
-          <!-- * if we have a person name or organization name -->
-          <!-- * ($person-name can actually be an orgname, not just a -->
-          <!-- * person name), then report to the user that we are -->
-          <!-- * lacking attribution information for that person -->
-          <xsl:if test="$refentry.meta.get.quietly = 0">
-            <xsl:call-template name="log.message">
-              <xsl:with-param name="level">Warn</xsl:with-param>
-              <xsl:with-param name="source" select="$refname"/>
-              <xsl:with-param name="context-desc">AUTHOR sect.</xsl:with-param>
-              <xsl:with-param name="message">
-                <xsl:text>no personblurb|contrib for </xsl:text>
-                <xsl:value-of select="$person-name"/>
-              </xsl:with-param>
-            </xsl:call-template>
-            <xsl:call-template name="log.message">
-              <xsl:with-param name="level">Note</xsl:with-param>
-              <xsl:with-param name="source" select="$refname"/>
-              <xsl:with-param name="context-desc">AUTHOR sect.</xsl:with-param>
-              <xsl:with-param name="message">
-                <xsl:text>see see http://docbook.sf.net/el/contrib</xsl:text>
-              </xsl:with-param>
-            </xsl:call-template>
-            <xsl:call-template name="log.message">
-              <xsl:with-param name="level">Note</xsl:with-param>
-              <xsl:with-param name="source" select="$refname"/>
-              <xsl:with-param name="context-desc">AUTHOR sect.</xsl:with-param>
-              <xsl:with-param name="message">
-                <xsl:text>see see http://docbook.sf.net/el/personblurb</xsl:text>
-              </xsl:with-param>
-            </xsl:call-template>
-          </xsl:if>
+      <!-- * If we have no *blurb or contrib, but this is an Author or -->
+      <!-- * Editor, then render the corresponding localized gentext -->
+      <xsl:when test="self::author">
+        <xsl:text>&#10;</xsl:text>
+        <xsl:text>.sp -1n&#10;</xsl:text>
+        <xsl:text>.IP ""</xsl:text> 
+        <xsl:if test="not($blurb-indent = '')">
+          <xsl:text> </xsl:text>
+          <xsl:value-of select="$blurb-indent"/>
         </xsl:if>
+        <xsl:text>&#10;</xsl:text>
+        <xsl:call-template name="gentext">
+          <xsl:with-param name="key" select="'Author'"/>
+        </xsl:call-template>
+        <xsl:text>.&#10;</xsl:text>
+      </xsl:when>
+      <xsl:when test="self::editor">
+        <xsl:text>&#10;</xsl:text>
+        <xsl:text>.sp -1n&#10;</xsl:text>
+        <xsl:text>.IP ""</xsl:text> 
+        <xsl:if test="not($blurb-indent = '')">
+          <xsl:text> </xsl:text>
+          <xsl:value-of select="$blurb-indent"/>
+        </xsl:if>
+        <xsl:text>&#10;</xsl:text>
+        <xsl:call-template name="gentext">
+          <xsl:with-param name="key" select="'Editor'"/>
+        </xsl:call-template>
+        <xsl:text>.&#10;</xsl:text>
+      </xsl:when>
+      <!-- * If we have no *blurb or contrib, but this is an Othercredit, -->
+      <!-- * check value of Class attribute and use corresponding gentext. -->
+      <xsl:when test="self::othercredit">
         <xsl:choose>
-          <!-- * If we have no *blurb or contrib, but this is an Author or -->
-          <!-- * Editor, then render the corresponding localized gentext -->
-          <xsl:when test="self::author">
+          <xsl:when test="@class and @class != 'other'">
             <xsl:text>&#10;</xsl:text>
-            <xsl:text>.RS</xsl:text> 
+            <xsl:text>.sp -1n&#10;</xsl:text>
+            <xsl:text>.IP ""</xsl:text> 
             <xsl:if test="not($blurb-indent = '')">
               <xsl:text> </xsl:text>
               <xsl:value-of select="$blurb-indent"/>
             </xsl:if>
             <xsl:text>&#10;</xsl:text>
             <xsl:call-template name="gentext">
-              <xsl:with-param name="key" select="'Author'"/>
+              <xsl:with-param name="key" select="@class"/>
             </xsl:call-template>
             <xsl:text>.&#10;</xsl:text>
-            <xsl:text>.RE&#10;</xsl:text> 
-          </xsl:when>
-          <xsl:when test="self::editor">
-            <xsl:text>&#10;</xsl:text>
-            <xsl:text>.RS</xsl:text> 
-            <xsl:if test="not($blurb-indent = '')">
-              <xsl:text> </xsl:text>
-              <xsl:value-of select="$blurb-indent"/>
-            </xsl:if>
-            <xsl:text>&#10;</xsl:text>
-            <xsl:call-template name="gentext">
-              <xsl:with-param name="key" select="'Editor'"/>
-            </xsl:call-template>
-            <xsl:text>.&#10;</xsl:text>
-            <xsl:text>.RE&#10;</xsl:text> 
-          </xsl:when>
-          <!-- * If we have no *blurb or contrib, but this is an Othercredit, -->
-          <!-- * check value of Class attribute and use corresponding gentext. -->
-          <xsl:when test="self::othercredit">
-            <xsl:choose>
-              <xsl:when test="@class and @class != 'other'">
-                <xsl:text>&#10;</xsl:text>
-                <xsl:text>.RS</xsl:text> 
-                <xsl:if test="not($blurb-indent = '')">
-                  <xsl:text> </xsl:text>
-                  <xsl:value-of select="$blurb-indent"/>
-                </xsl:if>
-                <xsl:text>&#10;</xsl:text>
-                <xsl:call-template name="gentext">
-                  <xsl:with-param name="key" select="@class"/>
-                </xsl:call-template>
-                <xsl:text>.&#10;</xsl:text>
-                <xsl:text>.RE&#10;</xsl:text> 
-              </xsl:when>
-              <xsl:otherwise>
-                <!-- * We have an Othercredit, but no usable value for the Class -->
-                <!-- * attribute, so nothing to show, do nothing -->
-              </xsl:otherwise>
-            </xsl:choose>
           </xsl:when>
           <xsl:otherwise>
-            <!-- * We have no *blurb or contrib or anything else we can use to -->
-            <!-- * display appropriate attribution for this person, so do nothing -->
+            <!-- * We have an Othercredit, but not usable value for the Class -->
+            <!-- * attribute, so nothing to show, do nothing -->
           </xsl:otherwise>
         </xsl:choose>
+      </xsl:when>
+      <xsl:otherwise>
+        <!-- * We have no *blurb or contrib or anything else we can use to -->
+        <!-- * display appropriate attribution for this person, so do nothing -->
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -659,15 +501,6 @@
     <!-- * yeah, it's possible for a *blurb to have a "title" -->
     <xsl:apply-templates select="title"/>
     <xsl:apply-templates select="*[not(self::title)]"/>
-    <!-- * If this *blurb has a sibling "name" element of some kind, then -->
-    <!-- * the mark.up.blurb.or.contrib template will generated an "RS" -->
-    <!-- * call that will cause it to be indented; so we need to call -->
-    <!-- * "RE" to restore the previous indent level -->
-    <xsl:if test="../personname|../surname|../firstname
-      |../othername|../lineage|../honorific
-      |../affiliation|../email|../address">
-      <xsl:text>.RE&#10;</xsl:text> 
-    </xsl:if>
   </xsl:template>
 
   <xsl:template match="personblurb/title|authorblurb/title">
@@ -691,11 +524,6 @@
     </xsl:variable>
     <xsl:value-of select="normalize-space($contents)"/>
     <xsl:text>&#10;</xsl:text>
-    <xsl:if test="../personname|../surname|../firstname
-      |../othername|../lineage|../honorific
-      |../affiliation|../email|../address">
-      <xsl:text>.RE&#10;</xsl:text> 
-    </xsl:if>
   </xsl:template>
 
   <xsl:template name="mark.up.blurb.or.contrib">
@@ -708,7 +536,8 @@
                 |../othername|../lineage|../honorific
                 |../affiliation|../email|../address">
         <xsl:text>&#10;</xsl:text>
-        <xsl:text>.RS</xsl:text> 
+        <xsl:text>.sp -1n&#10;</xsl:text>
+        <xsl:text>.IP ""</xsl:text> 
         <xsl:if test="not($blurb-indent = '')">
           <xsl:text> </xsl:text>
           <xsl:value-of select="$blurb-indent"/>
@@ -744,14 +573,15 @@
     <xsl:param name="info"/>
     <xsl:choose>
       <xsl:when test="$info//copyright|$info//legalnotice">
-        <xsl:call-template name="make.subheading">
-          <xsl:with-param name="title">
+        <xsl:text>.SH "</xsl:text>
+        <xsl:call-template name="string.upper">
+          <xsl:with-param name="string">
             <xsl:call-template name="gentext">
               <xsl:with-param name="key">Copyright</xsl:with-param>
             </xsl:call-template>
           </xsl:with-param>
         </xsl:call-template>
-        <xsl:text>.br&#10;</xsl:text>
+        <xsl:text>"&#10;</xsl:text>
         <!-- * the copyright mode="titlepage.mode" template is -->
         <!-- * imported from the HTML stylesheets -->
         <xsl:for-each select="

@@ -18,20 +18,23 @@
 <?tdg-refsynopsisdiv?>
 
 <refsection condition="ref.description">
-<title>Description</title><para>A <tag>hardware</tag> element identifies some physical
-      component of a computer system. Even though DocBook provides a broad
-      range of inlines for describing the various software components of a
-      system, it provides relatively few for describing hardware.</para>
+<title>Description</title>
 
-      <para>If you need to identify a number of different hardware components,
-      you may wish to consider extending DocBook, or at least using the
-      <tag class="attribute">role</tag> attribute to further classify
-      <tag>hardware</tag>.</para>
+<para>A <tag>hardware</tag> element identifies some physical component
+of a computer system. Even though DocBook provides a broad range of
+inlines for describing the various software components of a system, it
+provides relatively few for describing hardware.
+</para>
+<para>If you need to identify a number of different hardware components,
+you may wish to consider extending DocBook, or at least using the
+<tag class="attribute">role</tag> attribute to further classify
+<tag>hardware</tag>.
+</para>
 
-      <refsection><info><title>Processing expectations</title></info>
-        
+<refsection><title>Processing expectations</title>
+<para><?tdg gentext='format.inline'?>
 
-        <para>Formatted inline.</para>
+</para>
 </refsection>
 
 <?tdg-attributes?>

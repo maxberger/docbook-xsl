@@ -1,4 +1,4 @@
-include $(DOCBOOK_SVN)/buildtools/Makefile.incl
+include ../../buildtools/Makefile.incl
 
 PARAMBASE=param
 XSLFILES=param.xsl profile-docbook.xsl

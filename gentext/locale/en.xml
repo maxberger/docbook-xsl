@@ -15,8 +15,6 @@
 
 <gentext key="Abstract" text="Abstract"/>
 <gentext key="abstract" text="Abstract"/>
-<gentext key="Acknowledgements" text="Acknowledgements"/>
-<gentext key="acknowledgements" text="Acknowledgements"/>
 <gentext key="Answer" text="A:"/>
 <gentext key="answer" text="A:"/>
 <gentext key="Appendix" text="Appendix"/>
@@ -144,6 +142,7 @@
 <gentext key="in" text="in"/>
 <gentext key="lastlistcomma" text=","/>
 <gentext key="listcomma" text=","/>
+<gentext key="nonexistantelement" text="non-existant element"/>
 <gentext key="notes" text="Notes"/>
 <gentext key="Notes" text="Notes"/>
 <gentext key="Pgs" text="Pgs."/>
@@ -196,7 +195,6 @@
 <gentext key="below" text="below"/>
 <gentext key="sectioncalled" text="the section called"/>
 <gentext key="index symbols" text="Symbols"/>
-<gentext key="writing-mode" text="lr-tb"/>
 
 <gentext key="lowercase.alpha" text="abcdefghijklmnopqrstuvwxyz"/>
 <gentext key="uppercase.alpha" text="ABCDEFGHIJKLMNOPQRSTUVWXYZ"/>
@@ -226,7 +224,6 @@
 <context name="title">
 
 <template name="abstract">%t</template>
-<template name="acknowledgements">%t</template>
 <template name="answer">%t</template>
 <template name="appendix"><Appendix/>&#160;%n.&#160;%t</template>
 <template name="article">%t</template>
@@ -344,7 +341,6 @@
 <context name="subtitle">
 
 <template name="appendix">%s</template>
-<template name="acknowledgements">%s</template>
 <template name="article">%s</template>
 <template name="bibliodiv">%s</template>
 <template name="biblioentry">%s</template>
@@ -387,7 +383,6 @@
 
 <context name="xref">
 <template name="abstract">%t</template>
-<template name="acknowledgements">%t</template>
 <template name="answer"><Answer/>&#160;%n</template>
 <template name="appendix">%t</template>
 <template name="article">%t</template>
@@ -532,9 +527,8 @@
 </context>
 
 <context name="glossary">
-<template name="see"><GlossSee/> %t.</template>
-<template name="seealso"><GlossSeeAlso/> %t.</template>
-<template name="seealso-separator">, </template>
+<template name="see"><GlossSee/> %t</template>
+<template name="seealso"><GlossSeeAlso/> %t</template>
 </context>
 
 <context name="msgset">

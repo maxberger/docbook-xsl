@@ -14,10 +14,6 @@
           <affiliation><address><email>fundawang@linux.net.cn</email></address>
           </affiliation>
   </author>
-  <author><firstname>Tom</firstname><surname>K. C. Chiu</surname>
-          <affiliation><orgname>The Fedora Project</orgname><address><email>tomchiukc@gmail.com</email></address>
-          </affiliation>
-  </author>
 </authorgroup>
 </doc:localeinfo>
 
@@ -31,8 +27,6 @@
 
 <gentext key="Abstract" text="摘要"/>
 <gentext key="abstract" text="摘要"/>
-<gentext key="Acknowledgements" text="鸣谢"/>
-<gentext key="acknowledgements" text="鸣谢"/>
 <gentext key="Answer" text="答："/>
 <gentext key="answer" text="答："/>
 <gentext key="Appendix" text="附录"/>
@@ -49,8 +43,8 @@
 <gentext key="caution" text="小心"/>
 <gentext key="Chapter" text="章"/>
 <gentext key="chapter" text="章"/>
-<gentext key="Colophon" text="后记"/>
-<gentext key="colophon" text="后记"/>
+<gentext key="Colophon" text="Colophon"/>
+<gentext key="colophon" text="Colophon"/>
 <gentext key="Copyright" text="版权"/>
 <gentext key="copyright" text="版权"/>
 <gentext key="Dedication" text="题词"/>
@@ -100,20 +94,20 @@
 <gentext key="Published" text="出版方"/>
 <gentext key="published" text="出版方"/>
 <gentext key="Publisher" text="出版者"/>
-<gentext key="Qandadiv" text="答问集"/>
-<gentext key="qandadiv" text="答问集"/>
+<gentext key="Qandadiv" text="质保"/>
+<gentext key="qandadiv" text="质保"/>
 <gentext key="QandASet" text="常见问题"/>
 <gentext key="Question" text="问："/>
 <gentext key="question" text="问："/>
-<gentext key="RefEntry" text="页"/>
-<gentext key="refentry" text="页"/>
+<gentext key="RefEntry" text=""/>
+<gentext key="refentry" text=""/>
 <gentext key="Reference" text="参考"/>
 <gentext key="reference" text="参考"/>
 <gentext key="References" text="参考"/>
 <gentext key="RefName" text="名称"/>
 <gentext key="refname" text="名称"/>
-<gentext key="RefSection" text="节"/>
-<gentext key="refsection" text="节"/>
+<gentext key="RefSection" text=""/>
+<gentext key="refsection" text=""/>
 <gentext key="RefSynopsisDiv" text="大纲"/>
 <gentext key="refsynopsisdiv" text="大纲"/>
 <gentext key="RevHistory" text="修订历史"/>
@@ -127,17 +121,17 @@
 <gentext key="sect5" text="节"/>
 <gentext key="section" text="节"/>
 <gentext key="Section" text="节"/>
-<gentext key="see" text="见"/>   
+<gentext key="see" text="见"/>             <!-- uncapitalized -->
 <gentext key="See" text="见"/>
-<gentext key="seealso" text="参见"/> 
+<gentext key="seealso" text="参见"/>    <!-- uncapitalized -->
 <gentext key="Seealso" text="参见"/>
 <gentext key="SeeAlso" text="参见"/>
-<gentext key="set" text="集合"/>
-<gentext key="Set" text="集合"/>
-<gentext key="setindex" text="索引"/>
-<gentext key="SetIndex" text="索引"/>
-<gentext key="Sidebar" text="侧栏"/>
-<gentext key="sidebar" text="侧栏"/>
+<gentext key="set" text="Set"/>
+<gentext key="Set" text="Set"/>
+<gentext key="setindex" text="Set Index"/>
+<gentext key="SetIndex" text="Set Index"/>
+<gentext key="Sidebar" text=""/>
+<gentext key="sidebar" text="sidebar"/>
 <gentext key="step" text="步骤"/>
 <gentext key="Step" text="步骤"/>
 <gentext key="Table" text="表"/>
@@ -155,11 +149,12 @@
 <gentext key="by" text="由"/>
 <gentext key="Edited" text="编辑时间"/>
 <gentext key="edited" text="编辑时间"/>
-<gentext key="Editedby" text="编辑"/>
-<gentext key="editedby" text="编辑"/>
+<gentext key="Editedby" text="编辑者"/>
+<gentext key="editedby" text="编辑者"/>
 <gentext key="in" text="于"/>
 <gentext key="lastlistcomma" text=""/>
 <gentext key="listcomma" text="、"/>
+<gentext key="nonexistantelement" text="不存在的元素"/>
 <gentext key="notes" text="备注"/>
 <gentext key="Notes" text="备注"/>
 <gentext key="Pgs" text="页"/>
@@ -207,12 +202,11 @@
 <gentext key="nav-up" text="上一级"/>
 <gentext key="nav-toc" text="目录"/>
 
-<gentext key="Draft" text="草稿"/>
-<gentext key="above" text="以上"/>
-<gentext key="below" text="以下"/>
+<gentext key="Draft"         text="草稿"/>
+<gentext key="above"         text="以上"/>
+<gentext key="below"         text="以下"/>
 <gentext key="sectioncalled" text="一节"/>
 <gentext key="index symbols" text="符号"/>
-<gentext key="writing-mode" text="lr-tb"/>
 
 <gentext key="lowercase.alpha" text="abcdefghijklmnopqrstuvwxyz"/>
 <gentext key="uppercase.alpha" text="ABCDEFGHIJKLMNOPQRSTUVWXYZ"/>
@@ -242,7 +236,6 @@
 <context name="title">
 
 <template name="abstract">%t</template>
-<template name="acknowledgements">%t</template>
 <template name="answer">%t</template>
 <template name="appendix"><Appendix/>&#160;%n.&#160;%t</template>
 <template name="article">%t</template>
@@ -360,7 +353,6 @@
 <context name="subtitle">
 
 <template name="appendix">%s</template>
-<template name="acknowledgements">%s</template>
 <template name="article">%s</template>
 <template name="bibliodiv">%s</template>
 <template name="biblioentry">%s</template>
@@ -403,7 +395,6 @@
 
 <context name="xref">
 <template name="abstract">%t</template>
-<template name="acknowledgements">%t</template>
 <template name="answer"><Answer/>&#160;%n</template>
 <template name="appendix">%t</template>
 <template name="article">%t</template>
@@ -548,9 +539,8 @@
 </context>
 
 <context name="glossary">
-<template name="see"><GlossSee/>%t.</template>
-<template name="seealso"><GlossSeeAlso/>%t.</template>
-<template name="seealso-separator">, </template>
+<template name="see"><GlossSee/>%t</template>
+<template name="seealso"><GlossSeeAlso/>%t</template>
 </context>
 
 <context name="msgset">

@@ -1,16 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-		xmlns:xslthl="http://xslthl.sf.net"
-		exclude-result-prefixes="xslthl"
                 version="1.0">
 
 <xsl:import href="../../../../../xsl/html/profile-docbook.xsl"/>
-<xsl:import href="../../../../../xsl/html/highlight.xsl"/>
 
 <xsl:param name="profile.status">final</xsl:param>
-
-<!-- Name used in URIs -->
-<xsl:param name="basename" select="/*[1]/@xml:id"/>
 
 <xsl:template name="user.head.content">
   <xsl:param name="node" select="."/>
@@ -69,13 +63,13 @@
   <h4>Latest version:</h4>
   <dl class="urilist">
     <dt>
-      <span>http://docbook.org/docs/<xsl:value-of select="$basename"/>/</span>
+      <span>http://docbook.org/docs/howto/</span>
       <xsl:text> (</xsl:text>
-      <a href="http://docbook.org/docs/{$basename}/">HTML</a>
+      <a href="http://docbook.org/docs/howto/">HTML</a>
       <xsl:text>, </xsl:text>
-      <a href="http://docbook.org/docs/{$basename}/{$basename}.xml">XML</a>
+      <a href="http://docbook.org/docs/howto/howto.xml">XML</a>
       <xsl:text>, </xsl:text>
-      <a href="http://docbook.org/docs/{$basename}/{$basename}.pdf">PDF</a>
+      <a href="http://docbook.org/docs/howto/howto.pdf">PDF</a>
       <xsl:text>)</xsl:text>
     </dt>
   </dl>
@@ -106,9 +100,7 @@
 
 <xsl:template match="pubdate" mode="datedURI">
   <xsl:variable name="uri">
-    <xsl:text>http://docbook.org/docs/</xsl:text>
-    <xsl:value-of select="$basename"/>
-    <xsl:text>/</xsl:text>
+    <xsl:text>http://docbook.org/docs/howto/</xsl:text>
     <xsl:value-of select="substring(.,1,4)"/>
     <xsl:text>-</xsl:text>
     <xsl:value-of select="substring(.,6,2)"/>
@@ -123,9 +115,9 @@
   <xsl:text> (</xsl:text>
   <a href="{$uri}">HTML</a>
   <xsl:text>, </xsl:text>
-  <a href="{$uri}{$basename}.xml">XML</a>
+  <a href="{$uri}howto.xml">XML</a>
   <xsl:text>, </xsl:text>
-  <a href="{$uri}{$basename}.pdf">PDF</a>
+  <a href="{$uri}howto.pdf">PDF</a>
   <xsl:text>)</xsl:text>
 </xsl:template>
 
@@ -170,16 +162,9 @@
     </xsl:choose>
   </xsl:variable>
 
-  <xsl:choose>
-    <xsl:when test="$basename = 'howto'">  <!-- Make links only in howto -->
-      <a href="{$baseUri}{.}.html">
-	<xsl:apply-imports/>
-      </a>
-    </xsl:when>
-    <xsl:otherwise>
-      <xsl:apply-imports/>
-    </xsl:otherwise>
-  </xsl:choose>
+  <a href="{$baseUri}{.}.html">
+    <xsl:apply-imports/>
+  </a>
 </xsl:template>
 
 <!-- Support for labels identifying programlisting syntax used -->
@@ -250,20 +235,6 @@
       <xsl:with-param name="text" select="$tail"/>
     </xsl:call-template>
   </xsl:if>
-</xsl:template>
-
-<xsl:param name="highlight.source" select="1"/>
-
-<xsl:template name="language.to.xslthl">
-  <xsl:param name="context"/>
-
-  <xsl:if test="$context/@language != '' or not($context/@language)">
-    <xsl:text>myxml</xsl:text>
-  </xsl:if>
-</xsl:template>
-
-<xsl:template match='xslthl:html' mode="xslthl">
-  <b style="color: navy"><xsl:apply-templates mode="xslthl"/></b>
 </xsl:template>
 
 </xsl:stylesheet>

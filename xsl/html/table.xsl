@@ -179,7 +179,6 @@
       <!-- Otherwise, if there's a title, use that -->
       <xsl:when test="../title">
         <xsl:attribute name="summary">
-          <!-- This screws up on inline markup and footnotes, oh well... -->
           <xsl:value-of select="string(../title)"/>
         </xsl:attribute>
       </xsl:when>
@@ -306,11 +305,11 @@
               </xsl:call-template>
             </xsl:attribute>
           </xsl:when>
-          <xsl:when test="../@frame='none'">
-            <xsl:attribute name="style">
-              <xsl:text>border: none;</xsl:text>
-            </xsl:attribute>
-          </xsl:when>
+	  <xsl:when test="../@frame='none'">
+	    <xsl:attribute name="style">
+	      <xsl:text>border: none;</xsl:text>
+	    </xsl:attribute>
+	  </xsl:when>
           <xsl:otherwise>
             <xsl:attribute name="style">
               <xsl:text>border-collapse: collapse;</xsl:text>
@@ -414,11 +413,11 @@
     <xsl:apply-templates select="tfoot"/>
     <xsl:apply-templates select="tbody"/>
 
-    <xsl:if test=".//footnote|../title//footnote">
+    <xsl:if test=".//footnote">
       <tbody class="footnotes">
         <tr>
           <td colspan="{@cols}">
-            <xsl:apply-templates select=".//footnote|../title//footnote" mode="table.footnote.mode"/>
+            <xsl:apply-templates select=".//footnote" mode="table.footnote.mode"/>
           </td>
         </tr>
       </tbody>
@@ -466,29 +465,13 @@
       </xsl:attribute>
     </xsl:if>
 
-    <xsl:choose>
-      <!-- recurse on rows only if @morerows is present -->
-      <xsl:when test="row/entry/@morerows|row/entrytbl/@morerows">
-        <xsl:apply-templates select="row[1]">
-          <xsl:with-param name="spans">
-            <xsl:call-template name="blank.spans">
-              <xsl:with-param name="cols" select="../@cols"/>
-            </xsl:call-template>
-          </xsl:with-param>
-          <xsl:with-param name="browserows" select="'recurse'"/>
-        </xsl:apply-templates>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:apply-templates select="row">
-          <xsl:with-param name="spans">
-            <xsl:call-template name="blank.spans">
-              <xsl:with-param name="cols" select="../@cols"/>
-            </xsl:call-template>
-          </xsl:with-param>
-          <xsl:with-param name="browserows" select="'loop'" />
-        </xsl:apply-templates>
-      </xsl:otherwise>
-    </xsl:choose>
+    <xsl:apply-templates select="row[1]">
+      <xsl:with-param name="spans">
+        <xsl:call-template name="blank.spans">
+          <xsl:with-param name="cols" select="../@cols"/>
+        </xsl:call-template>
+      </xsl:with-param>
+    </xsl:apply-templates>
 
   </xsl:element>
 </xsl:template>
@@ -516,78 +499,57 @@
       </xsl:attribute>
     </xsl:if>
 
-    <xsl:choose>
-      <xsl:when test="row/entry/@morerows|row/entrytbl/@morerows">
-        <xsl:apply-templates select="row[1]">
-          <xsl:with-param name="spans">
-            <xsl:call-template name="blank.spans">
-              <xsl:with-param name="cols" select="../@cols"/>
-            </xsl:call-template>
-          </xsl:with-param>
-          <xsl:with-param name="browserows" select="'recurse'"/>
-        </xsl:apply-templates>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:apply-templates select="row">
-          <xsl:with-param name="spans">
-            <xsl:call-template name="blank.spans">
-              <xsl:with-param name="cols" select="../@cols"/>
-            </xsl:call-template>
-          </xsl:with-param>
-          <xsl:with-param name="browserows" select="'loop'" />
-        </xsl:apply-templates>
-      </xsl:otherwise>
-    </xsl:choose>
+    <xsl:apply-templates select="row[1]">
+      <xsl:with-param name="spans">
+        <xsl:call-template name="blank.spans">
+          <xsl:with-param name="cols" select="../@cols"/>
+        </xsl:call-template>
+      </xsl:with-param>
+    </xsl:apply-templates>
 
   </tbody>
 </xsl:template>
 
 <xsl:template match="row">
   <xsl:param name="spans"/>
-  <xsl:param name="browserows"/>
 
   <xsl:choose>
     <xsl:when test="contains($spans, '0')">
       <xsl:call-template name="normal-row">
-        <xsl:with-param name="spans" select="$spans"/>
-        <xsl:with-param name="browserows" select="$browserows"/>
+	<xsl:with-param name="spans" select="$spans"/>
       </xsl:call-template>
     </xsl:when>
     <xsl:otherwise>
       <!--
       <xsl:message>
-        <xsl:text>Ignoring row: </xsl:text>
-        <xsl:value-of select="$spans"/>
-        <xsl:text> = </xsl:text>
-        <xsl:call-template name="consume-row">
-          <xsl:with-param name="spans" select="$spans"/>
-        </xsl:call-template>
+	<xsl:text>Ignoring row: </xsl:text>
+	<xsl:value-of select="$spans"/>
+	<xsl:text> = </xsl:text>
+	<xsl:call-template name="consume-row">
+	  <xsl:with-param name="spans" select="$spans"/>
+	</xsl:call-template>
       </xsl:message>
       -->
 
       <xsl:if test="normalize-space(.//text()) != ''">
-        <xsl:message>Warning: overlapped row contains content!</xsl:message>
+	<xsl:message>Warning: overlapped row contains content!</xsl:message>
       </xsl:if>
 
       <tr><xsl:comment> This row intentionally left blank </xsl:comment></tr>
 
-      <xsl:if test="$browserows = 'recurse'">
-        <xsl:apply-templates select="following-sibling::row[1]">
-          <xsl:with-param name="spans">
-            <xsl:call-template name="consume-row">
-              <xsl:with-param name="spans" select="$spans"/>
-            </xsl:call-template>
-          </xsl:with-param>
-          <xsl:with-param name="browserows" select="$browserows"/>
-        </xsl:apply-templates>
-      </xsl:if>
+      <xsl:apply-templates select="following-sibling::row[1]">
+	<xsl:with-param name="spans">
+	  <xsl:call-template name="consume-row">
+	    <xsl:with-param name="spans" select="$spans"/>
+	  </xsl:call-template>
+	</xsl:with-param>
+      </xsl:apply-templates>
     </xsl:otherwise>
   </xsl:choose>
 </xsl:template>
 
 <xsl:template name="normal-row">
   <xsl:param name="spans"/>
-  <xsl:param name="browserows"/>
 
   <xsl:variable name="row-height">
     <xsl:if test="processing-instruction('dbhtml')">
@@ -668,44 +630,27 @@
     </xsl:apply-templates>
   </tr>
 
-  <xsl:if test="$browserows = 'recurse'">
-    <xsl:if test="following-sibling::row">
-      <xsl:variable name="nextspans">
-        <xsl:apply-templates select="(entry|entrytbl)[1]" mode="span">
-          <xsl:with-param name="spans" select="$spans"/>
-        </xsl:apply-templates>
-      </xsl:variable>
-  
-      <xsl:apply-templates select="following-sibling::row[1]">
-        <xsl:with-param name="spans" select="$nextspans"/>
-        <xsl:with-param name="browserows" select="$browserows"/>
+  <xsl:if test="following-sibling::row">
+    <xsl:variable name="nextspans">
+      <xsl:apply-templates select="(entry|entrytbl)[1]" mode="span">
+        <xsl:with-param name="spans" select="$spans"/>
       </xsl:apply-templates>
-    </xsl:if>
+    </xsl:variable>
+
+    <xsl:apply-templates select="following-sibling::row[1]">
+      <xsl:with-param name="spans" select="$nextspans"/>
+    </xsl:apply-templates>
   </xsl:if>
 </xsl:template>
 
 <xsl:template match="entry|entrytbl" name="entry">
-  <xsl:param name="col">
-    <xsl:choose>
-      <xsl:when test="@revisionflag">
-        <xsl:number from="row"/>
-      </xsl:when>
-      <xsl:otherwise>1</xsl:otherwise>
-    </xsl:choose>
-  </xsl:param>
-
+  <xsl:param name="col" select="1"/>
   <xsl:param name="spans"/>
 
   <xsl:variable name="cellgi">
     <xsl:choose>
       <xsl:when test="ancestor::thead">th</xsl:when>
       <xsl:when test="ancestor::tfoot">th</xsl:when>
-      <xsl:when test="ancestor::tbody and 
-                      (ancestor::table[@rowheader = 'firstcol'] or
-                      ancestor::informaltable[@rowheader = 'firstcol']) and
-                      ancestor-or-self::entry[1][count(preceding-sibling::entry) = 0]">
-        <xsl:text>th</xsl:text>
-      </xsl:when>
       <xsl:otherwise>td</xsl:otherwise>
     </xsl:choose>
   </xsl:variable>
@@ -747,8 +692,7 @@
     <xsl:choose>
       <!-- If this is the last row, rowsep never applies. -->
       <xsl:when test="ancestor::entrytbl
-                      and not (ancestor-or-self::row[1]/following-sibling::row)
-                      and not (ancestor::thead)">
+                      and not (ancestor-or-self::row[1]/following-sibling::row)">
         <xsl:value-of select="0"/>
       </xsl:when>
       <xsl:when test="not(ancestor-or-self::row[1]/following-sibling::row
@@ -846,7 +790,6 @@
           </xsl:attribute>
         </xsl:if>
 
-        <xsl:call-template name="locale.html.attributes"/>
         <xsl:if test="$entry.propagates.style != 0 and @role">
           <xsl:apply-templates select="." mode="class.attribute">
             <xsl:with-param name="class" select="@role"/>
@@ -988,8 +931,8 @@
     <xsl:when test="number($entry.colnum) &gt; $col">
       <xsl:text>0:</xsl:text>
       <xsl:call-template name="sentry">
-        <xsl:with-param name="col" select="$col + 1"/>
-        <xsl:with-param name="spans" select="substring-after($spans,':')"/>
+        <xsl:with-param name="col" select="$col+$entry.colspan"/>
+        <xsl:with-param name="spans" select="$following.spans"/>
       </xsl:call-template>
     </xsl:when>
 
@@ -1069,36 +1012,20 @@
       <xsl:choose>
         <xsl:when test="$colspec.colnum=$countcol">
           <col>
-            <xsl:choose>
-              <xsl:when test="$colspec/@colwidth
-                            and $use.extensions != 0
-                            and $tablecolumns.extension != 0">
-                <xsl:attribute name="width">
-                  <xsl:choose>
-                    <xsl:when test="normalize-space($colspec/@colwidth) = '*'">
-                      <xsl:value-of select="'1*'"/>
-                    </xsl:when>
-                    <xsl:otherwise>
-                      <xsl:value-of select="$colspec/@colwidth"/>
-                    </xsl:otherwise>
-                  </xsl:choose>
-                </xsl:attribute>
-              </xsl:when>
-              <!-- pass through to HTML if no * in colspecs -->
-              <xsl:when test="$colspec/@colwidth and
-                             not($colspec/parent::*/colspec/@colwidth[contains(.,'*')])">
-                <xsl:attribute name="width">
-                  <xsl:choose>
-                    <xsl:when test="normalize-space($colspec/@colwidth) = '*'">
-                      <xsl:value-of select="'1*'"/>
-                    </xsl:when>
-                    <xsl:otherwise>
-                      <xsl:value-of select="$colspec/@colwidth"/>
-                    </xsl:otherwise>
-                  </xsl:choose>
-                </xsl:attribute>
-              </xsl:when>
-            </xsl:choose>
+            <xsl:if test="$colspec/@colwidth
+                          and $use.extensions != 0
+                          and $tablecolumns.extension != 0">
+              <xsl:attribute name="width">
+	        <xsl:choose>
+		  <xsl:when test="normalize-space($colspec/@colwidth) = '*'">
+                    <xsl:value-of select="'1*'"/>
+		  </xsl:when>
+		  <xsl:otherwise>
+                    <xsl:value-of select="$colspec/@colwidth"/>
+		  </xsl:otherwise>
+		</xsl:choose>
+              </xsl:attribute>
+            </xsl:if>
 
             <xsl:choose>
               <xsl:when test="$colspec/@align">
@@ -1119,16 +1046,9 @@
                 <xsl:value-of select="$colspec/@char"/>
               </xsl:attribute>
             </xsl:if>
-            
             <xsl:if test="$colspec/@charoff">
               <xsl:attribute name="charoff">
                 <xsl:value-of select="$colspec/@charoff"/>
-              </xsl:attribute>
-            </xsl:if>
-
-            <xsl:if test="$colspec/@colname">
-              <xsl:attribute name="class">
-                <xsl:value-of select="$colspec/@colname"/>
               </xsl:attribute>
             </xsl:if>
           </col>

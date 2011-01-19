@@ -18,22 +18,18 @@
 <?tdg-refsynopsisdiv?>
 
 <refsection condition="ref.description">
-<title>Description</title><para>A <tag>mathphrase</tag> is a simple, inline equation, one
-      that can be represented using ordinary text, symbols, subscripts, and
-      superscripts. A good example is: E=mc<superscript>2</superscript>.<!--
+<title>Description</title>
 
-for example, or my personal favorite,
+<para>A <tag>mathphrase</tag> is a simple, inline equation, one that
+can be represented using ordinary text, symbols, subscripts, and
+superscripts. <inlineequation>
+<mathphrase>E=mc<superscript>2</superscript></mathphrase></inlineequation>,
+for example.
+</para>
 
-FIXME: FOR O'REILLY
-
-<inlineequation>
-<mathphrase><emphasis>e</emphasis><superscript>π<phrase role="italic">i</phrase></superscript> + 1 = 0</mathphrase></inlineequation>.
---></para>
-
-      <refsection><info><title>Processing expectations</title></info>
-        
-
-        <para>Formatted inline.</para>
+<refsection><title>Processing expectations</title>
+<para><?tdg gentext='format.inline'?>
+</para>
 </refsection>
 
 <?tdg-attributes?>
@@ -56,4 +52,3 @@ FIXME: FOR O'REILLY
 </refsection>
 
 </refentry>
-

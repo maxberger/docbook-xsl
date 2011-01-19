@@ -148,7 +148,6 @@ generate.section.toc.level;
 &default.table.width;
 &nominal.table.width;
 &default.table.frame;
-&default.table.rules;
 &table.cell.padding;
 &table.frame.border.thickness;
 &table.frame.border.style;
@@ -194,7 +193,6 @@ generate.section.toc.level;
 &orderedlist.label.width;
 &variablelist.max.termlength;
 &variablelist.term.separator;
-&variablelist.term.properties;
 &variablelist.term.break.after;
 </reference>
 <reference xml:id="qa"><title>QAndASet</title>
@@ -215,15 +213,10 @@ generate.section.toc.level;
 &glossterm.auto.link;
 &firstterm.only.link;
 &glossary.collection;
+&glossterm.separation;
+&glossterm.width;
 &glossary.as.blocks;
 &glosslist.as.blocks;
-&glossentry.list.item.properties;
-&glossterm.block.properties;
-&glossdef.block.properties;
-&glossterm.list.properties;
-&glossdef.list.properties;
-&glossterm.width;
-&glossterm.separation;
 &glossentry.show.acronym;
 &glossary.sort;
 </reference>
@@ -263,14 +256,9 @@ generate.section.toc.level;
 &subscript.properties;
 &pgwide.properties;
 &highlight.source;
-&highlight.xslthl.config;
 &highlight.default.language;
 &email.delimiters.enabled;
-&email.mailto.enabled;
 &section.container.element;
-&monospace.verbatim.font.width;
-&exsl.node.set.available;
-&bookmarks.collapse;
 </reference>
 <reference xml:id="graphics"><title>Graphics</title>
 &graphic.default.extension;
@@ -344,11 +332,11 @@ but the DocBook stylesheets explicitly make it
 </para></listitem>
 <listitem><para>The sum of the page-master margin-left and the
 region-body margin-left. In DocBook, the region-body margin-left is
-zero by default, so this is simply the page-master margin-left.
+zero by default, so this is simply the page-master region-left.
 </para></listitem>
 <listitem><para>The sum of the page-master margin-right and the
 region-body margin-right. In DocBook, the region-body margin-right is
-zero by default, so this is simply the page-master margin-right.
+zero by default, so this is simply the page-master region-left.
 </para></listitem>
 </orderedlist>
 
@@ -451,7 +439,6 @@ zero by default, so this is simply the page-master margin-right.
 &figure.properties;
 &example.properties;
 &equation.properties;
-&equation.number.properties;
 &table.properties;
 &informalfigure.properties;
 &informalexample.properties;
@@ -503,7 +490,6 @@ profiling of your document. For more information about profiling, see
 &l10n.gentext.default.language;
 &l10n.gentext.use.xref.language;
 &l10n.lang.value.rfc.compliant;
-&writing.mode;
 </reference>
 <reference xml:id="ebnf"><title>EBNF</title>
 &ebnf.assignment;
@@ -571,7 +557,6 @@ around all these parameters.</para>
 <src:fragref linkend="body.margin.top.frag"/>
 <src:fragref linkend="body.start.indent.frag"/>
 <src:fragref linkend="body.end.indent.frag"/>
-<src:fragref linkend="bookmarks.collapse.frag"/>
 <src:fragref linkend="bridgehead.in.toc.frag"/>
 <src:fragref linkend="callout.defaultcolumn.frag"/>
 <src:fragref linkend="callout.graphics.extension.frag"/>
@@ -611,7 +596,6 @@ around all these parameters.</para>
 <src:fragref linkend="default.image.width.frag"/>
 <src:fragref linkend="default.table.width.frag"/>
 <src:fragref linkend="default.table.frame.frag"/>
-<src:fragref linkend="default.table.rules.frag"/>
 <src:fragref linkend="default.units.frag"/>
 <src:fragref linkend="dingbat.font.family.frag"/>
 <src:fragref linkend="double.sided.frag"/>
@@ -620,11 +604,8 @@ around all these parameters.</para>
 <src:fragref linkend="ebnf.assignment.frag"/>
 <src:fragref linkend="ebnf.statement.terminator.frag"/>
 <src:fragref linkend="email.delimiters.enabled.frag"/>
-<src:fragref linkend="email.mailto.enabled.frag"/>
 <src:fragref linkend="equation.properties.frag"/>
-<src:fragref linkend="equation.number.properties.frag"/>
 <src:fragref linkend="example.properties.frag"/>
-<src:fragref linkend="exsl.node.set.available.frag"/>
 <src:fragref linkend="figure.properties.frag"/>
 <src:fragref linkend="firstterm.only.link.frag"/>
 <src:fragref linkend="footer.content.properties.frag"/>
@@ -659,11 +640,6 @@ around all these parameters.</para>
 <src:fragref linkend="glossterm.auto.link.frag"/>
 <src:fragref linkend="glossterm.separation.frag"/>
 <src:fragref linkend="glossterm.width.frag"/>
-<src:fragref linkend="glossentry.list.item.properties.frag"/>
-<src:fragref linkend="glossterm.list.properties.frag"/>
-<src:fragref linkend="glossterm.block.properties.frag"/>
-<src:fragref linkend="glossdef.list.properties.frag"/>
-<src:fragref linkend="glossdef.block.properties.frag"/>
 <src:fragref linkend="graphic.default.extension.frag"/>
 <src:fragref linkend="header.content.properties.frag"/>
 <src:fragref linkend="header.rule.frag"/>
@@ -673,7 +649,6 @@ around all these parameters.</para>
 <src:fragref linkend="headers.on.blank.pages.frag"/>
 <src:fragref linkend="highlight.default.language.frag"/>
 <src:fragref linkend="highlight.source.frag"/>
-<src:fragref linkend="highlight.xslthl.config.frag"/>
 <src:fragref linkend="hyphenate.frag"/>
 <src:fragref linkend="hyphenate.verbatim.frag"/>
 <src:fragref linkend="hyphenate.verbatim.characters.frag"/>
@@ -726,7 +701,6 @@ around all these parameters.</para>
 <src:fragref linkend="monospace.font.family.frag"/>
 <src:fragref linkend="monospace.properties.frag"/>
 <src:fragref linkend="monospace.verbatim.properties.frag"/>
-<src:fragref linkend="monospace.verbatim.font.width.frag"/>
 <src:fragref linkend="nominal.table.width.frag"/>
 <src:fragref linkend="normal.para.spacing.frag"/>
 <src:fragref linkend="olink.doctitle.frag"/>
@@ -873,10 +847,8 @@ around all these parameters.</para>
 <src:fragref linkend="variablelist.as.blocks.frag"/>
 <src:fragref linkend="variablelist.max.termlength.frag"/>
 <src:fragref linkend="variablelist.term.separator.frag"/>
-<src:fragref linkend="variablelist.term.properties.frag"/>
 <src:fragref linkend="variablelist.term.break.after.frag"/>
 <src:fragref linkend="verbatim.properties.frag"/>
-<src:fragref linkend="writing.mode.frag"/>
 <src:fragref linkend="xep.extensions.frag"/>
 <src:fragref linkend="xep.index.item.properties.frag"/>
 <src:fragref linkend="xref.label-page.separator.frag"/>

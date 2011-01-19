@@ -18,17 +18,21 @@
 <?tdg-refsynopsisdiv?>
 
 <refsection condition="ref.description">
-<title>Description</title><para>A <tag>partintro</tag> contains introductory text, often
-      an overview of the content of the <tag>part</tag>.</para>
+<title>Description</title>
 
-      <refsection><info><title>Processing expectations</title></info>
-        
+<para>A <tag>partintro</tag> contains introductory text, often an
+overview of the content of the <tag>part</tag>.
+</para>
 
-        <para>Formatted as a displayed block. Sometimes suppressed.</para>
-
-        <para>The <tag>partintro</tag> content is often printed on a
-        part separator page.</para>
+<refsection><title>Processing expectations</title>
+<para><?tdg gentext='format.block'?>
+<?tdg gentext='format.csuppress'?>
+</para>
+<para>The <tag>partintro</tag> content is often printed on a part
+separator page.
+</para>
 </refsection>
+
 
 <?tdg-attributes?>
 <?tdg-parents?>
@@ -38,10 +42,6 @@
 
 <?tdg-seealso?>
 
-<refsection condition="ref.examples">
-<title>Examples</title>
-<para>See <tag>part</tag> for an example that uses this element.</para>
-</refsection>
-
+<!-- FIXME: add examples -->
 
 </refentry>

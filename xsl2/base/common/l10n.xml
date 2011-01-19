@@ -27,7 +27,7 @@
 <!ENTITY lit SYSTEM "lt.xml">
 <!ENTITY nl SYSTEM "nl.xml">
 <!ENTITY nn SYSTEM "nn.xml">
-<!ENTITY nb SYSTEM "nb.xml">
+<!ENTITY no SYSTEM "no.xml">
 <!ENTITY pl SYSTEM "pl.xml">
 <!ENTITY pt SYSTEM "pt.xml">
 <!ENTITY pt_br SYSTEM "pt_br.xml">
@@ -43,7 +43,6 @@
 <!ENTITY uk SYSTEM "uk.xml">
 <!ENTITY vi SYSTEM "vi.xml">
 <!ENTITY xh SYSTEM "xh.xml">
-<!ENTITY zh SYSTEM "zh.xml">
 <!ENTITY zh_cn SYSTEM "zh_cn.xml">
 <!ENTITY zh_tw SYSTEM "zh_tw.xml">
 ]>
@@ -75,7 +74,7 @@
 &lit;
 &nl;
 &nn;
-&nb;
+&no;
 &pl;
 &pt;
 &pt_br;
@@ -91,7 +90,6 @@
 &uk;
 &vi;
 &xh;
-&zh;
 &zh_cn;
 &zh_tw;
 </l:i18n>

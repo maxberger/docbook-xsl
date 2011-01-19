@@ -1,318 +1,193 @@
 <?xml version="1.0"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-		xmlns="http://www.w3.org/1999/xhtml"
 		xmlns:db="http://docbook.org/ns/docbook"
-		xmlns:f="http://docbook.org/xslt/ns/extension"
-		xmlns:h="http://www.w3.org/1999/xhtml"
-                xmlns:m="http://docbook.org/xslt/ns/mode"
-		xmlns:t="http://docbook.org/xslt/ns/template"
 		xmlns:xlink="http://www.w3.org/1999/xlink"
-                xmlns:xs='http://www.w3.org/2001/XMLSchema'
-		exclude-result-prefixes="db f h m t xlink xs"
-                version="2.0">
+		exclude-result-prefixes="db xlink"
+                version="1.0">
 
-<xsl:import href="/sourceforge/docbook/xsl2/base/html/docbook.xsl"/>
+<xsl:import href="/projects/oasis/spectools/stylesheets/oasis-docbook-html.xsl"/>
 
-<xsl:param name="generate.toc" as="element()*">
-<tocparam path="appendix" toc="0" title="0"/>
-<tocparam path="article"  toc="1" title="1"/>
+<!-- These get evaluated before stripping! -->
+
+<xsl:variable name="tcProduct" 
+	      select="//db:info/db:productname[1]"/>
+<xsl:variable name="tcProductVersion"
+	      select="//db:info/db:productnumber[1]"/>
+<xsl:variable name="tcArtifactType" select="'spec'"/>
+<xsl:variable name="tcStage"
+	      select="//db:info/db:releaseinfo[@role='stage'][1]"/>
+<xsl:variable name="tcRevision"
+	      select="//db:info/db:biblioid[@class='pubsnumber'][1]"/>
+<xsl:variable name="tcLanguage" select="/@xml:lang"/>
+<xsl:variable name="tcForm" select="'xml'"/>
+
+<xsl:variable name="odnRoot">
+  <xsl:value-of select="$tcProduct"/>
+  <xsl:text>-</xsl:text>
+  <xsl:value-of select="$tcProductVersion"/>
+  <xsl:text>-</xsl:text>
+  <xsl:value-of select="$tcArtifactType"/>
+  <xsl:text>-</xsl:text>
+  <xsl:value-of select="$tcStage"/>
+  <xsl:text>-</xsl:text>
+  <xsl:value-of select="$tcRevision"/>
+  <xsl:if test="$tcLanguage != 'en' and $tcLanguage != ''">
+    <xsl:text>-</xsl:text>
+    <xsl:value-of select="$tcLanguage"/>
+  </xsl:if>
+</xsl:variable>
+
+<xsl:param name="css.path"
+           select="'http://www.oasis-open.org/spectools/css/'"/>
+
+<xsl:param name="css.stylesheet">
+  <xsl:choose>
+    <xsl:when test="$tcStage = 'wd'">oasis-wd.css</xsl:when>
+    <xsl:when test="$tcStage = 'cd'">oasis-cd.css</xsl:when>
+    <xsl:when test="$tcStage = 'pr'">oasis-pr.css</xsl:when>
+    <xsl:when test="$tcStage = 'cs'">oasis-cs.css</xsl:when>
+    <xsl:when test="$tcStage = 'os'">oasis-os.css</xsl:when>
+    <xsl:otherwise>
+      <xsl:message>
+        <xsl:text>Unrecognized stage: '</xsl:text>
+	<xsl:value-of select="$tcStage"/>
+        <xsl:text>'; styling as Working Draft.</xsl:text>
+      </xsl:message>
+      <xsl:text>oasis-wd.css</xsl:text>
+    </xsl:otherwise>
+  </xsl:choose>
 </xsl:param>
 
-<xsl:param name="section.label.includes.component.label" select="1"/>
-
-<xsl:param name="bibliography.collection" select="'bibliography.xml'"/>
-
-<xsl:param name="docbook.css" select="'docbook.css'"/>
-
-<xsl:param name="linenumbering" as="element()*">
-<ln path="literallayout" everyNth="0"/>
-<ln path="programlisting" everyNth="0"/>
-<ln path="programlistingco" everyNth="0"/>
-<ln path="screen" everyNth="0"/>
-<ln path="synopsis" everyNth="0"/>
-<ln path="address" everyNth="0"/>
-<ln path="epigraph/literallayout" everyNth="0"/>
-</xsl:param>
-
-<xsl:param name="profile.condition" select="'online'"/>
-
-<!-- ============================================================ -->
-
-<xsl:template name="t:user-head-content">
+<xsl:template name="user.head.content">
   <xsl:param name="node" select="."/>
-  <link href="OASIS_Specification_Template_v1-0.css"
-	rel="stylesheet" type="text/css" />
+
+  <meta name="tcProduct" content="{$tcProduct}"/>
+  <meta name="tcProductVersion" content="{$tcProductVersion}"/>
+  <meta name="tcArtifactType" content="{$tcArtifactType}"/>
+  <meta name="tcStage" content="{$tcStage}"/>
+  <meta name="tcRevision" content="{$tcRevision}"/>
+  <meta name="tcLanguage" content="{$tcLanguage}"/>
+  <meta name="tcForm" content="html"/>
 
   <style type="text/css">
-h1,
-div.toc p b { 
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 18pt;
-  font-weight: bold;
-  list-style-type: decimal;
-  color: #66116D;
-}
-
-body {
-font-family: Arial, Helvetica, sans-serif;
-font-size: 10pt;
-}
-
-.rev-added {
-  background-color: #AAFFAA;
-}
-
-.rev-deleted {
-  background-color: #FFAAAA;
-  text-decoration: line-through;
-}
-
-.rev-changed {
-  background-color: #FFFFAA;
-}
-
-.rev-off {
-  background-color: black;
-  text-decoration: none;
-}
-
+    span.paranum { color: #7F7F7F;
+                   font-style: italic;
+                   font-family: monospace;
+                 }
+    span.filename { font-weight: bold; }		 
   </style>
 </xsl:template>
 
-<xsl:template match="db:article">
-  <xsl:variable name="toc.params"
-		select="f:find-toc-params(., $generate.toc)"/>
+<xsl:template name="article.titlepage">
+  <div class="titlepage">
+    <p class="logo">
+      <a href="http://www.oasis-open.org/">
+	<img src="http://www.oasis-open.org/spectools/images/oasis.gif"
+	     alt="OASIS" border="0" />
+      </a>
+    </p>
 
-  <p>
-    <img src="http://docs.oasis-open.org/templates/OASISLogo.jpg"
-	 alt="OASIS logo" width="203" height="54" />
-  </p>
-
-  <xsl:apply-templates select="db:info"/>
-
-  <xsl:call-template name="make-lots">
-    <xsl:with-param name="toc.params" select="$toc.params"/>
-    <xsl:with-param name="toc">
-      <xsl:call-template name="component-toc">
-	<xsl:with-param name="toc.title" select="$toc.params/@title != 0"/>
-      </xsl:call-template>
-    </xsl:with-param>
-  </xsl:call-template>
-
-  <xsl:apply-templates select="*[not(self::db:info)]"/>
-</xsl:template>
-
-<xsl:template match="db:article/db:info">
-  <div class="head">
-    <h1>
-      <xsl:apply-templates select="db:title/node()"/>
-      <xsl:text> Version </xsl:text>
-      <xsl:value-of select="db:productnumber"/>
-    </h1>
+    <xsl:apply-templates select="//articleinfo/title"
+			 mode="titlepage.mode"/>
 
     <h2>
-      <xsl:value-of select="../@status"/>
+      <xsl:choose>
+	<xsl:when test="$tcStage = 'wd'">Working Draft</xsl:when>
+	<xsl:when test="$tcStage = 'cd'">Committee Draft</xsl:when>
+	<xsl:when test="$tcStage = 'pr'">Public Review Draft</xsl:when>
+	<xsl:when test="$tcStage = 'cs'">Committee Specification</xsl:when>
+	<xsl:when test="$tcStage = 'os'">OASIS Standard</xsl:when>
+	<xsl:otherwise>
+	  <xsl:message>
+	    <xsl:text>Unrecognized stage: '</xsl:text>
+	    <xsl:value-of select="$tcStage"/>
+	    <xsl:text>'; labeling as Working Draft.</xsl:text>
+	  </xsl:message>
+	  <xsl:text>Working Draft</xsl:text>
+	</xsl:otherwise>
+      </xsl:choose>
+      <xsl:text>,&#160;</xsl:text>
+
+      <xsl:value-of select="substring(//articleinfo/pubdate[1],9,2)"/>
+      <xsl:text>&#160;</xsl:text>
+
+      <xsl:variable name="month"
+		    select="substring(//articleinfo/pubdate[1],6,2)"/>
+      <xsl:choose>
+	<xsl:when test="$month = '01'">January</xsl:when>
+	<xsl:when test="$month = '02'">February</xsl:when>
+	<xsl:when test="$month = '03'">March</xsl:when>
+	<xsl:when test="$month = '04'">April</xsl:when>
+	<xsl:when test="$month = '05'">May</xsl:when>
+	<xsl:when test="$month = '06'">June</xsl:when>
+	<xsl:when test="$month = '07'">July</xsl:when>
+	<xsl:when test="$month = '08'">August</xsl:when>
+	<xsl:when test="$month = '09'">September</xsl:when>
+	<xsl:when test="$month = '10'">October</xsl:when>
+	<xsl:when test="$month = '11'">November</xsl:when>
+	<xsl:when test="$month = '12'">December</xsl:when>
+      </xsl:choose>
+
+      <xsl:text>&#160;</xsl:text>
+      <xsl:value-of select="substring(//articleinfo/pubdate[1],1,4)"/>
     </h2>
 
-    <h2 class="pubdate">
-      <xsl:value-of select="format-date(xs:date(db:pubdate[1]),
-	                                '[D] [MNn] [Y0001]')"/>
-    </h2>
+    <dl>
+      <dt><span class="docid-heading">Document identifier:</span></dt>
+      <dd>
+	<p>
+	  <xsl:value-of select="$odnRoot"/>
+	  <xsl:text> (</xsl:text>
+	  <a href="{$odnRoot}.xml">.xml</a>
+	  <xsl:text>, </xsl:text>
+	  <a href="{$odnRoot}.html">.html</a>
+	  <xsl:text>, </xsl:text>
+	  <a href="{$odnRoot}.pdf">.pdf</a>
+	  <xsl:text>)</xsl:text>
+	</p>
+      </dd>
 
-    <xsl:variable name="odnRoot">
-      <xsl:value-of select="db:productname[1]"/>
-      <xsl:text>-</xsl:text>
-      <xsl:value-of select="db:productnumber[1]"/>
-      <xsl:text>-</xsl:text>
-      <xsl:value-of select="'spec'"/>
-      <xsl:text>-</xsl:text>
-      <xsl:value-of select="db:releaseinfo[@role='stage'][1]"/>
-      <xsl:if test="db:biblioid[@class='pubsnumber'][1] != ''">
-        <xsl:text>-</xsl:text>
-        <xsl:value-of select="db:biblioid[@class='pubsnumber'][1]"/>
-      </xsl:if>
-      <xsl:if test="ancestor::*[@xml:lang][1]
-		    and ancestor::*[@xml:lang][1]/@xml:lang != 'en'">
-	<xsl:text>-</xsl:text>
-	<xsl:value-of select="ancestor::*[@xml:lang][1]/@xml:lang"/>
-      </xsl:if>
-    </xsl:variable>
+      <dt><span class="loc-heading">Location:</span></dt>
+      <dd>
+	<p>
+	  <a href="{//articleinfo/releaseinfo[@role='location']}">
+	    <xsl:value-of select="//articleinfo/releaseinfo[@role='location']"/>
+	  </a>
+	</p>
+      </dd>
 
-    <div class="uris">
-      <h3>Specification URIs:</h3>
-      <dl>
-	<dt>This Version:</dt>
-	<xsl:for-each select="('.html','.pdf','.xml')">
-	  <dd>
-	    <a href="{$odnRoot}{.}">
-	      <xsl:text>http://docs.oasis-open.org/docbook/specs/</xsl:text>
-	      <xsl:value-of select="$odnRoot"/>
-	      <xsl:value-of select="."/>
-	    </a>
-	  </dd>
-	</xsl:for-each>
-
-<!--
-        <xsl:if test="db:bibliorelation[@type='replaces']">
-          <xsl:variable name="r" select="string((db:bibliorelation[@type='replaces'])[1]/@xlink:href)"/>
-          <dt>Previous Version:</dt>
-          <xsl:for-each select="('.html','.pdf','.xml')">
-            <dd>
-              <a href="{$r}{.}">
-                <xsl:text>http://docs.oasis-open.org/docbook/specs/</xsl:text>
-                <xsl:value-of select="$r"/>
-                <xsl:value-of select="."/>
-              </a>
-            </dd>
-          </xsl:for-each>
-        </xsl:if>
--->
-      </dl>
-    </div>
-
-    <div class="committee">
-      <dl>
-	<dt>Technical Committee:</dt>
-	<xsl:for-each select="db:org/db:orgdiv">
-	  <dd>
-	    <a href="{@xlink:href}">
-	      <xsl:value-of select="."/>
-	    </a>
-	  </dd>
-	</xsl:for-each>
-
-	<dt>
-	  <xsl:text>Chair</xsl:text>
-	  <xsl:if test="count(db:othercredit[@otherclass = 'chair']) &gt; 1">
-	    <xsl:text>s</xsl:text>
-	  </xsl:if>
-	</dt>
-	<xsl:apply-templates select="db:othercredit[@otherclass = 'chair']"
-			     mode="spec.titlepage"/>
-
-	<xsl:variable name="editors" select="db:authorgroup/db:editor|db:editor"/>
-	<dt>
+      <dt>
+	<span class="editor-heading">
 	  <xsl:text>Editor</xsl:text>
-	  <xsl:if test="count($editors) &gt; 1">
+	  <xsl:if test="count(//articleinfo//editor) &gt; 1">
 	    <xsl:text>s</xsl:text>
 	  </xsl:if>
-	</dt>
-	<xsl:apply-templates select="$editors" mode="spec.titlepage"/>
+	  <xsl:text>:</xsl:text>
+	</span>
+      </dt>
+      <dd>
+	<xsl:for-each select="//articleinfo//editor">
+	  <p>
+	    <xsl:apply-templates select="." mode="titlepage.mode"/>
+	  </p>
+	</xsl:for-each>
+      </dd>
 
-	<xsl:variable name="replaces" select="db:bibliorelation[@type='replaces']"/>
-	<xsl:variable name="supersedes" select="db:bibliorelation[@othertype='supersedes']"/>
-	<xsl:variable name="related" select="db:bibliorelation[@type='references']"/>
+      <dt><span class="abstract-heading">Abstract:</span></dt>
+      <dd>
+	<xsl:apply-templates select="//articleinfo/abstract[1]/*"/>
+      </dd>
 
-	<xsl:if test="$replaces | $supersedes | $related">
-	  <dt>Related Work:</dt>
-	  <dd>
-	    <dl>
-	      <xsl:if test="$replaces|$supersedes">
-		<dt>This specification replaces or supersedes:</dt>
-		<xsl:for-each select="$replaces|$supersedes">
-		  <dd>
-		    <xsl:value-of select="@xlink:href"/>
-		  </dd>
-		</xsl:for-each>
-	      </xsl:if>
-	      <xsl:if test="$related">
-		<dt>This specification is related to:</dt>
-		<xsl:for-each select="$related">
-		  <dd>
-		    <xsl:value-of select="@xlink:href"/>
-		  </dd>
-		</xsl:for-each>
-	      </xsl:if>
-	    </dl>
-	  </dd>
-	</xsl:if>
-      </dl>
-    </div>
+      <dt><span class="status-heading">Status:</span></dt>
+      <dd>
+	<xsl:apply-templates
+	    select="//articleinfo/legalnotice[@role='status']/*"/>
+      </dd>
+    </dl>
 
-    <xsl:if test="db:bibliomisc[@role='namespace']">
-      <div class="namespaces">
-	<dl>
-	  <dt>
-	    <xsl:text>Declared XML Namespace</xsl:text>
-	    <xsl:if test="count(db:bibliomisc[@role='namespace']) &gt; 1">s</xsl:if>
-	  </dt>
-	  <xsl:for-each select="db:bibliomisc[@role='namespace']">
-	    <dd>
-	      <xsl:value-of select="."/>
-	    </dd>
-	  </xsl:for-each>
-	</dl>
-      </div>
-    </xsl:if>
-
-    <div class="abstract">
-      <h3>Abstract:</h3>
-      <xsl:apply-templates select="db:abstract"/>
-    </div>
-
-    <div class="abstract">
-      <h3>Status:</h3>
-      <xsl:apply-templates select="db:legalnotice[@role='status']"/>
-    </div>
-
-    <div class="notices">
-      <h2>Notices:</h2>
-      <xsl:apply-templates select="db:legalnotice[@role='notices']"/>
-    </div>
+    <xsl:apply-templates select="//articleinfo/copyright" mode="titlepage.mode"/>
   </div>
-</xsl:template>
-
-<xsl:template match="db:editor|db:editor|db:othercredit" mode="spec.titlepage">
-  <dd>
-    <xsl:apply-templates select="db:personname" mode="spec.titlepage"/>
-    <xsl:if test="db:affiliation/db:orgname">
-      <xsl:text>, </xsl:text>
-      <span class="affiliation">
-	<xsl:apply-templates select="db:affiliation/db:orgname"/>
-      </span>
-    </xsl:if>
-    <xsl:if test="db:email">
-      <xsl:text> </xsl:text>
-      <xsl:apply-templates select="db:email"/>
-    </xsl:if>
-  </dd>
-</xsl:template>
-
-<xsl:template match="db:personname" mode="spec.titlepage">
-  <span class="personname">
-    <xsl:apply-templates select="db:firstname"/>
-    <xsl:text> </xsl:text>
-    <xsl:apply-templates select="db:surname"/>
-  </span>
-</xsl:template>
-
-<xsl:template match="db:abstract|db:legalnotice">
-  <xsl:apply-templates/>
-</xsl:template>
-
-<xsl:template match="db:section/db:info/db:title" mode="m:titlepage-mode">
-  <xsl:variable name="depth"
-		select="count(ancestor::db:section)"/>
-
-  <xsl:variable name="hslevel"
-		select="if ($depth &lt; 6) then $depth else 6"/>
-
-  <xsl:variable name="hlevel"
-		select="if (ancestor::db:appendix) then $hslevel+1 else $hslevel"/>
-
-  <xsl:element name="h{$hlevel}" namespace="http://www.w3.org/1999/xhtml">
-    <xsl:apply-templates select="../.." mode="m:object-title-markup">
-      <xsl:with-param name="allow-anchors" select="1"/>
-    </xsl:apply-templates>
-  </xsl:element>
-</xsl:template>
-
-<!-- ============================================================ -->
-
-<xsl:template match="db:phrase[@revisionflag]">
-  <span class="rev-{@revisionflag}">
-    <xsl:next-match/>
-  </span>
+  <hr />
 </xsl:template>
 
 </xsl:stylesheet>

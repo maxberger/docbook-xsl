@@ -2,33 +2,30 @@
 # Please create your build.properties file from this template file.
 #
 
-docbook5.home=/home/dongsheng/var/svn/i18n-zh/trunk/lib/docbook/docbook5
-#docbook5.home=C:/var/svn/i18n-zh/trunk/lib/docbook/docbook5
+#docbook5.home=/home/cauchy/wc/svn/i18n-zh/trunk/lib/docbook/docbook5
+#docbook5.xsl=/home/cauchy/wc/svn/i18n-zh/trunk/lib/docbook/docbook5-xsl
 
-docbook.xsl=/home/dongsheng/var/svn/i18n-zh/trunk/lib/docbook/docbook-xsl
-#docbook.xsl=C:/var/svn/i18n-zh/trunk/lib/docbook/docbook-xsl
+docbook5.home=C:/wc/svn/i18n-zh/trunk/lib/docbook/docbook5
+docbook5.xsl=C:/wc/svn/i18n-zh/trunk/lib/docbook/docbook5-xsl
+
+# for saxon 6.5 !
+#docbook5.xsl.url=file:///home/cauchy/wc/svn/i18n-zh/trunk/lib/docbook/docbook5-xsl
+docbook5.xsl.url=file:///C:/wc/svn/i18n-zh/trunk/lib/docbook/docbook5-xsl
+
+fop.home=C:/wc/svn/i18n-zh/trunk/lib/fop/0.20.5
+#fop.home=/home/cauchy/wc/svn/i18n-zh/trunk/lib/fop/0.20.5
+fop.class=org.apache.fop.apps.Fop
+
+#fop.home=/home/cauchy/wc/svn/i18n-zh/trunk/lib/fop/1.x
+#fop.home=C:/wc/svn/i18n-zh/trunk/lib/fop/1.x
+#fop.class=org.apache.fop.cli.Main
+
+#Only for MBCS pdf files
+#fonts.dir=/home/cauchy/wc/svn/i18n-zh/trunk/lib/fonts
+fonts.dir=C:/wc/svn/i18n-zh/trunk/lib/fonts
+fonts.metrics.dir=${fop.home}/conf
 
 #You jars put here
 # usr.share.java = /usr/share/java
-usr.share.java = /home/dongsheng/var/svn/i18n-zh/trunk/lib/share/java
-# usr.share.java = C:/var/svn/i18n-zh/trunk/lib/share/java
-
-# Only for pdf files(xep)
-xep.home=/home/dongsheng/var/svn/i18n-zh/trunk/lib/xep
-
-# Only for pdf files(fop 0.20.5)
-#fop.home=/home/dongsheng/var/svn/i18n-zh/trunk/lib/fop/0.20.5
-#fop.home=C:/var/svn/i18n-zh/trunk/lib/fop/0.20.5
-#fop.class=org.apache.fop.apps.Fop
-
-# Only for pdf files(fop 0.94+)
-fop.home=/home/dongsheng/var/svn/i18n-zh/trunk/lib/fop/1.x
-#fop.home=C:/var/svn/i18n-zh/trunk/lib/fop/1.x
-fop.class=org.apache.fop.cli.Main
-
-# Only for pdf files(fop)
-fop.title.font.family=Arial,Calibri,FZCuYaSong,sans-serif,SimHei
-fop.body.font.family=Times New Roman,Cambria,Cambria Math,FZBoYaSong,serif,SimSun
-fop.sans.font.family=Arial,Calibri,FZCuYaSong,sans-serif,SimHei
-fop.dingbat.font.family=Times New Roman,Cambria,Cambria Math,FZBoYaSong,serif,SimSun
-fop.monospace.font.family=Courier New,FZFangSong,monospace,FangSong
+# usr.share.java = /home/cauchy/wc/svn/i18n-zh/trunk/lib/share/java
+usr.share.java = C:/wc/svn/i18n-zh/trunk/lib/share/java

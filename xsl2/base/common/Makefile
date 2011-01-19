@@ -1,12 +1,11 @@
 include ../../../buildtools/Makefile.incl
 
-XJPARSEFLAGS= -E 0 -w
-
-SOURCES=af.xml ar.xml bg.xml bn.xml bs.xml ca.xml cs.xml da.xml de.xml el.xml \
-	en.xml es.xml et.xml eu.xml fi.xml fr.xml he.xml hu.xml id.xml it.xml \
-	ja.xml ko.xml lt.xml nl.xml nn.xml nb.xml pl.xml hr.xml la.xml pt.xml \
-	pt_br.xml ro.xml ru.xml sk.xml sl.xml sr.xml sr_Latn.xml sv.xml th.xml \
-	tr.xml uk.xml vi.xml xh.xml zh.xml zh_cn.xml zh_tw.xml
+SOURCES=af.xml ar.xml bg.xml bn.xml bs.xml \
+        ca.xml cs.xml da.xml de.xml el.xml en.xml es.xml et.xml eu.xml fi.xml \
+        fr.xml he.xml hu.xml id.xml it.xml ja.xml ko.xml lt.xml nl.xml nn.xml \
+        no.xml pl.xml hr.xml la.xml \
+        pt.xml pt_br.xml ro.xml ru.xml sk.xml sl.xml sr.xml sr_Latn.xml sv.xml \
+        th.xml tr.xml uk.xml vi.xml xh.xml zh_cn.xml zh_tw.xml
 
 GENSTYLE=../../../gentext/xsl/xsl.xsl ../../../gentext/locale/en.xml
 
@@ -39,7 +38,7 @@ la.xml: ../../../gentext/locale/la.xml $(GENSTYLE)
 lt.xml: ../../../gentext/locale/lt.xml $(GENSTYLE)
 nl.xml: ../../../gentext/locale/nl.xml $(GENSTYLE)
 nn.xml: ../../../gentext/locale/nn.xml $(GENSTYLE)
-nb.xml: ../../../gentext/locale/nb.xml $(GENSTYLE)
+no.xml: ../../../gentext/locale/no.xml $(GENSTYLE)
 pl.xml: ../../../gentext/locale/pl.xml $(GENSTYLE)
 pt.xml: ../../../gentext/locale/pt.xml $(GENSTYLE)
 pt_br.xml: ../../../gentext/locale/pt_br.xml $(GENSTYLE)
@@ -55,13 +54,12 @@ tr.xml: ../../../gentext/locale/tr.xml $(GENSTYLE)
 uk.xml: ../../../gentext/locale/uk.xml $(GENSTYLE)
 vi.xml: ../../../gentext/locale/vi.xml $(GENSTYLE)
 xh.xml: ../../../gentext/locale/xh.xml $(GENSTYLE)
-zh.xml: ../../../gentext/locale/zh.xml $(GENSTYLE)
 zh_cn.xml: ../../../gentext/locale/zh_cn.xml $(GENSTYLE)
 zh_tw.xml: ../../../gentext/locale/zh_tw.xml $(GENSTYLE)
 
 %.xml:
-	$(XJPARSE) $(XJPARSEFLAGS) $<
+	$(XJPARSE) -w $<
 	$(XSLT) ../../../gentext/locale/en.xml ../../../gentext/xsl/xsl.xsl $@ locale.file=$@
 
 clean:
-	rm -f *.ent $(SOURCES)
+	rm -f *.ent *.xml

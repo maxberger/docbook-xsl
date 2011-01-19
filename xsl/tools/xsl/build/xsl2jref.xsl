@@ -6,31 +6,12 @@
                 xmlns:xlink="http://www.w3.org/1999/xlink"
                 exclude-result-prefixes="doc xsl lxslt">
 
-<xsl:include href="../../../common/l10n.xsl"/>
 <xsl:include href="../../../html/param.xsl"/>
 <xsl:include href="../../../html/chunker.xsl"/>
 
 <xsl:output
      method="xml"
 />
-
-<!-- These variables are also declared in html.xsl -->
-<xsl:variable name="direction.align.start">
-  <xsl:choose>
-    <xsl:when test="starts-with($writing.mode, 'lr')">left</xsl:when>
-    <xsl:when test="starts-with($writing.mode, 'rl')">right</xsl:when>
-    <xsl:otherwise>left</xsl:otherwise>
-  </xsl:choose>
-</xsl:variable>
-
-<xsl:variable name="direction.align.end">
-  <xsl:choose>
-    <xsl:when test="starts-with($writing.mode, 'lr')">right</xsl:when>
-    <xsl:when test="starts-with($writing.mode, 'rl')">left</xsl:when>
-    <xsl:otherwise>right</xsl:otherwise>
-  </xsl:choose>
-</xsl:variable>
-
 
 <xsl:preserve-space elements="xsl:variable"/>
 <xsl:strip-space elements="xsl:stylesheet"/>

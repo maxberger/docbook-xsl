@@ -125,8 +125,7 @@
       <!-- *   Output table title                                           -->
       <!-- * ============================================================== -->
       <xsl:if test="$title != '' or parent::td">
-        <xsl:text>.sp&#10;</xsl:text>
-        <xsl:call-template name="pinch.together"/>
+        <xsl:text>.PP&#10;</xsl:text>
         <xsl:text>.</xsl:text>
         <xsl:value-of select="$tbl.font.title"/>
         <xsl:text> </xsl:text>
@@ -135,6 +134,7 @@
         </xsl:if>
         <xsl:value-of select="normalize-space($title)"/>
         <xsl:text>&#10;</xsl:text>
+        <xsl:text>.sp -1n&#10;</xsl:text>
       </xsl:if>
       
       <!-- * mark the start of the table -->
@@ -210,7 +210,7 @@
       <!-- * .TE = "Table End" -->
       <xsl:text>.TE&#10;</xsl:text>
       <!-- * put a blank line of space below the table -->
-      <xsl:text>.sp 1&#10;</xsl:text>
+      <xsl:text>.sp&#10;</xsl:text>
     </xsl:for-each>
   </xsl:template>
 
@@ -600,7 +600,7 @@
       <xsl:apply-templates select="."/>
     </xsl:variable>
     <xsl:choose>
-      <xsl:when test="$exsl.node.set.available != 0">
+      <xsl:when test="function-available('exsl:node-set')">
         <xsl:variable name="html-nodes" select="exsl:node-set($html)"/>
         <xsl:choose>
           <xsl:when test="$html-nodes//p">

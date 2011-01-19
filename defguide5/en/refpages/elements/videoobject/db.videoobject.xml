@@ -18,19 +18,22 @@
 <?tdg-refsynopsisdiv?>
 
 <refsection condition="ref.description">
-<title>Description</title><para>A <tag>videoobject</tag> is a wrapper containing
-      <tag>videodata</tag> and its associated meta-information.</para>
+<title>Description</title>
 
-      <refsection><info><title>Processing expectations</title></info>
-        
 
-        <para>May be formatted inline or as a displayed block, depending on
-        context. It might not be rendered at all, depending on its placement
-        within a <tag>mediaobject</tag> or
-        <tag>inlinemediaobject</tag> and the constraints on the
-        publishing system. For a more detailed description of the semantics
-        involved, see <tag>mediaobject</tag>.</para>
-</refsection>
+<para>A <tag>videoobject</tag> is a wrapper containing <tag>videodata</tag>
+and its associated meta-information.
+</para>
+
+<refsection><title>Processing expectations</title>
+<para><?tdg gentext='format.context'?>
+It might not be rendered at all, depending on its placement
+within a <tag>mediaobject</tag> or <tag>inlinemediaobject</tag> and
+the constraints on the publishing system.  For a more detailed description
+of the semantics involved, see <tag>mediaobject</tag>.
+</para>
+</refsection> 
+
 
 <?tdg-attributes?>
 <?tdg-parents?>

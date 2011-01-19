@@ -220,27 +220,15 @@
   </xsl:template>
 
   <xsl:template name='doc:make-phrase'>
-    <xsl:param name='style' select='""'/>
-    <xsl:param name='italic' select='0'/>
-    <xsl:param name='bold' select='0'/>
+    <xsl:param name='style' select='"unknown"'/>
     <xsl:param name='content'>
-      <xsl:apply-templates mode='doc:phrase'/>
+      <xsl:apply-templates mode='doc:body'/>
     </xsl:param>
 
     <w:r>
-      <xsl:if test='$style != "" or
-                    $bold = 1 or
-                    $italic = 1'>
+      <xsl:if test='$style != ""'>
 	<w:rPr>
-          <xsl:if test='$style != ""'>
-            <w:rStyle w:val='{$style}'/>
-          </xsl:if>
-          <xsl:if test='$italic = 1'>
-            <w:i/>
-          </xsl:if>
-          <xsl:if test='$bold = 1'>
-            <w:b/>
-          </xsl:if>
+	  <w:rStyle w:val='{$style}'/>
 	</w:rPr>
       </xsl:if>
 

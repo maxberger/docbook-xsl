@@ -1,9 +1,8 @@
 <?xml version="1.0"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                xmlns:xslo="http://www.w3.org/1999/XSL/TransformAlias"
                 xmlns:exsl="http://exslt.org/common"
                 xmlns:saxon="http://icl.com/saxon"
-                exclude-result-prefixes="exsl saxon"
+                exclude-result-prefixes="exsl"
                 version="1.0">
 
 <xsl:include href="../lib/lib.xsl"/>
@@ -11,9 +10,6 @@
   encoding="ASCII"
   saxon:character-representation="decimal"
   />
-
-<xsl:namespace-alias stylesheet-prefix="xslo" result-prefix="xsl"/>
-
 <xsl:preserve-space elements="*"/>
 
 <xsl:template match="/">
@@ -132,27 +128,11 @@
   </xsl:copy>
 </xsl:template>
 
-<!-- Bare anchors (<a/>) are not allowed in <blockquote>s -->
-<xsl:template match="xsl:template[@name='anchor']/xsl:if">
-  <xslo:if>
-    <xsl:attribute name="test">
-      <xsl:text>not($node[parent::blockquote])</xsl:text>
-    </xsl:attribute>
-    <xsl:copy>
-      <xsl:copy-of select="@*"/>
-      <xsl:apply-templates/>
-    </xsl:copy>
-  </xslo:if>
-</xsl:template>
-
 <xsl:template match="xsl:template[@name='body.attributes']">
   <xsl:copy>
     <xsl:copy-of select="@*"/>
-    <xslo:if test="starts-with($writing.mode, 'rl')">
-      <xslo:attribute name="dir">rtl</xslo:attribute>
-    </xslo:if>
     <xsl:text>&#10;</xsl:text>
-    <xsl:comment> no apply-templates; make it empty except for dir for rtl</xsl:comment>
+    <xsl:comment> no apply-templates; make it empty </xsl:comment>
     <xsl:text>&#10;</xsl:text>
   </xsl:copy>
 </xsl:template>
@@ -163,20 +143,6 @@
     <xsl:apply-templates/>
   </span>
 </xsl:template>
-
-<!-- "The following HTML elements specify font information. 
-      Although they are not all deprecated, their use is discouraged in 
-      favor of style sheets." -->
-<xsl:template match="b">
-  <strong xmlns="http://www.w3.org/1999/xhtml">
-    <xsl:apply-templates select="@*|node()"/>
-  </strong>
-</xsl:template>  
-<xsl:template match="i">
-  <em xmlns="http://www.w3.org/1999/xhtml">
-    <xsl:apply-templates select="@*|node()"/>
-  </em>
-</xsl:template>  
 
 <!-- this only occurs in docbook.xsl to identify errors -->
 <xsl:template match="a[@name]">

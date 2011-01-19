@@ -18,16 +18,20 @@
 <?tdg-refsynopsisdiv?>
 
 <refsection condition="ref.description">
-<title>Description</title><para>A <tag>glossary</tag> contains a collection of terms and
-      brief descriptions or definitions of those terms.</para>
+<title>Description</title>
 
-      <refsection><info><title>Processing expectations</title></info>
-        
 
-        <para>Formatted as a displayed block. A <tag>glossary</tag> in
-        a <tag>book</tag> frequently causes a forced page break in
-        print media.</para>
+<para>A <tag>glossary</tag> contains a collection of terms and brief descriptions
+or definitions of those terms.
+</para>
+
+<refsection><title>Processing expectations</title>
+<para><?tdg gentext='format.block'?>
+A <tag>glossary</tag> in a <tag>book</tag>
+frequently causes a forced page break in print media.
+</para>
 </refsection>
+
 
 <?tdg-attributes?>
 <?tdg-parents?>

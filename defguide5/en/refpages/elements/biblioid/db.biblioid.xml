@@ -18,16 +18,22 @@
 <?tdg-refsynopsisdiv?>
 
 <refsection condition="ref.description">
-<title>Description</title><para>A bibliographic identifier, such as an <acronym>ISBN</acronym>
-      number, Library of Congress identifier, or URI.</para>
+<title>Description</title>
 
-      <para>This element supersedes the <tag role="nonexistant">isbn</tag>, <tag role="nonexistant">issn</tag>, and <tag role="nonexistant">pubsnumber</tag> elements.</para>
 
-      <refsection><info><title>Processing expectations</title></info>
-        
+<para>A bibliographic identifier, such as an <acronym>ISBN</acronym>
+number, Library of Congress identifier, or URI.</para>
 
-        <para>Formatted inline. Sometimes suppressed.</para>
+<para>This element supercedes the <tag role="nonexistant">isbn</tag>,
+<tag role="nonexistant">issn</tag>, and
+<tag role="nonexistant">pubsnumber</tag> elements.</para>
+
+<refsection><title>Processing expectations</title>
+<para><?tdg gentext='format.inline'?>
+<?tdg gentext='format.csuppress'?>
+</para>
 </refsection>
+
 
 <?tdg-attributes?>
 <?tdg-parents?>

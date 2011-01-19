@@ -18,27 +18,34 @@
 <?tdg-refsynopsisdiv?>
 
 <refsection condition="ref.description">
-<title>Description</title><para>A <tag>bibliomset</tag> is a <quote>cooked</quote> wrapper
-      for a collection of bibliographic information.</para>
+<title>Description</title>
 
-      <para>The purpose of this wrapper is to assert the relationship that
-      binds the collection. For example, in a <tag>bibliomixed</tag>
-      entry for an article in a journal, you might use two
-      <tag>bibliomset</tag>s to wrap the fields related to the article
-      and the fields related to the journal.</para>
 
-      <refsection><info><title>Processing expectations</title></info>
-        
+<para>A <tag>bibliomset</tag> is a <quote>cooked</quote> wrapper for a
+collection of bibliographic information.
+</para>
 
-        <para>Formatted as a displayed block.</para>
+<para>The purpose of this wrapper is
+to assert the relationship that binds the collection.  For example, in a
+<tag>bibliomixed</tag> entry for an article in a journal, you might
+use two <tag>bibliomset</tag>s to wrap the fields related to the article
+and the fields related to the journal.
+</para>
 
-        <para>A <tag>bibliomset</tag> is <quote>cooked.</quote> In
-        addition to named fields, it can contain interspersed text to provide
-        punctuation and other formatting information.</para>
+<refsection><title>Processing expectations</title>
+<para><?tdg gentext='format.block'?>
+</para>
 
-        <para>The processing system is generally expected to present each and
-        every element in the set, all interspersed <literal>#PCDATA</literal>,
-        in the order in which it occurs.</para>
+<para>A <tag>bibliomset</tag> is <quote>cooked.</quote> In
+addition to named fields, it can contain interspersed text
+to provide punctuation and other formatting information.
+</para>
+
+<para>The processing
+system is generally expected to present each and every element in the set,
+all interspersed <literal>#PCDATA</literal>, in the order in which it 
+occurs.
+</para>
 </refsection>
 
 <?tdg-attributes?>

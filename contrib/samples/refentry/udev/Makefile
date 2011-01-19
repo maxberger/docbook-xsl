@@ -17,8 +17,9 @@ all: man
 
 $(FILE):
 ifeq ($(VERSION),)
-	$(warning See http://www.us.kernel.org/pub/linux/utils/kernel/hotplug/)
-	$(error Specify a VERSION; e.g., "make VERSION=103" to download udev-103.tar.bz2)
+	@echo 'See http://www.us.kernel.org/pub/linux/utils/kernel/hotplug/'
+	@echo 'Specify a VERSION; e.g., "make VERSION=103" to download udev-103.tar.bz2'
+	@echo
 endif
 	$(FTP) $(FTP_OPTS) "mget -O $(TMP) $(DIR)/$(DOWNLOAD_FILENAME); quit" $(HOST)
 	(cd $(TMP); $(UNTAR) $(UNTAR_OPTS) $(DOWNLOAD_FILENAME))

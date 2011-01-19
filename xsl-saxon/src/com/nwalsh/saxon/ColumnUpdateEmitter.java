@@ -1,9 +1,11 @@
 package com.nwalsh.saxon;
 
-import javax.xml.transform.TransformerException;
-
+import org.xml.sax.*;
+import com.icl.saxon.output.*;
 import com.icl.saxon.Controller;
-import com.icl.saxon.om.NamePool;
+import com.icl.saxon.om.*;
+import javax.xml.transform.TransformerException;
+import com.icl.saxon.expr.FragmentValue;
 import com.icl.saxon.tree.AttributeCollection;
 
 /**
@@ -44,8 +46,6 @@ public class ColumnUpdateEmitter extends CopyEmitter {
 
   /** The FO namespace name. */
   protected static String foURI = "http://www.w3.org/1999/XSL/Format";
-  /** The XHTML namespace name. */
-  protected static String xhtmlURI = "http://www.w3.org/1999/xhtml";
 
   /** Construct a new ColumnUpdateEmitter. */
   public ColumnUpdateEmitter(Controller controller,
@@ -65,10 +65,9 @@ public class ColumnUpdateEmitter extends CopyEmitter {
 
     int thisFingerprint = namePool.getFingerprint(nameCode);
     int colFingerprint = namePool.getFingerprint("", "col");
-    int XHTMLcolFingerprint = namePool.getFingerprint(xhtmlURI, "col");
     int foColFingerprint = namePool.getFingerprint(foURI, "table-column");
 
-    if (thisFingerprint == colFingerprint || thisFingerprint == XHTMLcolFingerprint ) {
+    if (thisFingerprint == colFingerprint) {
       AttributeCollection attr = new AttributeCollection(namePool, attributes);
       int widthFingerprint = namePool.getFingerprint("", "width");
 

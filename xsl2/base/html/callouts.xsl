@@ -28,12 +28,16 @@
 
 <xsl:template match="db:co">
   <!-- Support a single linkend in HTML -->
-  <xsl:variable name="targets" select="key('id', @linkends)"/>
+  <xsl:variable name="targets" select="$input/key('id', @linkends)"/>
   <xsl:variable name="target" select="$targets[1]"/>
   <xsl:choose>
     <xsl:when test="$target">
-      <a href="{f:href(/,$target)}">
-        <xsl:apply-templates select="." mode="m:html-attributes"/>
+      <a href="{f:href($input,$target)}">
+        <xsl:if test="@id">
+          <xsl:attribute name="name">
+            <xsl:value-of select="@id"/>
+          </xsl:attribute>
+        </xsl:if>
         <xsl:apply-templates select="." mode="m:callout-bug"/>
       </a>
     </xsl:when>
@@ -68,7 +72,6 @@
 </xsl:template>
 
 <xsl:template match="db:co" mode="m:callout-bug">
-  <!--
   <xsl:message>
     <xsl:text>CO: </xsl:text>
     <xsl:value-of select="count(ancestor::db:programlisting)"/>
@@ -89,7 +92,6 @@
 		      |db:literallayout|db:address"
 		format="1"/>
   </xsl:message>
-  -->
 
   <xsl:call-template name="t:callout-bug">
     <xsl:with-param name="conum">
@@ -151,8 +153,9 @@
 		select="$titlepages/*[node-name(.)
 			              = node-name(current())][1]"/>
 
-  <div>
-    <xsl:apply-templates select="." mode="m:html-attributes"/>
+  <div class="{local-name(.)}">
+    <xsl:call-template name="id"/>
+    <xsl:call-template name="class"/>
 
     <xsl:call-template name="titlepage">
       <xsl:with-param name="content" select="$titlepage"/>
@@ -174,8 +177,7 @@
   <tr class="callout-row">
     <td class="callout-bug" valign="baseline" align="left">
       <p>
-        <xsl:apply-templates select="." mode="m:html-attributes"/>
-
+	<xsl:call-template name="id"/>
 	<xsl:for-each select="tokenize(@arearefs,'\s')">
 	  <xsl:variable name="target" select="key('id',.,$doc)[1]"/>
 

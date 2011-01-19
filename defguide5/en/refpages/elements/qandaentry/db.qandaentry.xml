@@ -18,18 +18,20 @@
 <?tdg-refsynopsisdiv?>
 
 <refsection condition="ref.description">
-<title>Description</title><para>A <tag>qandaentry</tag> is an entry in a
-      <tag>qandaset</tag>. Each <tag>qandaentry</tag> defines
-      a <tag>question</tag> and (possibly) its
-      <tag>answer</tag> or <tag>answer</tag>s.</para>
+<title>Description</title>
 
-      <refsection><info><title>Processing expectations</title></info>
-        
+<para>A <tag>qandaentry</tag> is an entry in a
+<tag>qandaset</tag>. Each <tag>qandaentry</tag>
+defines a <tag>question</tag> and (possibly) its
+<tag>answer</tag> or <tag>answer</tag>s.
+</para>
 
-        <para>Formatted as a displayed block. The <tag>question</tag>s
-        are usually presented before the <tag>answer</tag>s, and often
-        the <tag>answer</tag>s are indented to make the questions
-        stand out.</para>
+<refsection><title>Processing expectations</title>
+<para><?tdg gentext='format.block'?>
+The <tag>question</tag>s are usually presented before the 
+<tag>answer</tag>s, and often the <tag>answer</tag>s are indented
+to make the questions stand out.
+</para>
 </refsection>
 
 <?tdg-attributes?>

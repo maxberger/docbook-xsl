@@ -18,14 +18,17 @@
 <?tdg-refsynopsisdiv?>
 
 <refsection condition="ref.description">
-<title>Description</title><para>This element marks the first occurrence of a word or term in a
-      given context.</para>
+<title>Description</title>
 
-      <refsection><info><title>Processing expectations</title></info>
-        
+<para>This element marks the first occurrence of a word or term in a given
+context.
+</para>
 
-        <para>Formatted inline. A <tag>firstterm</tag> is often given
-        special typographic treatment, such as italics.</para>
+<refsection><title>Processing expectations</title>
+<para><?tdg gentext='format.inline'?>
+A <tag>firstterm</tag> is often given special typographic treatment,
+such as italics.
+</para>
 </refsection>
 
 <?tdg-attributes?>

@@ -30,11 +30,9 @@
 default namespace = "http://docbook.org/ns/docbook"
 namespace ctrl = "http://nwalsh.com/xmlns/schema-control/"
 namespace rng  = "http://relaxng.org/ns/structure/1.0"
-namespace s = "http://purl.oclc.org/dsdl/schematron"
+namespace s = "http://www.ascc.net/xml/schematron"
 namespace db = "http://docbook.org/ns/docbook"
 namespace a = "http://relaxng.org/ns/compatibility/annotations/1.0"
-
-start |= db.synopsis.blocks | db.funcsynopsisinfo | db.classsynopsisinfo
 
 db.domain.inlines |= db.programming.inlines
 
@@ -128,7 +126,7 @@ div {
 
 [
    db:refname [ "funcsynopsisinfo" ]
-   db:refpurpose [ "Information supplementing the funcdefs of a funcsynopsis" ]
+   db:refpurpose [ "Information supplementing the FuncDefs of a FuncSynopsis" ]
 ]
 div {
 
@@ -167,7 +165,7 @@ div {
          db.funcprototype.attlist,
          db.modifier*,
          db.funcdef,
-         (db.void | db.varargs | ((db.paramdef|db.group.paramdef)+, db.varargs?)),
+         (db.void | db.varargs | (db.paramdef+, db.varargs?)),
          db.modifier*
       }
 }
@@ -257,30 +255,6 @@ div {
       element varargs {
          db.varargs.attlist,
          empty
-      }
-}
-
-# ======================================================================
-
-[
-   db:refname [ "group" ]
-   db:refpurpose [ "A group of parameters" ]
-]
-div {
-
-   db.group.paramdef.role.attribute = attribute role { text }
-   db.group.paramdef.choice.attribute = db.choice.opt.attribute
-
-   db.group.paramdef.attlist =
-      db.group.paramdef.role.attribute?
-    & db.common.attributes
-    & db.common.linking.attributes
-    & db.group.paramdef.choice.attribute?
-
-   db.group.paramdef =
-      element group {
-         db.group.paramdef.attlist,
-         (db.paramdef|db.group.paramdef)+
       }
 }
 
@@ -388,7 +362,7 @@ div {
 
 [
    db:refname [ "classsynopsisinfo" ]
-   db:refpurpose [ "Information supplementing the contents of a classsynopsis" ]
+   db:refpurpose [ "Information supplementing the contents of a ClassSynopsis" ]
 ]
 div {
 
@@ -592,7 +566,7 @@ div {
 
 [
    db:refname [ "initializer" ]
-   db:refpurpose [ "The initializer for a fieldsynopsis" ]
+   db:refpurpose [ "The initializer for a FieldSynopsis" ]
 ]
 div {
 
@@ -603,12 +577,10 @@ div {
     & db.common.attributes
     & db.common.linking.attributes
 
-   db.initializer.inlines = db._text
-
    db.initializer =
       element initializer {
          db.initializer.attlist,
-         db.initializer.inlines*
+         db._text
       }
 }
 
@@ -633,7 +605,7 @@ div {
          db.constructorsynopsis.attlist,
          db.modifier*,
          db.methodname?,
-         ((db.methodparam|db.group.methodparam)+ | db.void?),
+         (db.methodparam+ | db.void?),
          db.exceptionname*
       }
 }
@@ -659,7 +631,7 @@ div {
          db.destructorsynopsis.attlist,
          db.modifier*,
          db.methodname?,
-         ((db.methodparam|db.group.methodparam)+ | db.void?),
+         (db.methodparam+ | db.void?),
          db.exceptionname*
       }
 }
@@ -686,7 +658,7 @@ div {
          db.modifier*,
          (db.type | db.void)?,
          db.methodname,
-         ((db.methodparam|db.group.methodparam)+ | db.void),
+         (db.methodparam+ | db.void),
          db.exceptionname*,
          db.modifier*
       }
@@ -741,30 +713,6 @@ div {
          ((db.modifier*, db.parameter, db.initializer?)
           | db.funcparams),
          db.modifier*
-      }
-}
-
-# ======================================================================
-
-[
-   db:refname [ "group" ]
-   db:refpurpose [ "A group of method parameters" ]
-]
-div {
-
-   db.group.methodparam.role.attribute = attribute role { text }
-   db.group.methodparam.choice.attribute = db.choice.opt.attribute
-
-   db.group.methodparam.attlist =
-      db.group.methodparam.role.attribute?
-    & db.common.attributes
-    & db.common.linking.attributes
-    & db.group.methodparam.choice.attribute?
-
-   db.group.methodparam =
-      element group {
-         db.group.methodparam.attlist,
-         (db.methodparam|db.group.methodparam)+
       }
 }
 

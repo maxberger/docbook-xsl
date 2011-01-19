@@ -63,7 +63,7 @@
 
 <xsl:template match="screenshot">
   <div>
-    <xsl:apply-templates select="." mode="common.html.attributes"/>
+    <xsl:apply-templates select="." mode="class.attribute"/>
     <xsl:apply-templates/>
   </div>
 </xsl:template>
@@ -274,8 +274,7 @@
   <xsl:variable name="realintrinsicwidth">
     <!-- This funny compound test works around a bug in XSLTC -->
     <xsl:choose>
-      <xsl:when test="$use.extensions != 0 and $graphicsize.extension != 0
-                      and not(@format='SVG')">
+      <xsl:when test="$use.extensions != 0 and $graphicsize.extension != 0">
         <xsl:choose>
           <xsl:when test="function-available('simg:getWidth')">
             <xsl:value-of select="simg:getWidth(simg:new($filename.for.graphicsize),
@@ -310,8 +309,7 @@
   <xsl:variable name="intrinsicdepth">
     <!-- This funny compound test works around a bug in XSLTC -->
     <xsl:choose>
-      <xsl:when test="$use.extensions != 0 and $graphicsize.extension != 0
-                      and not(@format='SVG')">
+      <xsl:when test="$use.extensions != 0 and $graphicsize.extension != 0">
         <xsl:choose>
           <xsl:when test="function-available('simg:getDepth')">
             <xsl:value-of select="simg:getDepth(simg:new($filename.for.graphicsize),
@@ -527,19 +525,8 @@ valign: <xsl:value-of select="@valign"/></xsl:message>
   <xsl:variable name="img">
     <xsl:choose>
       <xsl:when test="@format = 'SVG'">
-        <object type="image/svg+xml">
-	  <xsl:attribute name="data">
-	    <xsl:choose>
-	      <xsl:when test="$img.src.path != '' and
-                           $tag = 'img' and
-			   not(starts-with($output_filename, '/')) and
-			   not(contains($output_filename, '://'))">
-		<xsl:value-of select="$img.src.path"/>
-	      </xsl:when>
-           </xsl:choose>
-	   <xsl:value-of select="$output_filename"/>
-	  </xsl:attribute>
-	  <xsl:call-template name="process.image.attributes">
+        <object data="{$output_filename}" type="image/svg+xml">
+          <xsl:call-template name="process.image.attributes">
             <!--xsl:with-param name="alt" select="$alt"/ there's no alt here-->
             <xsl:with-param name="html.depth" select="$html.depth"/>
             <xsl:with-param name="html.width" select="$html.width"/>
@@ -561,18 +548,7 @@ valign: <xsl:value-of select="@valign"/></xsl:message>
             </xsl:attribute>
           </xsl:if>
           <xsl:if test="$use.embed.for.svg != 0">
-	    <embed type="image/svg+xml">
-	      <xsl:attribute name="src">
-		<xsl:choose>
-                  <xsl:when test="$img.src.path != '' and
-				  $tag = 'img' and
-				  not(starts-with($output_filename, '/')) and
-				  not(contains($output_filename, '://'))">
-		    <xsl:value-of select="$img.src.path"/>
-                  </xsl:when>
-		</xsl:choose>
-		<xsl:value-of select="$output_filename"/>
-              </xsl:attribute>
+            <embed src="{$output_filename}" type="image/svg+xml">
               <xsl:call-template name="process.image.attributes">
                 <!--xsl:with-param name="alt" select="$alt"/ there's no alt here -->
                 <xsl:with-param name="html.depth" select="$html.depth"/>
@@ -1093,11 +1069,9 @@ valign: <xsl:value-of select="@valign"/></xsl:message>
           </xsl:choose>
         </xsl:when>
         <xsl:otherwise>
-	  <xsl:message terminate="yes">
-	    <xsl:text>Cannot insert </xsl:text><xsl:value-of select="$filename"/>
-	    <xsl:text>. Check use.extensions and textinsert.extension parameters.</xsl:text> 
-	  </xsl:message>
-	</xsl:otherwise>
+          <a xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad"
+             href="{$filename}"/>
+        </xsl:otherwise>
       </xsl:choose>
     </xsl:when>
     <xsl:otherwise>
@@ -1128,7 +1102,7 @@ valign: <xsl:value-of select="@valign"/></xsl:message>
   </xsl:variable>
 
   <div>
-    <xsl:apply-templates select="." mode="common.html.attributes"/>
+    <xsl:apply-templates select="." mode="class.attribute"/>
     <xsl:if test="$align != '' ">
       <xsl:attribute name="align">
         <xsl:value-of select="$align"/>
@@ -1143,7 +1117,7 @@ valign: <xsl:value-of select="@valign"/></xsl:message>
 
 <xsl:template match="inlinemediaobject">
   <span>
-    <xsl:apply-templates select="." mode="common.html.attributes"/>
+    <xsl:apply-templates select="." mode="class.attribute"/>
     <xsl:call-template name="anchor"/>
     <xsl:call-template name="select.mediaobject"/>
   </span>
@@ -1354,7 +1328,7 @@ valign: <xsl:value-of select="@valign"/></xsl:message>
     </xsl:call-template>
   </xsl:variable>
 
-  <div class="longdesc-link" align="{$direction.align.end}">
+  <div class="longdesc-link" align="right">
     <br clear="all"/>
     <span class="longdesc-link">
       <xsl:text>[</xsl:text>
@@ -1441,10 +1415,8 @@ valign: <xsl:value-of select="@valign"/></xsl:message>
       </xsl:choose>
     </xsl:when>
     <xsl:otherwise>
-      <xsl:message terminate="yes">
-	<xsl:text>Cannot insert </xsl:text><xsl:value-of select="$filename"/>
-	<xsl:text>. Check use.extensions and textinsert.extension parameters.</xsl:text> 
-      </xsl:message>
+      <a xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad"
+         href="{$filename}"/>
     </xsl:otherwise>
   </xsl:choose>
 </xsl:template>
@@ -1453,7 +1425,7 @@ valign: <xsl:value-of select="@valign"/></xsl:message>
 
 <xsl:template match="caption">
   <div>
-    <xsl:apply-templates select="." mode="common.html.attributes"/>
+    <xsl:apply-templates select="." mode="class.attribute"/>
     <xsl:if test="@align = 'right' or @align = 'left' or @align='center'">
       <xsl:attribute name="align"><xsl:value-of
                          select="@align"/></xsl:attribute>

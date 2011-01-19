@@ -71,15 +71,6 @@ each row and cell.</para>
 <xsl:template match="db:row" mode="m:cals-phase-1">
   <xsl:param name="overhang" as="xs:integer+"/>
 
-<!--
-  <xsl:message>
-    <xsl:text>ROW </xsl:text>
-    <xsl:value-of select="count(preceding-sibling::db:row)+1"/>
-    <xsl:text> </xsl:text>
-    <xsl:value-of select="$overhang" separator=","/>
-  </xsl:message>
--->
-
   <xsl:variable name="row">
     <xsl:copy>
       <xsl:copy-of select="@*"/>
@@ -168,17 +159,6 @@ each row and cell.</para>
     </xsl:choose>
   </xsl:variable>
 
-<!--
-  <xsl:message>
-    <xsl:text>  ENT </xsl:text>
-    <xsl:value-of select="count(preceding-sibling::db:entry)+1"/>
-    <xsl:text> </xsl:text>
-    <xsl:value-of select="$pos"/>
-    <xsl:text>, </xsl:text>
-    <xsl:value-of select="$width"/>
-  </xsl:message>
--->
-
   <xsl:for-each select="for $col in ($prevpos+1 to $pos - 1) return $col">
     <xsl:variable name="col" select="."/>
     <xsl:choose>
@@ -240,37 +220,15 @@ each row and cell.</para>
 
   <!-- pad the row with empties if necessary -->
   <xsl:if test="not(following-sibling::db:entry|following-sibling::db:entrytbl)">
-<!--
-    <xsl:message>
-      <xsl:text>  PAD </xsl:text>
-      <xsl:value-of select="$pos+$width"/>
-      <xsl:text>-</xsl:text>
-      <xsl:value-of select="$container/@cols"/>
-    </xsl:message>
--->
     <xsl:for-each select="for $col
-			  in ($pos + $width to $container/@cols)
+			  in ($pos+1 to $container/@cols)
 			  return $col">
-      <xsl:variable name="col" select="."/>
-      <xsl:choose>
-        <xsl:when test="$overhang[$col] = 0">
-<!--
-          <xsl:message>    empty</xsl:message>
--->
-          <ghost:empty ghost:colnum="{.}" ghost:morerows="0">
-            <xsl:call-template name="inherit-table-attributes">
-              <xsl:with-param name="colnum" select="."/>
-              <xsl:with-param name="row" select="$row"/>
-            </xsl:call-template>
-          </ghost:empty>
-        </xsl:when>
-        <xsl:otherwise>
-<!--
-          <xsl:message>    overlapped</xsl:message>
--->
-          <ghost:overlapped ghost:colnum="{.}" ghost:morerows="0"/>
-        </xsl:otherwise>
-      </xsl:choose>
+      <ghost:empty ghost:colnum="{.}" ghost:morerows="0">
+	<xsl:call-template name="inherit-table-attributes">
+	  <xsl:with-param name="colnum" select="."/>
+	  <xsl:with-param name="row" select="$row"/>
+	</xsl:call-template>
+      </ghost:empty>
     </xsl:for-each>
   </xsl:if>
 </xsl:template>
@@ -412,18 +370,18 @@ be an integer and won't have a parent.</para>
       <xsl:when test="$entry instance of element()">
 	<xsl:sequence select="($entry,
 			       $row,
+			       $tgroup,
+			       $tgroup/parent::*,
 			       $spanspec,
 			       $tgroup/db:colspec[@colname=$spanspec/@namest],
 			       $tgroup/db:colspec[@colname=$entry/@namest],
-			       f:find-colspec-by-colnum($tgroup, $colnum),
-			       $tgroup,
-			       $tgroup/parent::*)"/>
+			       f:find-colspec-by-colnum($tgroup, $colnum))"/>
       </xsl:when>
       <xsl:otherwise>
 	<xsl:sequence select="($row,
-			       f:find-colspec-by-colnum($tgroup, $colnum),
 			       $tgroup,
-			       $tgroup/parent::*)"/>
+			       $tgroup/parent::*,
+			       f:find-colspec-by-colnum($tgroup, $colnum))"/>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:variable>
@@ -452,7 +410,7 @@ be an integer and won't have a parent.</para>
 
     <xsl:choose>
       <xsl:when test="f:find-element-by-attribute($elements, $attr)">
-	<xsl:attribute name="{string($attr)}"
+	<xsl:attribute name="{$attr}"
 		       select="f:find-element-by-attribute($elements, $attr)
 			       /@*[node-name(.) = $attr]"/>
       </xsl:when>
@@ -461,7 +419,7 @@ be an integer and won't have a parent.</para>
 	     tgroup value, which we've already found above, if it exists,
 	     except for colsep and rowsep which default to "1" -->
 	<xsl:if test="$attr=QName('','rowsep') or $attr=QName('','colsep')">
-	  <xsl:attribute name="{string($attr)}" select="1"/>
+	  <xsl:attribute name="{$attr}" select="1"/>
 	</xsl:if>
       </xsl:otherwise>
     </xsl:choose>

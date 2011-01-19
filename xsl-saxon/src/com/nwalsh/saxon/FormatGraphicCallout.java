@@ -1,6 +1,7 @@
 package com.nwalsh.saxon;
 
-import org.w3c.dom.Element;
+import org.xml.sax.SAXException;
+import org.w3c.dom.*;
 
 import javax.xml.transform.TransformerException;
 

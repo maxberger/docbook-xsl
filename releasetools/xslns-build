@@ -1,15 +1,15 @@
 #!/usr/bin/perl -w -- #  -*- Perl -*-
 #
-#    xslns-build - generate a parallel set of DocBook5 namespaced 
+#  makedb5xsl.pl - generate a parallel set of DocBook5 namespaced 
 #                  stylesheet directories from a directory of
 #                  non-namespaced stylesheets.
 #
 # $Id$
 #
 
-my $Usage = "
+my $Usage = '
 USAGE:
-  $0 input-dir output-dir
+  makedb5xsl input-dir output-dir
 
   where:
     input-dir  is the directory containing non-namespaced stylesheets
@@ -17,7 +17,7 @@ USAGE:
 
   Note: an existing output-dir will be completely removed
         before creating new output.
-";
+';
 
 #######################################################
 # Modules to use
@@ -271,12 +271,7 @@ sub nsfilter {
   else {
     s|(<xsl:stylesheet)|$1 exclude-result-prefixes="d"\n                |s;
   }
-
-  # Add d: prefix to literal tocentry in maketoc.xsl
-  if ($infile =~ /maketoc/) {
-    s/(<\/?)(tocentry)/$1d:$2/sg;
-  }
-
+  
   # Process certain XSL attributes to add d: namespace if needed
   # and output everything using this while loop.
   
@@ -429,7 +424,7 @@ sub namespacefilter {
 
   my $newstring = '';
 
-  while ( $string =~ /^(.*?)($dbname)(.*$)/s ) {
+  while ( $string =~ /^(.*?)($dbname)(.*?$)/s ) {
 
     my $pre = $1;
     my $name = $2;

@@ -20,10 +20,6 @@
   </xsl:element>
 </xsl:template>
 
-<xsl:template match="processing-instruction()|comment()" mode="addNS">
-  <xsl:copy/>
-</xsl:template>
-
 <xsl:template name="add-xml-base">
   <!-- * Get a title for current doc so that we let the user -->
   <!-- * know what document we are processing at this point. -->

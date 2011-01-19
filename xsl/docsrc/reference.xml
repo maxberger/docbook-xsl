@@ -37,7 +37,7 @@
                 >plain text</link></para>
           </listitem>
         </itemizedlist>
-        This is primarily documentation on the parameters and processing instructions you can use
+        This is primarily documentation on the parameters you can adjust
         to control the behavior of the stylesheets.
         <note>
           <para>This is purely reference documentation&#xa0;– not how-to
@@ -170,9 +170,6 @@
     </part>
     <part xml:id="pi-fo">
       <xi:include href="../fo/pi.xml" xpointer="xpointer(/reference/node())" />
-    </part>
-    <part xml:id="pi-man">
-      <xi:include href="../manpages/pi.xml" xpointer="xpointer(/reference/node())" />
     </part>
     <part xml:id="pi-common">
       <xi:include href="../common/pi.xml" xpointer="xpointer(/reference/node())" />

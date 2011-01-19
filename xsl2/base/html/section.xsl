@@ -87,9 +87,8 @@
 
   <xsl:variable name="hlevel"
 		select="if ($depth &lt; 5) then $depth else 4"/>
-
-  <xsl:element name="h{$hlevel+1}" namespace="http://www.w3.org/1999/xhtml">
-    <xsl:attribute name="class" select="'bridgehead'"/>
+  
+  <xsl:element name="h{$hlevel+2}" namespace="http://www.w3.org/1999/xhtml">
     <xsl:apply-templates/>
   </xsl:element>
 </xsl:template>

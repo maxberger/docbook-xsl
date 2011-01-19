@@ -379,7 +379,7 @@
 <xsl:template match="formalpara|figure|table[tgroup]|example|blockquote
                      |caution|important|note|warning|tip
                      |bibliodiv|glossarydiv|indexdiv
-		     |orderedlist|itemizedlist|variablelist|procedure|step
+		     |orderedlist|itemizedlist|variablelist|procedure
 		     |task|tasksummary|taskprerequisites|taskrelated
 		     |sidebar"
 	      priority="200">
@@ -1092,18 +1092,13 @@
 </xsl:template>
 
 <xsl:template match="abstract" priority="300">
-  <xsl:choose>
-    <xsl:when test="not(contains(name(parent::*),'info'))">
-      <xsl:call-template name="emit-message">
-        <xsl:with-param name="message">
-          <xsl:text>Check abstract; moved into info correctly?</xsl:text>
-        </xsl:with-param>
-      </xsl:call-template>
-    </xsl:when>
-    <xsl:otherwise>
-      <xsl:apply-templates select="." mode="copy"/>
-    </xsl:otherwise>
-  </xsl:choose>
+  <xsl:if test="not(contains(name(parent::*),'info'))">
+    <xsl:call-template name="emit-message">
+      <xsl:with-param name="message">
+	<xsl:text>Check abstract; moved into info correctly?</xsl:text>
+      </xsl:with-param>
+    </xsl:call-template>
+  </xsl:if>
 </xsl:template>
 
 <xsl:template match="indexterm">

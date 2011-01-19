@@ -38,15 +38,12 @@
   <xsl:include href="lists.xsl"/>
   <xsl:include href="endnotes.xsl"/>
   <xsl:include href="table.xsl"/>
-  <xsl:include href="pi.xsl"/>
 
   <!-- * we rename the following just to avoid using params with "man" -->
   <!-- * prefixes in the table.xsl stylesheet (because that stylesheet -->
   <!-- * can potentially be reused for more than just man output) -->
   <xsl:param name="tbl.font.headings" select="$man.font.table.headings"/>
   <xsl:param name="tbl.font.title" select="$man.font.table.title"/>
-
-  <xsl:param name="stylesheet.result.type" select="'manpages'"/>
 
   <!-- ==================================================================== -->
 
@@ -192,10 +189,6 @@
     <!-- * Assemble the various parts into a complete page, then store into -->
     <!-- * $manpage.contents so that we can manipluate them further. -->
     <xsl:variable name="manpage.contents">
-      <!-- * preprocessor invocation (need for legacy AT&T troff use) -->
-      <!-- * this tells troff to pre-process the page through tbl(1) -->
-      <!-- * (groff can figure it out automatically, but AT&T troff can't) -->
-      <xsl:text>'\" t&#10;</xsl:text>
       <!-- * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
       <!-- * top.comment = commented-out section at top of roff source -->
       <!-- * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -205,7 +198,6 @@
         <xsl:with-param name="title"      select="$refentry.metadata/title"/>
         <xsl:with-param name="manual"     select="$refentry.metadata/manual"/>
         <xsl:with-param name="source"     select="$refentry.metadata/source"/>
-        <xsl:with-param name="refname"    select="$first.refname"/>
       </xsl:call-template>
       <!-- * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
       <!-- * TH.title.line = title line in header/footer of man page -->
@@ -231,13 +223,6 @@
         <xsl:with-param name="extra3"  select="$refentry.metadata/manual"/>
       </xsl:call-template>
       <!-- * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-      <!-- * (re)define some macros -->
-      <!-- * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-      <xsl:call-template name="define.portability.macros"/>
-      <xsl:if test="not($man.output.better.ps.enabled = 0)">
-        <xsl:call-template name="define.macros"/>
-      </xsl:if>
-      <!-- * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
       <!-- * Set default hyphenation, justification, indentation, and -->
       <!-- * line-breaking -->
       <!-- * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -245,9 +230,6 @@
       <!-- * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
       <!-- * Main body of man page -->
       <!-- * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-      <xsl:text>.\" -----------------------------------------------------------------&#10;</xsl:text>
-      <xsl:text>.\" * MAIN CONTENT STARTS HERE *&#10;</xsl:text>
-      <xsl:text>.\" -----------------------------------------------------------------&#10;</xsl:text>
       <xsl:apply-templates/>
       <!-- * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
       <!-- * AUTHOR section -->

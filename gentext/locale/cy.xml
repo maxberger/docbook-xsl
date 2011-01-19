@@ -137,6 +137,7 @@
 <gentext key="in" text="yn"/>
 <gentext key="lastlistcomma" text=","/>
 <gentext key="listcomma" text=","/>
+<gentext key="nonexistantelement" text="elfen sydd ddim yn bodoli"/>
 <gentext key="notes" text="Nodiadau"/>
 <gentext key="Notes" text="Nodiadau"/>
 <gentext key="Pgs" text="Tud."/>
@@ -178,7 +179,6 @@
 <gentext key="below"         text="isod"/>
 <gentext key="sectioncalled" text="yr adran o'r enw"/>
 <gentext key="index symbols" text="Symbolau"/>
-<gentext key="writing-mode" text="lr-tb"/>
 
 <gentext key="lowercase.alpha" text="abcdefghijklmnopqrstuvwxyz"/>
 <gentext key="uppercase.alpha" text="ABCDEFGHIJKLMNOPQRSTUVWXYZ"/>
@@ -503,9 +503,8 @@
 </context>
 
 <context name="glossary">
-<template name="see"><GlossSee/> %t.</template>
-<template name="seealso"><GlossSeeAlso/> %t.</template>
-<template name="seealso-separator">, </template>
+<template name="see"><GlossSee/> %t</template>
+<template name="seealso"><GlossSeeAlso/> %t</template>
 </context>
 
 <context name="msgset">

@@ -144,6 +144,7 @@
 <gentext key="listcomma" text=","/>
 <!-- FIXME: Thai lanuage nomally use space for separate list, not comma -->
 
+<gentext key="nonexistantelement" text="ไม่พบส่วนที่ต้องการ"/><!-- FIXME: Don't Sure -->
 <gentext key="notes" text="หมายเหตุ"/>
 <gentext key="Notes" text="หมายเหตุ"/>
 <gentext key="Pgs" text="หน้า"/>
@@ -181,7 +182,6 @@
 <gentext key="above"         text="above"/> <!-- en -->
 <gentext key="below"         text="below"/> <!-- en -->
 <gentext key="index symbols" text="สัญลักษณ์"/>
-<gentext key="writing-mode" text="lr-tb"/>
 
 <gentext key="lowercase.alpha" text="abcdefghijklmnopqrstuvwxyz"/>
 <gentext key="uppercase.alpha" text="ABCDEFGHIJKLMNOPQRSTUVWXYZ"/>
@@ -482,9 +482,8 @@
 </context>
 
 <context name="glossary">
-<template name="see"><GlossSee/> %t.</template>
-<template name="seealso"><GlossSeeAlso/> %t.</template>
-<template name="seealso-separator">, </template>
+<template name="see"><GlossSee/> %t</template>
+<template name="seealso"><GlossSeeAlso/> %t</template>
 </context>
 
 <context name="msgset">

@@ -25,12 +25,6 @@
 
 <!-- ============================================================ -->
 
-<xsl:param name="body.fontset">
-  <!-- this isn't used by the HTML stylesheets, but it's in common/functions -->
-</xsl:param>
-
-<!-- ============================================================ -->
-
 <doc:template name="anchor" xmlns="http://docbook.org/ns/docbook">
 <refpurpose>Returns an XHTML anchor if appropriate</refpurpose>
 
@@ -218,35 +212,6 @@ of the stylesheet is inserted directly.</para>
   <xsl:if test="//db:annotation">
     <script type="text/javascript" src="{$annotation.js}"/>
   </xsl:if>
-</xsl:template>
-
-<!-- ====================================================================== -->
-
-<doc:template name="t:head" xmlns="http://docbook.org/ns/docbook">
-<refpurpose>Template for generating the head element</refpurpose>
-
-<refdescription>
-<para>This template is called to generate the HTML head for the
-primary result document.</para>
-</refdescription>
-</doc:template>
-
-<xsl:template name="t:head">
-  <xsl:param name="root" as="element()"
-	     select="if ($rootid != '')
-                     then key('id',$rootid)[1]
-		     else /*[1]"/>
-  <head>
-    <title>
-      <xsl:value-of select="f:title($root)"/>
-    </title>
-    <xsl:call-template name="t:system-head-content"/>
-    <xsl:call-template name="t:head-meta"/>
-    <xsl:call-template name="t:head-links"/>
-    <xsl:call-template name="css-style"/>
-    <xsl:call-template name="javascript"/>
-    <xsl:call-template name="t:user-head-content"/>
-  </head>
 </xsl:template>
 
 <!-- ====================================================================== -->
@@ -552,50 +517,6 @@ body { background-image: url('</xsl:text>
   <xsl:apply-templates select="db:info/db:keywordset" mode="m:html-header"/>
   <xsl:if test="$inherit.keywords != 0 and parent::*">
     <xsl:apply-templates select="parent::*" mode="m:head-keywords-content"/>
-  </xsl:if>
-</xsl:template>
-
-<!-- ====================================================================== -->
-
-<xsl:template match="*" mode="m:html-attributes" as="attribute()*">
-  <xsl:param name="class" select="''" as="xs:string"/>
-  <xsl:param name="force-id" select="false()" as="xs:boolean"/>
-  <xsl:param name="suppress-local-name-class" select="false()" as="xs:boolean"/>
-  <xsl:param name="suppress-role-class" select="false()" as="xs:boolean"/>
-
-  <xsl:choose>
-    <xsl:when test="@xml:id">
-      <xsl:attribute name="id" select="@xml:id"/>
-    </xsl:when>
-    <xsl:when test="$force-id">
-      <xsl:attribute name="id" select="f:node-id(.)"/>
-    </xsl:when>
-  </xsl:choose>
-
-  <xsl:if test="@dir">
-    <xsl:copy-of select="@dir"/>
-  </xsl:if>
-
-  <xsl:if test="@xml:lang">
-    <xsl:call-template name="lang-attribute">
-      <xsl:with-param name="node" select="."/>
-    </xsl:call-template>
-  </xsl:if>
-
-  <xsl:variable name="value-seq"
-                select="(if ($suppress-local-name-class)
-                         then () else local-name(.),
-                         if ($class != '') then $class else (),
-                         if ($suppress-role-class or not(@role))
-                         then ()
-                         else @role,
-                         if (@revisionflag)
-                         then concat('rf-',@revisionflag)
-                         else ())"/>
-
-  <xsl:if test="not(empty($value-seq))">
-    <xsl:attribute name="class"
-                   select="normalize-space(string-join($value-seq, ' '))"/>
   </xsl:if>
 </xsl:template>
 

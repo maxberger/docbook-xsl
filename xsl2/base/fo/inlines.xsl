@@ -6,10 +6,9 @@
                 xmlns:f="http://docbook.org/xslt/ns/extension"
                 xmlns:fn="http://www.w3.org/2005/xpath-functions"
                 xmlns:m="http://docbook.org/xslt/ns/mode"
-		xmlns:t="http://docbook.org/xslt/ns/template"
                 xmlns:u="http://nwalsh.com/xsl/unittests#"
                 xmlns:xlink='http://www.w3.org/1999/xlink'
-                exclude-result-prefixes="db doc f fn m t u xlink"
+                exclude-result-prefixes="db doc f fn m u xlink"
                 version="2.0">
 
 <!-- ********************************************************************
@@ -24,7 +23,7 @@
 
 <!-- ============================================================ -->
 
-<doc:template name="t:simple-xlink" xmlns="http://docbook.org/ns/docbook">
+<doc:template name="simple-xlink" xmlns="http://docbook.org/ns/docbook">
 <refpurpose>Handle xlink:href attributes on inlines</refpurpose>
 
 <refdescription>
@@ -60,7 +59,7 @@ context item.</para>
 </refreturn>
 </doc:template>
 
-<xsl:template name="t:simple-xlink">
+<xsl:template name="simple-xlink">
   <xsl:param name="node" select="."/>
   <xsl:param name="content">
     <xsl:apply-templates/>
@@ -71,48 +70,49 @@ context item.</para>
       <xsl:when test="$node/@xlink:href
 		      and (not($node/@xlink:type)
 		           or $node/@xlink:type='simple')">
+	<fo:a>
+	  <xsl:if test="$node/@xlink.title">
+	    <xsl:attribute name="title" select="$node/@xlink:title"/>
+	  </xsl:if>
 
-	<xsl:variable name="url">
-	  <xsl:choose>
-	    <!-- if the href starts with # and does not contain an "(" -->
-	    <!-- or if the href starts with #xpointer(id(, it's just an ID -->
-	    <xsl:when test="starts-with($node/@xlink:href,'#')
-                            and (not(contains($node/@xlink:href,'&#40;'))
-                            or starts-with($node/@xlink:href,
-			                   '#xpointer&#40;id&#40;'))">
-	      <xsl:variable name="idref">
-		<xsl:call-template name="xpointer-idref">
-		  <xsl:with-param name="xpointer" select="$node/@xlink:href"/>
-		</xsl:call-template>
-	      </xsl:variable>
+	  <xsl:attribute name="href">
+	    <xsl:choose>
+	      <!-- if the href starts with # and does not contain an "(" -->
+              <!-- or if the href starts with #xpointer(id(, it's just an ID -->
+              <xsl:when test="starts-with($node/@xlink:href,'#')
+                              and (not(contains($node/@xlink:href,'&#40;'))
+                              or starts-with($node/@xlink:href,
+			                     '#xpointer&#40;id&#40;'))">
+                <xsl:variable name="idref">
+                  <xsl:call-template name="xpointer-idref">
+                    <xsl:with-param name="xpointer" select="$node/@xlink:href"/>
+                  </xsl:call-template>
+                </xsl:variable>
 
-	      <xsl:variable name="target" select="key('id',$idref)[1]"/>
+                <xsl:variable name="target" select="key('id',$idref)[1]"/>
 
-	      <xsl:choose>
-		<xsl:when test="not($target)">
-		  <xsl:message>
-		    <xsl:text>XLink to nonexistent id: </xsl:text>
-		    <xsl:value-of select="$idref"/>
-		  </xsl:message>
-		  <xsl:text>???</xsl:text>
-		</xsl:when>
-		<xsl:otherwise>
-		  <!--FIXME:fo-->
-		</xsl:otherwise>
-	      </xsl:choose>
-	    </xsl:when>
+                <xsl:choose>
+                  <xsl:when test="not($target)">
+		    <xsl:message>
+		      <xsl:text>XLink to nonexistent id: </xsl:text>
+		      <xsl:value-of select="$idref"/>
+		    </xsl:message>
+                    <xsl:text>???</xsl:text>
+                  </xsl:when>
+		  <xsl:otherwise>
+		    <!--FIXME:fo-->
+		  </xsl:otherwise>
+		</xsl:choose>
+              </xsl:when>
 
-	    <!-- otherwise it's a URI -->
-	    <xsl:otherwise>
-	      <xsl:value-of select="$node/@xlink:href"/>
-	    </xsl:otherwise>
-	  </xsl:choose>
-	</xsl:variable>
-
-	<fo:basic-link xsl:use-attribute-sets="xref.properties"
-		       external-destination="url({$url})">
-	  <xsl:copy-of select="$content"/>
-	</fo:basic-link>
+              <!-- otherwise it's a URI -->
+              <xsl:otherwise>
+		<xsl:value-of select="$node/@xlink:href"/>
+              </xsl:otherwise>
+            </xsl:choose>
+          </xsl:attribute>
+          <xsl:copy-of select="$content"/>
+        </fo:a>
       </xsl:when>
       <xsl:otherwise>
         <xsl:copy-of select="$content"/>
@@ -122,7 +122,6 @@ context item.</para>
 
   <xsl:copy-of select="$link"/>
 
-  <!-- FIXME
   <xsl:variable name="inline" select="."/>
   <xsl:variable name="id" select="@xml:id"/>
 
@@ -150,12 +149,11 @@ context item.</para>
       <xsl:apply-templates select="." mode="m:annotation"/>
     </fo:block>
   </xsl:for-each>
-   -->
 </xsl:template>
 
 <!-- ============================================================ -->
 
-<doc:template name="t:inline-charseq" xmlns="http://docbook.org/ns/docbook">
+<doc:template name="inline-charseq" xmlns="http://docbook.org/ns/docbook">
 <refpurpose>Handles simple inline elements</refpurpose>
 
 <refdescription>
@@ -185,7 +183,7 @@ calling “apply templates” with the current context node.</para>
 <para>The result tree markup for the element.</para>
 </refreturn>
 
-<u:unittests template="t:inline-charseq">
+<u:unittests template="inline-charseq">
   <u:test>
     <u:context as="element()">
       <db:varname xml:id="varfoo">someVarName</db:varname>
@@ -199,10 +197,12 @@ calling “apply templates” with the current context node.</para>
 
 </doc:template>
 
-<xsl:template name="t:inline-charseq">
+<xsl:template name="inline-charseq">
   <xsl:param name="content">
-    <xsl:call-template name="t:simple-xlink"/>
+    <xsl:call-template name="simple-xlink"/>
   </xsl:param>
+
+  <xsl:message>inline-charseq: <xsl:value-of select="$content"/></xsl:message>
 
   <fo:inline>
     <xsl:call-template name="id"/>
@@ -212,11 +212,8 @@ calling “apply templates” with the current context node.</para>
       </xsl:attribute>
     </xsl:if>
     <xsl:if test="@dir">
-      <xsl:attribute name="direction">
-        <xsl:choose>
-          <xsl:when test="@dir = 'ltr' or @dir = 'lro'">ltr</xsl:when>
-          <xsl:otherwise>rtl</xsl:otherwise>
-        </xsl:choose>
+      <xsl:attribute name="dir">
+	<xsl:value-of select="@dir"/>
       </xsl:attribute>
     </xsl:if>
     <xsl:copy-of select="$content"/>
@@ -225,7 +222,7 @@ calling “apply templates” with the current context node.</para>
 
 <!-- ============================================================ -->
 
-<doc:template name="t:inline-monoseq" xmlns="http://docbook.org/ns/docbook">
+<doc:template name="inline-monoseq" xmlns="http://docbook.org/ns/docbook">
 <refpurpose>Handles monospace inline elements</refpurpose>
 
 <refdescription>
@@ -256,27 +253,30 @@ calling “apply templates” with the current context node.</para>
 </refreturn>
 </doc:template>
 
-<xsl:template name="t:inline-monoseq">
+<xsl:template name="inline-monoseq">
   <xsl:param name="content">
-    <xsl:call-template name="t:simple-xlink"/>
+    <xsl:call-template name="simple-xlink"/>
   </xsl:param>
 
-  <fo:inline xsl:use-attribute-sets="monospace.properties">
-    <xsl:if test="@dir">
-      <xsl:attribute name="direction">
-        <xsl:choose>
-          <xsl:when test="@dir = 'ltr' or @dir = 'lro'">ltr</xsl:when>
-          <xsl:otherwise>rtl</xsl:otherwise>
-        </xsl:choose>
+  <fo:tt class="{local-name(.)}">
+    <xsl:call-template name="id"/>
+    <xsl:if test="db:alt">
+      <xsl:attribute name="title">
+	<xsl:value-of select="db:alt"/>
       </xsl:attribute>
     </xsl:if>
-    <xsl:sequence select="$content"/>
-  </fo:inline>
+    <xsl:if test="@dir">
+      <xsl:attribute name="dir">
+	<xsl:value-of select="@dir"/>
+      </xsl:attribute>
+    </xsl:if>
+    <xsl:copy-of select="$content"/>
+  </fo:tt>
 </xsl:template>
 
 <!-- ============================================================ -->
 
-<doc:template name="t:inline-boldseq" xmlns="http://docbook.org/ns/docbook">
+<doc:template name="inline-boldseq" xmlns="http://docbook.org/ns/docbook">
 <refpurpose>Handles bold inline elements</refpurpose>
 
 <refdescription>
@@ -307,27 +307,30 @@ calling “apply templates” with the current context node.</para>
 </refreturn>
 </doc:template>
 
-<xsl:template name="t:inline-boldseq">
+<xsl:template name="inline-boldseq">
   <xsl:param name="content">
-    <xsl:call-template name="t:simple-xlink"/>
+    <xsl:call-template name="simple-xlink"/>
   </xsl:param>
 
-  <fo:inline font-weight="bold">
-    <xsl:if test="@dir">
-      <xsl:attribute name="direction">
-        <xsl:choose>
-          <xsl:when test="@dir = 'ltr' or @dir = 'lro'">ltr</xsl:when>
-          <xsl:otherwise>rtl</xsl:otherwise>
-        </xsl:choose>
+  <fo:strong class="{local-name(.)}">
+    <xsl:call-template name="id"/>
+    <xsl:if test="db:alt">
+      <xsl:attribute name="title">
+	<xsl:value-of select="db:alt"/>
       </xsl:attribute>
     </xsl:if>
-    <xsl:sequence select="$content"/>
-  </fo:inline>
+    <xsl:if test="@dir">
+      <xsl:attribute name="dir">
+	<xsl:value-of select="@dir"/>
+      </xsl:attribute>
+    </xsl:if>
+    <xsl:copy-of select="$content"/>
+  </fo:strong>
 </xsl:template>
 
 <!-- ============================================================ -->
 
-<doc:template name="t:inline-italicseq" xmlns="http://docbook.org/ns/docbook">
+<doc:template name="inline-italicseq" xmlns="http://docbook.org/ns/docbook">
 <refpurpose>Handles italic inline elements</refpurpose>
 
 <refdescription>
@@ -358,27 +361,30 @@ calling “apply templates” with the current context node.</para>
 </refreturn>
 </doc:template>
 
-<xsl:template name="t:inline-italicseq">
+<xsl:template name="inline-italicseq">
   <xsl:param name="content">
-    <xsl:call-template name="t:simple-xlink"/>
+    <xsl:call-template name="simple-xlink"/>
   </xsl:param>
 
-  <fo:inline font-style="italic">
-    <xsl:if test="@dir">
-      <xsl:attribute name="direction">
-        <xsl:choose>
-          <xsl:when test="@dir = 'ltr' or @dir = 'lro'">ltr</xsl:when>
-          <xsl:otherwise>rtl</xsl:otherwise>
-        </xsl:choose>
+  <fo:em class="{local-name(.)}">
+    <xsl:call-template name="id"/>
+    <xsl:if test="db:alt">
+      <xsl:attribute name="title">
+	<xsl:value-of select="db:alt"/>
       </xsl:attribute>
     </xsl:if>
-    <xsl:sequence select="$content"/>
-  </fo:inline>
+    <xsl:if test="@dir">
+      <xsl:attribute name="dir">
+	<xsl:value-of select="@dir"/>
+      </xsl:attribute>
+    </xsl:if>
+    <xsl:copy-of select="$content"/>
+  </fo:em>
 </xsl:template>
 
 <!-- ============================================================ -->
 
-<doc:template name="t:inline-boldmonoseq" xmlns="http://docbook.org/ns/docbook">
+<doc:template name="inline-boldmonoseq" xmlns="http://docbook.org/ns/docbook">
 <refpurpose>Handles bold, monospace inline elements</refpurpose>
 
 <refdescription>
@@ -414,27 +420,32 @@ calling “apply templates” with the current context node.</para>
 </refreturn>
 </doc:template>
 
-<xsl:template name="t:inline-boldmonoseq">
+<xsl:template name="inline-boldmonoseq">
   <xsl:param name="content">
-    <xsl:call-template name="t:simple-xlink"/>
+    <xsl:call-template name="simple-xlink"/>
   </xsl:param>
 
-  <fo:inline font-weight="bold" xsl:use-attribute-sets="monospace.properties">
-    <xsl:if test="@dir">
-      <xsl:attribute name="direction">
-        <xsl:choose>
-          <xsl:when test="@dir = 'ltr' or @dir = 'lro'">ltr</xsl:when>
-          <xsl:otherwise>rtl</xsl:otherwise>
-        </xsl:choose>
+  <fo:strong class="{local-name(.)}">
+    <xsl:call-template name="id"/>
+    <xsl:if test="db:alt">
+      <xsl:attribute name="title">
+	<xsl:value-of select="db:alt"/>
       </xsl:attribute>
     </xsl:if>
-    <xsl:sequence select="$content"/>
-  </fo:inline>
+    <fo:tt class="{local-name(.)}">
+      <xsl:if test="@dir">
+	<xsl:attribute name="dir">
+	  <xsl:value-of select="@dir"/>
+	</xsl:attribute>
+      </xsl:if>
+      <xsl:copy-of select="$content"/>
+    </fo:tt>
+  </fo:strong>
 </xsl:template>
 
 <!-- ============================================================ -->
 
-<doc:template name="t:inline-italicmonoseq" xmlns="http://docbook.org/ns/docbook">
+<doc:template name="inline-italicmonoseq" xmlns="http://docbook.org/ns/docbook">
 <refpurpose>Handles italic, monospace inline elements</refpurpose>
 
 <refdescription>
@@ -470,27 +481,32 @@ calling “apply templates” with the current context node.</para>
 </refreturn>
 </doc:template>
 
-<xsl:template name="t:inline-italicmonoseq">
+<xsl:template name="inline-italicmonoseq">
   <xsl:param name="content">
-    <xsl:call-template name="t:simple-xlink"/>
+    <xsl:call-template name="simple-xlink"/>
   </xsl:param>
 
-  <fo:inline font-style="italic" xsl:use-attribute-sets="monospace.properties">
-    <xsl:if test="@dir">
-      <xsl:attribute name="direction">
-        <xsl:choose>
-          <xsl:when test="@dir = 'ltr' or @dir = 'lro'">ltr</xsl:when>
-          <xsl:otherwise>rtl</xsl:otherwise>
-        </xsl:choose>
+  <fo:em class="{local-name(.)}">
+    <xsl:call-template name="id"/>
+    <xsl:if test="db:alt">
+      <xsl:attribute name="title">
+	<xsl:value-of select="db:alt"/>
       </xsl:attribute>
     </xsl:if>
-    <xsl:sequence select="$content"/>
-  </fo:inline>
+    <fo:tt class="{local-name(.)}">
+      <xsl:if test="@dir">
+	<xsl:attribute name="dir">
+	  <xsl:value-of select="@dir"/>
+	</xsl:attribute>
+      </xsl:if>
+      <xsl:copy-of select="$content"/>
+    </fo:tt>
+  </fo:em>
 </xsl:template>
 
 <!-- ============================================================ -->
 
-<doc:template name="t:inline-superscriptseq" xmlns="http://docbook.org/ns/docbook">
+<doc:template name="inline-superscriptseq" xmlns="http://docbook.org/ns/docbook">
 <refpurpose>Handles superscript inline elements</refpurpose>
 
 <refdescription>
@@ -522,36 +538,30 @@ calling “apply templates” with the current context node.</para>
 </refreturn>
 </doc:template>
 
-<xsl:template name="t:inline-superscriptseq">
+<xsl:template name="inline-superscriptseq">
   <xsl:param name="content">
-    <xsl:call-template name="t:simple-xlink"/>
+    <xsl:call-template name="simple-xlink"/>
   </xsl:param>
 
-  <fo:inline xsl:use-attribute-sets="superscript.properties">
+  <fo:sup>
     <xsl:call-template name="id"/>
-    <xsl:if test="@dir">
-      <xsl:attribute name="direction">
-        <xsl:choose>
-          <xsl:when test="@dir = 'ltr' or @dir = 'lro'">ltr</xsl:when>
-          <xsl:otherwise>rtl</xsl:otherwise>
-        </xsl:choose>
+    <xsl:if test="db:alt">
+      <xsl:attribute name="title">
+	<xsl:value-of select="db:alt"/>
       </xsl:attribute>
     </xsl:if>
-    <xsl:choose>
-      <xsl:when test="$fo.processor = 'fop'">
-        <xsl:attribute name="vertical-align">super</xsl:attribute>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:attribute name="baseline-shift">super</xsl:attribute>
-      </xsl:otherwise>
-    </xsl:choose>
+    <xsl:if test="@dir">
+      <xsl:attribute name="dir">
+        <xsl:value-of select="@dir"/>
+      </xsl:attribute>
+    </xsl:if>
     <xsl:copy-of select="$content"/>
-  </fo:inline>
+  </fo:sup>
 </xsl:template>
 
 <!-- ============================================================ -->
 
-<doc:template name="t:inline-subscriptseq" xmlns="http://docbook.org/ns/docbook">
+<doc:template name="inline-subscriptseq" xmlns="http://docbook.org/ns/docbook">
 <refpurpose>Handles subscript inline elements</refpurpose>
 
 <refdescription>
@@ -583,31 +593,25 @@ calling “apply templates” with the current context node.</para>
 </refreturn>
 </doc:template>
 
-<xsl:template name="t:inline-subscriptseq">
+<xsl:template name="inline-subscriptseq">
   <xsl:param name="content">
-    <xsl:call-template name="t:simple-xlink"/>
+    <xsl:call-template name="simple-xlink"/>
   </xsl:param>
 
-  <fo:inline xsl:use-attribute-sets="subscript.properties">
+  <fo:sub>
     <xsl:call-template name="id"/>
-    <xsl:if test="@dir">
-      <xsl:attribute name="direction">
-        <xsl:choose>
-          <xsl:when test="@dir = 'ltr' or @dir = 'lro'">ltr</xsl:when>
-          <xsl:otherwise>rtl</xsl:otherwise>
-        </xsl:choose>
+    <xsl:if test="db:alt">
+      <xsl:attribute name="title">
+	<xsl:value-of select="db:alt"/>
       </xsl:attribute>
     </xsl:if>
-    <xsl:choose>
-      <xsl:when test="$fo.processor = 'fop'">
-        <xsl:attribute name="vertical-align">sub</xsl:attribute>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:attribute name="baseline-shift">sub</xsl:attribute>
-      </xsl:otherwise>
-    </xsl:choose>
+    <xsl:if test="@dir">
+      <xsl:attribute name="dir">
+        <xsl:value-of select="@dir"/>
+      </xsl:attribute>
+    </xsl:if>
     <xsl:copy-of select="$content"/>
-  </fo:inline>
+  </fo:sub>
 </xsl:template>
 
 <!-- ============================================================ -->
@@ -654,101 +658,68 @@ the default is “element”.</para>
     </xsl:choose>
   </xsl:param>
 
-  <xsl:choose>
-    <xsl:when test="$class='attribute'">
-      <xsl:call-template name="t:inline-monoseq"/>
-    </xsl:when>
-    <xsl:when test="$class='attvalue'">
-      <xsl:call-template name="t:inline-monoseq"/>
-    </xsl:when>
-    <xsl:when test="$class='element'">
-      <xsl:call-template name="t:inline-monoseq"/>
-    </xsl:when>
-    <xsl:when test="$class='endtag'">
-      <xsl:call-template name="t:inline-monoseq">
-        <xsl:with-param name="content">
-          <xsl:text>&lt;/</xsl:text>
-          <xsl:apply-templates/>
-          <xsl:text>&gt;</xsl:text>
-        </xsl:with-param>
-      </xsl:call-template>
-    </xsl:when>
-    <xsl:when test="$class='genentity'">
-      <xsl:call-template name="t:inline-monoseq">
-        <xsl:with-param name="content">
-          <xsl:text>&amp;</xsl:text>
-          <xsl:apply-templates/>
-          <xsl:text>;</xsl:text>
-        </xsl:with-param>
-      </xsl:call-template>
-    </xsl:when>
-    <xsl:when test="$class='numcharref'">
-      <xsl:call-template name="t:inline-monoseq">
-        <xsl:with-param name="content">
-          <xsl:text>&amp;#</xsl:text>
-          <xsl:apply-templates/>
-          <xsl:text>;</xsl:text>
-        </xsl:with-param>
-      </xsl:call-template>
-    </xsl:when>
-    <xsl:when test="$class='paramentity'">
-      <xsl:call-template name="t:inline-monoseq">
-        <xsl:with-param name="content">
-          <xsl:text>%</xsl:text>
-          <xsl:apply-templates/>
-          <xsl:text>;</xsl:text>
-        </xsl:with-param>
-      </xsl:call-template>
-    </xsl:when>
-    <xsl:when test="$class='pi'">
-      <xsl:call-template name="t:inline-monoseq">
-        <xsl:with-param name="content">
-          <xsl:text>&lt;?</xsl:text>
-          <xsl:apply-templates/>
-          <xsl:text>&gt;</xsl:text>
-        </xsl:with-param>
-      </xsl:call-template>
-    </xsl:when>
-    <xsl:when test="$class='xmlpi'">
-      <xsl:call-template name="t:inline-monoseq">
-        <xsl:with-param name="content">
-          <xsl:text>&lt;?</xsl:text>
-          <xsl:apply-templates/>
-          <xsl:text>?&gt;</xsl:text>
-        </xsl:with-param>
-      </xsl:call-template>
-    </xsl:when>
-    <xsl:when test="$class='starttag'">
-      <xsl:call-template name="t:inline-monoseq">
-        <xsl:with-param name="content">
-          <xsl:text>&lt;</xsl:text>
-          <xsl:apply-templates/>
-          <xsl:text>&gt;</xsl:text>
-        </xsl:with-param>
-      </xsl:call-template>
-    </xsl:when>
-    <xsl:when test="$class='emptytag'">
-      <xsl:call-template name="t:inline-monoseq">
-        <xsl:with-param name="content">
-          <xsl:text>&lt;</xsl:text>
-          <xsl:apply-templates/>
-          <xsl:text>/&gt;</xsl:text>
-        </xsl:with-param>
-      </xsl:call-template>
-    </xsl:when>
-    <xsl:when test="$class='sgmlcomment' or $class='comment'">
-      <xsl:call-template name="t:inline-monoseq">
-        <xsl:with-param name="content">
-          <xsl:text>&lt;!--</xsl:text>
-          <xsl:apply-templates/>
-          <xsl:text>--&gt;</xsl:text>
-        </xsl:with-param>
-      </xsl:call-template>
-    </xsl:when>
-    <xsl:otherwise>
-      <xsl:call-template name="t:inline-charseq"/>
-    </xsl:otherwise>
-  </xsl:choose>
+  <fo:tt class="tag-{$class}">
+    <xsl:call-template name="id"/>
+    <xsl:choose>
+      <xsl:when test="$class='attribute'">
+        <xsl:apply-templates/>
+      </xsl:when>
+      <xsl:when test="$class='attvalue'">
+        <xsl:apply-templates/>
+      </xsl:when>
+      <xsl:when test="$class='element'">
+        <xsl:apply-templates/>
+      </xsl:when>
+      <xsl:when test="$class='endtag'">
+        <xsl:text>&lt;/</xsl:text>
+        <xsl:apply-templates/>
+        <xsl:text>&gt;</xsl:text>
+      </xsl:when>
+      <xsl:when test="$class='genentity'">
+        <xsl:text>&amp;</xsl:text>
+        <xsl:apply-templates/>
+        <xsl:text>;</xsl:text>
+      </xsl:when>
+      <xsl:when test="$class='numcharref'">
+        <xsl:text>&amp;#</xsl:text>
+        <xsl:apply-templates/>
+        <xsl:text>;</xsl:text>
+      </xsl:when>
+      <xsl:when test="$class='paramentity'">
+        <xsl:text>%</xsl:text>
+        <xsl:apply-templates/>
+        <xsl:text>;</xsl:text>
+      </xsl:when>
+      <xsl:when test="$class='pi'">
+        <xsl:text>&lt;?</xsl:text>
+        <xsl:apply-templates/>
+        <xsl:text>&gt;</xsl:text>
+      </xsl:when>
+      <xsl:when test="$class='xmlpi'">
+        <xsl:text>&lt;?</xsl:text>
+        <xsl:apply-templates/>
+        <xsl:text>?&gt;</xsl:text>
+      </xsl:when>
+      <xsl:when test="$class='starttag'">
+        <xsl:text>&lt;</xsl:text>
+        <xsl:apply-templates/>
+        <xsl:text>&gt;</xsl:text>
+      </xsl:when>
+      <xsl:when test="$class='emptytag'">
+        <xsl:text>&lt;</xsl:text>
+        <xsl:apply-templates/>
+        <xsl:text>/&gt;</xsl:text>
+      </xsl:when>
+      <xsl:when test="$class='sgmlcomment'">
+        <xsl:text>&lt;!--</xsl:text>
+        <xsl:apply-templates/>
+        <xsl:text>--&gt;</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:apply-templates/>
+      </xsl:otherwise>
+    </xsl:choose>
+  </fo:tt>
 </xsl:template>
 
 <u:unittests match="db:emphasis">
@@ -772,20 +743,25 @@ the default is “element”.</para>
 </u:unittests>
 
 <xsl:template match="db:emphasis">
-  <xsl:call-template name="t:simple-xlink">
+  <xsl:call-template name="simple-xlink">
     <xsl:with-param name="content">
       <xsl:choose>
 	<xsl:when test="@role='bold' or @role='strong'">
-	  <fo:inline font-weight="bold">
+	  <fo:strong class="{local-name(.)}">
 	    <xsl:call-template name="id"/>
 	    <xsl:apply-templates/>
-	  </fo:inline>
+	  </fo:strong>
 	</xsl:when>
 	<xsl:otherwise>
-	  <fo:inline font-style="italic">
+	  <fo:em>
 	    <xsl:call-template name="id"/>
+	    <xsl:if test="@role">
+	      <xsl:attribute name="class">
+		<xsl:value-of select="@role"/>
+	      </xsl:attribute>
+	    </xsl:if>
 	    <xsl:apply-templates/>
-	  </fo:inline>
+	  </fo:em>
 	</xsl:otherwise>
       </xsl:choose>
     </xsl:with-param>
@@ -793,15 +769,33 @@ the default is “element”.</para>
 </xsl:template>
 
 <!-- ============================================================ -->
+<!-- HACK HACK HACK for testing framework. Delete me! -->
+
+<u:unittests match="db:emphasis" mode="foobar">
+  <u:test>
+    <u:context as="element()">
+      <db:emphasis>Something emphasized</db:emphasis>
+    </u:context>
+    <u:result>
+      <fo:b xmlns:fo="http://www.w3.org/1999/XSL/Format">Something emphasized</fo:b>
+    </u:result>
+  </u:test>
+</u:unittests>
+
+<xsl:template match="db:emphasis" mode="foobar">
+  <fo:b><xsl:apply-templates/></fo:b>
+</xsl:template>
+
+<!-- ============================================================ -->
 
 <xsl:template match="db:foreignphrase">
-  <fo:inline>
+  <fo:em class="{local-name(.)}">
     <xsl:call-template name="id"/>
     <xsl:if test="@lang or @xml:lang">
       <xsl:call-template name="lang-attribute"/>
     </xsl:if>
-    <xsl:call-template name="t:inline-italicseq"/>
-  </fo:inline>
+    <xsl:call-template name="inline-italicseq"/>
+  </fo:em>
 </xsl:template>
 
 <xsl:template match="db:phrase">
@@ -810,29 +804,32 @@ the default is “element”.</para>
     <xsl:if test="@lang or @xml:lang">
       <xsl:call-template name="lang-attribute"/>
     </xsl:if>
+    <xsl:if test="@role">
+      <xsl:attribute name="class">
+	<xsl:value-of select="@role"/>
+      </xsl:attribute>
+    </xsl:if>
 
-    <xsl:call-template name="t:simple-xlink"/>
+    <xsl:call-template name="simple-xlink"/>
   </fo:inline>
 </xsl:template>
 
 <xsl:template match="db:lineannotation">
-  <fo:inline>
+  <fo:em class="{local-name(.)}">
     <xsl:call-template name="id"/>
-    <xsl:call-template name="t:inline-italicseq"/>
-  </fo:inline>
+    <xsl:call-template name="inline-charseq"/>
+  </fo:em>
 </xsl:template>
 
 <xsl:template match="db:trademark">
-  <xsl:call-template name="t:inline-charseq">
+  <xsl:call-template name="inline-charseq">
     <xsl:with-param name="content">
       <xsl:apply-templates/>
       <xsl:choose>
 	<xsl:when test="@class = 'copyright'">&#x00A9;</xsl:when>
 	<xsl:when test="@class = 'registered'">&#x00AE;</xsl:when>
 	<xsl:when test="@class = 'service'">
-	  <xsl:call-template name="t:inline-superscriptseq">
-	    <xsl:with-param name="content">SM</xsl:with-param>
-	  </xsl:call-template>
+	  <fo:sup>SM</fo:sup>
 	</xsl:when>
 	<xsl:otherwise>&#x2122;</xsl:otherwise>
       </xsl:choose>
@@ -860,14 +857,16 @@ and <tag>firstterm</tag> elements.</para>
 <xsl:template match="db:glossterm" name="db:glossterm">
   <xsl:param name="firstterm" select="0"/>
 
-  <fo:inline>
+  <fo:em class="{if ($firstterm != 0) then 'firstterm' else 'glossterm'}">
     <xsl:call-template name="id"/>
+    <xsl:if test="db:alt">
+      <xsl:attribute name="title">
+	<xsl:value-of select="db:alt"/>
+      </xsl:attribute>
+    </xsl:if>
     <xsl:if test="@dir">
-      <xsl:attribute name="direction">
-        <xsl:choose>
-          <xsl:when test="@dir = 'ltr' or @dir = 'lro'">ltr</xsl:when>
-          <xsl:otherwise>rtl</xsl:otherwise>
-        </xsl:choose>
+      <xsl:attribute name="dir">
+	<xsl:value-of select="@dir"/>
       </xsl:attribute>
     </xsl:if>
 
@@ -920,11 +919,11 @@ and <tag>firstterm</tag> elements.</para>
 	<xsl:apply-templates/>
       </xsl:otherwise>
     </xsl:choose>
-  </fo:inline>
+  </fo:em>
 </xsl:template>
 
 <xsl:template match="db:termdef">
-  <fo:inline>
+  <fo:inline class="{local-name(.)}">
     <xsl:call-template name="id"/>
     <xsl:text>[Definition: </xsl:text>
     <xsl:apply-templates/>
@@ -933,10 +932,16 @@ and <tag>firstterm</tag> elements.</para>
 </xsl:template>
 
 <xsl:template match="db:email">
-  <xsl:call-template name="t:inline-monoseq">
+  <xsl:call-template name="inline-monoseq">
     <xsl:with-param name="content">
       <xsl:text>&lt;</xsl:text>
-      <xsl:apply-templates/>
+      <fo:a>
+	<xsl:attribute name="href">
+	  <xsl:text>mailto:</xsl:text>
+	  <xsl:value-of select="."/>
+	</xsl:attribute>
+	<xsl:apply-templates/>
+      </fo:a>
       <xsl:text>&gt;</xsl:text>
     </xsl:with-param>
   </xsl:call-template>
@@ -945,7 +950,7 @@ and <tag>firstterm</tag> elements.</para>
 <!-- ==================================================================== -->
 
 <xsl:template match="db:optional">
-  <xsl:call-template name="t:inline-charseq"/>
+  <xsl:call-template name="inline-charseq"/>
 </xsl:template>
 
 <!-- ==================================================================== -->

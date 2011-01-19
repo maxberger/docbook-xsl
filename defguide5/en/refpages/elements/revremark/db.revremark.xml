@@ -18,17 +18,20 @@
 <?tdg-refsynopsisdiv?>
 
 <refsection condition="ref.description">
-<title>Description</title><para>The <tag>revremark</tag> associated with a revision is a
-      short summary of the changes made in that revision. If a longer, more
-      complete summary is desired, see
-      <tag>revdescription</tag>.</para>
+<title>Description</title>
 
-      <refsection><info><title>Processing expectations</title></info>
-        
 
-        <para>May be formatted inline or as a displayed block, depending on
-        context. Sometimes suppressed.</para>
+<para>The <tag>revremark</tag> associated with a revision is a short summary
+of the changes made in that revision. If a longer, more complete summary
+is desired, see <tag>revdescription</tag>.
+</para>
+
+<refsection><title>Processing expectations</title>
+<para><?tdg gentext='format.context'?>
+<?tdg gentext='format.csuppress'?>
+</para>
 </refsection>
+
 
 <?tdg-attributes?>
 <?tdg-parents?>
@@ -38,9 +41,6 @@
 
 <?tdg-seealso?>
 
-<refsection condition="ref.examples">
-<title>Examples</title>
-<para>See <tag>revhistory</tag> for an example that uses this element.</para>
-</refsection>
+<!-- FIXME: add examples -->
 
 </refentry>

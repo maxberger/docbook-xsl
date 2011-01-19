@@ -18,15 +18,17 @@
 <?tdg-refsynopsisdiv?>
 
 <refsection condition="ref.description">
-<title>Description</title><para>A <tag>markup</tag> element contains a string of
-      formatting markup that is to be represented literally in the text. The
-      utility of this element is almost wholly constrained to books about
-      document formatting tools.</para>
+<title>Description</title>
 
-      <refsection><info><title>Processing expectations</title></info>
-        
+<para>A <tag>markup</tag> element contains a string of formatting
+markup that is to be represented literally in the text. The utility of
+this element is almost wholly constrained to books about document
+formatting tools.
+</para>
 
-        <para>Formatted inline.</para>
+<refsection><title>Processing expectations</title>
+<para><?tdg gentext='format.inline'?>
+</para>
 </refsection>
 
 <?tdg-attributes?>

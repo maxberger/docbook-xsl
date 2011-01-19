@@ -133,6 +133,7 @@
 <gentext key="in" text="ב"/>
 <gentext key="lastlistcomma" text=","/>
 <gentext key="listcomma" text=","/>
+<gentext key="nonexistantelement" text="מרכיב שאינו קיים"/>
 <gentext key="notes" text="הערות"/>
 <gentext key="Notes" text="הערות"/>
 <gentext key="Pgs" text="עמודים"/>
@@ -170,7 +171,6 @@
 <gentext key="above"         text="למעלה"/> 
 <gentext key="below"         text="למטה"/> 
 <gentext key="index symbols"            text="סמלים"/>
-<gentext key="writing-mode" text="rl-tb"/>
 
 <gentext key="lowercase.alpha" text="abcdefghijklmnopqrstuvwxyz"/> <!--en-->
 <gentext key="uppercase.alpha" text="ABCDEFGHIJKLMNOPQRSTUVWXYZ"/> <!--en-->
@@ -471,9 +471,8 @@
 </context>
 
 <context name="glossary">
-<template name="see"><GlossSee/> %t.</template>
-<template name="seealso"><GlossSeeAlso/> %t.</template>
-<template name="seealso-separator">, </template>
+<template name="see"><GlossSee/> %t</template>
+<template name="seealso"><GlossSeeAlso/> %t</template>
 </context>
 
 <context name="msgset">

@@ -1,7 +1,7 @@
 # $Id$
 
-include $(DOCBOOK_SVN)/buildtools/Makefile.incl
-include $(DOCBOOK_SVN)/releasetools/Variables.mk
+include ../buildtools/Makefile.incl
+include ../releasetools/Variables.mk
 
 # The -E0 switch on xjparse gets passed on to the XML Commons
 # resolver and causes all error message from the resolver to be
@@ -10,10 +10,11 @@ include $(DOCBOOK_SVN)/releasetools/Variables.mk
 XJPARSEFLAGS=-E 0 -w
 
 DISTRO=xsl
+
 # value of DISTRIB_CHANGELOG_INCLUDES is a space-separated list of
 # any other top-level modules from which to log changes in the
 # NEWS and RELEASE-NOTES.* files for this distro
-DISTRIB_CHANGELOG_INCLUDES = gentext xsl-saxon xsl-xalan xsl-libxslt xsl-webhelpindexer
+DISTRIB_CHANGELOG_INCLUDES = gentext xsl-saxon xsl-xalan
 
 # value of DISTRIB_DEPENDS is a space-separated list of any
 # targets for this distro's "distrib" target to depend on
@@ -31,7 +32,7 @@ RELEASE_CLEAN_TARGETS = docsrc-clean
 # targets for this distro's "install" target to depend on
 INSTALL_DEPENDS = release tag
 
-# value of DISTRIB_EXCLUDES is a space-separated list of any file or
+# value of ZIP_EXCLUDES is a space-separated list of any file or
 # directory names (shell wildcards OK) that should be excluded
 # from the zip file and tarball for the release
 DISTRIB_EXCLUDES = \
@@ -40,10 +41,8 @@ DISTRIB_EXCLUDES = \
   doc/reference.fo$$ \
   doc/reference.pdf$$ \
   doc/HTML.manifest$$ \
-  epub/bin/spec \
   tools/xsl \
   xhtml/html2xhtml.xsl$$ \
-  xhtml-1_1/html2xhtml.xsl$$ \
   Makefile.tests \
   README.BUILD \
   RELEASE-NOTES-PARTIAL.txt \
@@ -63,7 +62,7 @@ DISTRIB_PACKAGES = doc
 URILIST = \
 .\ http://docbook.sourceforge.net/release/xsl/current/
 
-DIRS=common lib html fo manpages htmlhelp javahelp eclipse roundtrip slides website extensions webhelp
+DIRS=common lib html fo manpages htmlhelp javahelp eclipse roundtrip slides website
 
 .PHONY: distrib clean doc docsrc xhtml
 
@@ -88,13 +87,22 @@ base:
 
 xhtml:
 	$(MAKE) -C xhtml
-	$(MAKE) -C xhtml-1_1
 
-docsrc: base docsrc-clean
+docsrc: base 
 	$(MAKE) -C docsrc
 
 doc: docsrc
 	$(MAKE) -C doc RELVER=$(RELVER)
+
+extensions: ../xsl-saxon/saxon65.jar ../xsl-xalan/xalan27.jar
+	if [ ! -d $@ ]; then mkdir $@; fi
+	cp -p $^ $@
+
+../xsl-saxon/saxon65.jar: $(wildcard ../xsl-saxon/src/com/nwalsh/saxon/*.java) 
+	$(MAKE) -C $(dir $@)
+
+../xsl-xalan/xalan27.jar: $(wildcard ../xsl-xalan/src/com/nwalsh/xalan/*.java) 
+	$(MAKE) -C $(dir $@)
 
 clean:
 	for i in $(DIRS) __bogus__; do \
@@ -102,8 +110,8 @@ clean:
 			echo "$(MAKE) clean -C $$i"; $(MAKE) clean -C $$i; \
 		fi \
 	done
+	$(RM) -r extensions
 	$(MAKE) clean -C xhtml
-	$(MAKE) clean -C xhtml-1_1
 	$(MAKE) clean -C doc
 	$(MAKE) clean -C docsrc
 	$(MAKE) clean -C tests
@@ -112,5 +120,5 @@ docsrc-clean:
 	$(MAKE) -C docsrc release-clean
 
 include Makefile.tests
-include $(DOCBOOK_SVN)/releasetools/Targets.mk
-include $(DOCBOOK_SVN)/releasetools/xslns.mk
+include ../releasetools/Targets.mk
+include ../releasetools/xslns.mk

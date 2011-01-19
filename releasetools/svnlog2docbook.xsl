@@ -76,30 +76,20 @@
 
   <!-- * a subsection can actually be either subsection of the distro or -->
   <!-- * a sibling of the distro (whatever you want to include in the -->
-  <!-- * DocBook version of the changelog). -->
+  <!-- * DocBook version of the changelog. -->
   <!-- * $subsections holds a "display name" for each subsection to -->
-  <!-- * include in DocBookified changelog. The lowercase versions of -->
+  <!-- * include in DocBookified changelog . The lowercase versions of -->
   <!-- * these display names correspond to the real subdirectories or -->
-  <!-- * sibling directories whose changes we want to include. So if you want -->
+  <!-- * sibling directory whose changes we to include. So if you want -->
   <!-- * to include a new subdirectory or sibling directory and have its -->
-  <!-- * changes documented in the output, then just add a "display name" -->
-  <!-- * for the subdirectory or sibling directory. -->
+  <!-- * changes documented in the ouptut, then just add a "display name" -->
+  <!-- * for the subdirectory or sibling directory -->
   <xsl:param
       name="subsections"
-      >Gentext Common FO HTML Manpages Epub HTMLHelp Eclipse JavaHelp Roundtrip Slides Website Webhelp Params Highlighting Profiling Lib Tools Template Extensions XSL-Java XSL-Saxon XSL-Xalan XSL-libxslt</xsl:param>
+      >Gentext Common FO HTML Manpages HTMLHelp Eclipse JavaHelp Roundtrip Slides Website Params Highlighting Profiling Lib Tools Template Extensions XSL-Java XSL-Saxon XSL-Xalan</xsl:param>
   <sf:users>
     <!-- * The sf:users structure associates Sourceforge usernames -->
     <!-- * with the real names of the people they correspond to -->
-    <sf:user>
-      <sf:username>paulnorton</sf:username>
-      <sf:firstname>Paul</sf:firstname>
-      <sf:surname>Norton</sf:surname>
-    </sf:user>
-    <sf:user>
-      <sf:username>abdelazer</sf:username>
-      <sf:firstname>Keith</sf:firstname>
-      <sf:surname>Fahlgren</sf:surname>
-    </sf:user>
     <sf:user>
       <sf:username>balls</sf:username>
       <sf:firstname>Steve</sf:firstname>

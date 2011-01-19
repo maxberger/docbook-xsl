@@ -34,7 +34,8 @@
       <xsl:value-of select="()"/>
     </xsl:when>
     <xsl:otherwise>
-      <xsl:sequence select="f:cleanup-docbook(document($glossary.collection,.))"/>
+      <xsl:apply-templates select="document($glossary.collection, .)"
+			   mode="m:cleanup"/>
     </xsl:otherwise>
   </xsl:choose>
 </xsl:variable>
@@ -45,7 +46,8 @@
       <xsl:value-of select="()"/>
     </xsl:when>
     <xsl:otherwise>
-      <xsl:sequence select="f:cleanup-docbook(document($bibliography.collection,.))"/>
+      <xsl:apply-templates select="document($bibliography.collection)"
+			   mode="m:cleanup"/>
     </xsl:otherwise>
   </xsl:choose>
 </xsl:variable>
@@ -113,11 +115,7 @@ copied by normalization.</para>
 </xsl:template>
 
 <xsl:template match="db:title|db:subtitle|db:titleabbrev" mode="m:normalize">
-  <xsl:if test="parent::db:info
-                |parent::db:biblioentry
-                |parent::db:bibliomixed
-                |parent::db:bibliomset
-                |parent::db:biblioset">
+  <xsl:if test="parent::db:info">
     <xsl:copy>
       <xsl:copy-of select="@*"/>
       <xsl:apply-templates mode="m:normalize"/>
@@ -342,11 +340,9 @@ necessary.</para>
 	      <xsl:copy-of select="db:info/preceding-sibling::node()"/>
 	      <xsl:copy-of select="db:info/*"/>
 	    </xsl:element>
-
-	    <xsl:apply-templates select="db:info/following-sibling::node()"
+	    <xsl:apply-templates select="db:info//following-sibling::node()"
 				 mode="m:normalize"/>
 	  </xsl:when>
-
 	  <xsl:otherwise>
 	    <xsl:variable name="node-tree">
 	      <xsl:element name="title" namespace="{$docbook-namespace}">
@@ -436,7 +432,6 @@ if appropriate</refpurpose>
 		     and db:imageobject
 		     and db:imageobject/db:imagedata[@format='linespecific']]"
 	      mode="m:normalize">
-
   <xsl:variable name="data"
 		select="(db:imageobject
 			 /db:imagedata[@format='linespecific'])[1]"/>
@@ -465,45 +460,6 @@ if appropriate</refpurpose>
       <xsl:value-of select="unparsed-text(db:textdata/@fileref)"/>
     </xsl:otherwise>
   </xsl:choose>
-</xsl:template>
-
-<!-- CALS tables are normalized here so that they're in the right context later -->
-<xsl:template match="db:tgroup" mode="m:normalize">
-  <xsl:apply-templates select="." mode="m:cals-phase-1"/>
-</xsl:template>
-
-<!-- Verbatim environments are normalized here too -->
-<xsl:template
-    match="db:programlisting|db:address|db:screen|db:synopsis|db:literallayout"
-    mode="m:normalize">
-
-  <xsl:variable name="normalized" as="element()">
-    <xsl:copy>
-      <xsl:copy-of select="@*"/>
-      <xsl:apply-templates mode="m:normalize"/>
-    </xsl:copy>
-  </xsl:variable>
-
-  <xsl:apply-templates select="$normalized" mode="m:verbatim-phase-1">
-    <xsl:with-param name="origelem" select="."/>
-  </xsl:apply-templates>
-</xsl:template>
-
-<xsl:template match="db:programlistingco" mode="m:normalize">
-  <xsl:variable name="normalized" as="element()">
-    <xsl:copy>
-      <xsl:copy-of select="@*"/>
-      <xsl:copy-of select="db:info"/>
-      <xsl:copy-of select="db:areaspec"/>
-      <db:programlisting>
-        <xsl:copy-of select="db:programlisting/@*"/>
-        <xsl:apply-templates select="db:programlisting/node()" mode="m:normalize"/>
-      </db:programlisting>
-      <xsl:copy-of select="db:calloutlist"/>
-    </xsl:copy>
-  </xsl:variable>
-
-  <xsl:apply-templates select="$normalized" mode="m:verbatim-phase-1"/>
 </xsl:template>
 
 <xsl:template match="*" mode="m:normalize"
@@ -565,20 +521,7 @@ if appropriate</refpurpose>
       <xsl:apply-templates select="$mapped" mode="m:normalize"/>
     </xsl:when>
     <xsl:when test="db:title|db:subtitle|db:titleabbrev|db:info/db:title">
-      <xsl:choose>
-        <xsl:when test="parent::db:biblioentry
-                        |parent::db:bibliomixed
-                        |parent::db:bibliomset
-                        |parent::db:biblioset">
-          <xsl:copy>
-            <xsl:copy-of select="@*"/>
-            <xsl:apply-templates mode="m:normalize"/>
-          </xsl:copy>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:call-template name="n:normalize-movetitle"/>
-        </xsl:otherwise>
-      </xsl:choose>
+      <xsl:call-template name="n:normalize-movetitle"/>
     </xsl:when>
     <xsl:otherwise>
       <xsl:copy>
@@ -593,7 +536,7 @@ if appropriate</refpurpose>
 	      mode="m:normalize">
   <xsl:copy/>
 </xsl:template>
-
+  
 <!-- ============================================================ -->
 
 <xsl:template match="r:content" mode="m:remap"
@@ -624,6 +567,251 @@ if appropriate</refpurpose>
   <xsl:param name="content" select="()"/>
   <xsl:copy/>
 </xsl:template>
+
+
+<!-- ============================================================ -->
+<!-- fix namespace -->
+
+<doc:mode name="m:fixnamespace" xmlns="http://docbook.org/ns/docbook">
+<refpurpose>Mode for fixing the namespace of DocBook documents</refpurpose>
+
+<refdescription>
+<para>This mode is used to fix the namespace of an input document.
+All elements that are not in any namespace are moved into the
+DocBook namespace. (See <parameter>docbook-namespace</parameter>).</para>
+</refdescription>
+</doc:mode>
+
+<xsl:template match="/" mode="m:fixnamespace">
+  <xsl:choose>
+    <xsl:when test="namespace-uri(*[1]) = $docbook-namespace">
+      <xsl:apply-templates mode="mp:justcopy"/>
+    </xsl:when>
+    <xsl:otherwise>
+      <xsl:apply-templates mode="m:fixnamespace"/>
+    </xsl:otherwise>
+  </xsl:choose>
+</xsl:template>
+
+<xsl:template match="*" mode="m:fixnamespace">
+  <xsl:choose>
+    <xsl:when test="namespace-uri(.) = ''">
+      <xsl:element name="{local-name(.)}" namespace="{$docbook-namespace}">
+	<xsl:copy-of select="@*"/>
+	<xsl:apply-templates mode="m:fixnamespace"/>
+      </xsl:element>
+    </xsl:when>
+    <xsl:otherwise>
+      <xsl:copy>
+	<xsl:copy-of select="@*"/>
+	<xsl:apply-templates mode="m:fixnamespace"/>
+      </xsl:copy>
+    </xsl:otherwise>
+  </xsl:choose>
+</xsl:template>
+
+<xsl:template match="imagedata|db:imagedata
+		     |textdata|db:textdata
+		     |videodata|db:videodata
+		     |audiodata|db:audiodata" mode="m:fixnamespace">
+  <xsl:call-template name="tp:fixfileref"/>
+</xsl:template>
+
+<xsl:template match="comment()|processing-instruction()|text()"
+	      mode="m:fixnamespace">
+  <xsl:copy/>
+</xsl:template>
+
+<xsl:template match="*" mode="mp:justcopy">
+  <xsl:copy>
+    <xsl:copy-of select="@*"/>
+    <xsl:apply-templates mode="mp:justcopy"/>
+  </xsl:copy>
+</xsl:template>
+
+<xsl:template match="imagedata|db:imagedata
+		     |textdata|db:textdata
+		     |videodata|db:videodata
+		     |audiodata|db:audiodata" mode="m:justcopy">
+  <xsl:call-template name="tp:fixfileref"/>
+</xsl:template>
+
+<xsl:template match="comment()|processing-instruction()|text()"
+	      mode="mp:justcopy">
+  <xsl:copy/>
+</xsl:template>
+
+<xsl:template name="tp:fixfileref">
+  <xsl:element name="{local-name(.)}" namespace="{$docbook-namespace}">
+    <xsl:copy-of select="@*[name(.) != 'fileref' and name(.) != 'entityref']"/>
+
+    <xsl:choose>
+      <xsl:when test="@fileref">
+	<xsl:attribute name="fileref"
+		       select="resolve-uri(@fileref, base-uri(.))"/>
+      </xsl:when>
+      <xsl:when test="@entityref">
+	<xsl:attribute name="fileref">
+	  <xsl:value-of select="unparsed-entity-uri(@entityref)"/>
+	</xsl:attribute>
+      </xsl:when>
+    </xsl:choose>
+  </xsl:element>
+</xsl:template>
+
+<!-- ============================================================ -->
+<!-- profile content -->
+
+<doc:mode name="m:profile" xmlns="http://docbook.org/ns/docbook">
+<refpurpose>Mode for profiling DocBook documents</refpurpose>
+
+<refdescription>
+<para>This mode is used to profile an input document. Profiling discards
+content that is not in the specified profile.</para>
+</refdescription>
+</doc:mode>
+
+<xsl:template match="/" mode="m:profile">
+  <xsl:apply-templates mode="m:profile"/>
+</xsl:template>
+
+<xsl:template match="*" mode="m:profile">
+  <xsl:if test="f:profile-ok(@arch, $profile.arch)
+                and f:profile-ok(@condition, $profile.condition)
+                and f:profile-ok(@conformance, $profile.conformance)
+                and f:profile-ok(@lang, $profile.lang)
+                and f:profile-ok(@os, $profile.os)
+                and f:profile-ok(@revision, $profile.revision)
+                and f:profile-ok(@revisionflag, $profile.revisionflag)
+                and f:profile-ok(@role, $profile.role)
+                and f:profile-ok(@security, $profile.security)
+                and f:profile-ok(@userlevel, $profile.userlevel)
+                and f:profile-ok(@vendor, $profile.vendor)
+		and f:profile-attribute-ok(.,
+		                           $profile.attribute, $profile.value)">
+    <xsl:copy>
+      <xsl:copy-of select="@*"/>
+      <xsl:apply-templates mode="m:profile"/>
+    </xsl:copy>
+  </xsl:if>
+</xsl:template>
+
+<xsl:template match="text()|comment()|processing-instruction()"
+	      mode="m:profile">
+  <xsl:copy/>
+</xsl:template>
+
+<!-- ============================================================ -->
+
+<doc:function name="f:profile-ok" xmlns="http://docbook.org/ns/docbook">
+<refpurpose>Returns true if the specified attribute is in the specified profile
+</refpurpose>
+
+<refdescription>
+<para>This function compares the profile values actually specified on
+an element with the set of values being used for profiling and returns
+true if the current attribute is in the specified profile.</para>
+</refdescription>
+
+<refparameter>
+<variablelist>
+<varlistentry><term>attr</term>
+<listitem>
+<para>The profiling attribute.</para>
+</listitem>
+</varlistentry>
+<varlistentry><term>prof</term>
+<listitem>
+<para>The desired profile.</para>
+</listitem>
+</varlistentry>
+</variablelist>
+</refparameter>
+
+<refreturn>
+<para>True or false.</para>
+</refreturn>
+</doc:function>
+
+<xsl:function name="f:profile-ok" as="xs:boolean">
+  <xsl:param name="attr" as="attribute()?"/>
+  <xsl:param name="prof" as="xs:string?"/>
+
+  <xsl:choose>
+    <xsl:when test="not($attr) or not($prof)">
+      <xsl:value-of select="true()"/>
+    </xsl:when>
+    <xsl:otherwise>
+      <xsl:variable name="node-values"
+		    select="fn:tokenize($attr, $profile.separator)"/>
+      <xsl:variable name="profile-values"
+		    select="fn:tokenize($prof, $profile.separator)"/>
+
+      <!-- take advantage of existential semantics of "=" -->
+      <xsl:value-of select="$node-values = $profile-values"/>
+    </xsl:otherwise>
+  </xsl:choose>
+</xsl:function>
+
+<!-- ============================================================ -->
+
+<doc:function name="f:profile-attribute-ok"
+	      xmlns="http://docbook.org/ns/docbook">
+<refpurpose>Returns true if the context node has the specified attribute and that attribute is in the specified profile
+</refpurpose>
+
+<refdescription>
+<para>This function compares the profile values actually specified in the
+named attribute on the context element
+with the set of values being used for profiling and returns
+true if the current attribute is in the specified profile.</para>
+</refdescription>
+
+<refparameter>
+<variablelist>
+<varlistentry><term>context</term>
+<listitem>
+<para>The context element.</para>
+</listitem>
+</varlistentry>
+<varlistentry><term>attr</term>
+<listitem>
+<para>The profiling attribute.</para>
+</listitem>
+</varlistentry>
+<varlistentry><term>prof</term>
+<listitem>
+<para>The desired profile.</para>
+</listitem>
+</varlistentry>
+</variablelist>
+</refparameter>
+
+<refreturn>
+<para>True or false.</para>
+</refreturn>
+</doc:function>
+
+<xsl:function name="f:profile-attribute-ok" as="xs:boolean">
+  <xsl:param name="context" as="element()"/>
+  <xsl:param name="attrname" as="xs:string?"/>
+  <xsl:param name="prof" as="xs:string?"/>
+
+  <xsl:choose>
+    <xsl:when test="not($attrname) or not($prof)">
+      <xsl:value-of select="true()"/>
+    </xsl:when>
+    <xsl:when test="not($context/@*[local-name(.) = $attrname
+		                    and namespace-uri(.) = ''])">
+      <xsl:value-of select="true()"/>
+    </xsl:when>
+    <xsl:otherwise>
+      <xsl:value-of select="f:profile-ok($context/@*[local-name(.) = $attrname
+                                                     and namespace-uri(.) = ''],
+					 $prof)"/>
+    </xsl:otherwise>
+  </xsl:choose>
+</xsl:function>
 
 <!-- ============================================================ -->
 <!-- copy external glossary -->

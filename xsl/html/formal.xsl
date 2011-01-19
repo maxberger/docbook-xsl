@@ -90,28 +90,15 @@
     </xsl:apply-templates>
   </xsl:param>
 
-
-  <xsl:choose>
-    <xsl:when test="$make.clean.html != 0">
-      <xsl:variable name="html.class" select="concat(local-name($object),'-title')"/>
-      <div class="{$html.class}">
-        <xsl:copy-of select="$title"/>
-      </div>
-    </xsl:when>
-    <xsl:otherwise>
-      <p class="title">
-        <b>
-          <xsl:copy-of select="$title"/>
-        </b>
-      </p>
-    </xsl:otherwise>
-  </xsl:choose>
+  <p class="title">
+    <b>
+      <xsl:copy-of select="$title"/>
+    </b>
+  </p>
 </xsl:template>
 
 <xsl:template name="informal.object">
-  <xsl:param name="class">
-    <xsl:apply-templates select="." mode="class.value"/>
-  </xsl:param>
+  <xsl:param name="class" select="local-name(.)"/>
 
   <xsl:variable name="content">
     <div class="{$class}">
@@ -155,7 +142,7 @@
   <xsl:param name="class" select="local-name(.)"/>
 
   <xsl:choose>
-    <xsl:when test="title or info/title">
+    <xsl:when test="title">
       <xsl:call-template name="formal.object">
         <xsl:with-param name="placement" select="$placement"/>
         <xsl:with-param name="class" select="$class"/>
@@ -198,14 +185,13 @@
       <xsl:call-template name="calsTable"/>
     </xsl:when>
     <xsl:otherwise>
-      <!-- do not use xsl:copy because of XHTML's needs -->
-      <xsl:element name="table" namespace="">
-        <xsl:apply-templates select="@*" mode="htmlTableAtt"/>
+      <xsl:copy>
+        <xsl:copy-of select="@*[not(local-name()='id')]"/>
         <xsl:attribute name="id">
           <xsl:call-template name="object.id"/>
         </xsl:attribute>
         <xsl:call-template name="htmlTable"/>
-      </xsl:element>
+      </xsl:copy>
     </xsl:otherwise>
   </xsl:choose>
 </xsl:template>
@@ -235,18 +221,18 @@
 
   <xsl:call-template name="formal.object">
     <xsl:with-param name="placement" select="$placement"/>
+    <xsl:with-param name="class">
+      <xsl:choose>
+        <xsl:when test="@tabstyle">
+          <!-- hack, this will only ever occur on table, not example -->
+          <xsl:value-of select="@tabstyle"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="local-name(.)"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:with-param>
   </xsl:call-template>
-</xsl:template>
-
-<xsl:template match="table|informaltable" mode="class.value">
-  <xsl:choose>
-    <xsl:when test="@tabstyle">
-      <xsl:value-of select="@tabstyle"/>
-    </xsl:when>
-    <xsl:otherwise>
-      <xsl:value-of select="local-name(.)"/>
-    </xsl:otherwise>
-  </xsl:choose>
 </xsl:template>
 
 <xsl:template name="htmlTable">
@@ -257,16 +243,6 @@
   </xsl:if>
 
   <xsl:apply-templates mode="htmlTable"/>
-
-  <xsl:if test=".//footnote|../title//footnote">
-    <tbody class="footnotes">
-      <tr>
-        <td colspan="50">
-          <xsl:apply-templates select=".//footnote|../title//footnote" mode="table.footnote.mode"/>
-        </td>
-      </tr>
-    </tbody>
-  </xsl:if>
 </xsl:template>
 
 <xsl:template match="example">
@@ -336,16 +312,24 @@
 <xsl:template match="informaltable">
   <xsl:choose>
     <xsl:when test="tgroup|mediaobject|graphic">
-      <xsl:call-template name="informal.object"/>
+      <xsl:call-template name="informal.object">
+        <xsl:with-param name="class">
+          <xsl:choose>
+            <xsl:when test="@tabstyle">
+              <xsl:value-of select="@tabstyle"/>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:value-of select="local-name(.)"/>
+            </xsl:otherwise>
+          </xsl:choose>
+        </xsl:with-param>
+      </xsl:call-template>
     </xsl:when>
     <xsl:otherwise>
-      <xsl:element name="table" namespace="">
-        <xsl:apply-templates select="@*" mode="htmlTableAtt"/>
-        <xsl:attribute name="id">
-          <xsl:call-template name="object.id"/>
-        </xsl:attribute>
+      <table>
+        <xsl:copy-of select="@*"/>
         <xsl:call-template name="htmlTable"/>
-      </xsl:element>
+      </table>
     </xsl:otherwise>
   </xsl:choose>
 </xsl:template>

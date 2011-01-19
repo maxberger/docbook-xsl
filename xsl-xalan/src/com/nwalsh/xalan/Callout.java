@@ -1,6 +1,6 @@
 package com.nwalsh.xalan;
 
-import org.w3c.dom.Element;
+import org.w3c.dom.*;
 
 /**
  * <p>Utility class for the Verbatim extension (ignore this).</p>

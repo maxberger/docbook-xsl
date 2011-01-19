@@ -62,52 +62,6 @@
     </xsl:for-each>
   </xsl:template>
 
-  <xsl:template name="inline.monoseq">
-    <xsl:call-template name="code-inline-start"/>
-    <xsl:apply-templates/>
-    <xsl:call-template name="code-inline-end"/>
-  </xsl:template>
-
-  <xsl:template name="code-inline-start">
-    <xsl:if test="not($man.output.better.ps.enabled = 0)">
-      <xsl:text>\FC</xsl:text>
-    </xsl:if>
-  </xsl:template>
-
-  <xsl:template name="code-inline-end">
-    <xsl:if test="not($man.output.better.ps.enabled = 0)">
-      <xsl:text>\F[]</xsl:text>
-    </xsl:if>
-  </xsl:template>
-
-  <!-- ================================================================== -->
-
-  <xsl:template name="verbatim-block-start">
-    <xsl:if test="not($man.output.better.ps.enabled = 0)">
-      <xsl:text>.fam C&#10;</xsl:text>
-      <xsl:text>.ps -1&#10;</xsl:text>
-    </xsl:if>
-  </xsl:template>
-
-  <xsl:template name="verbatim-block-end">
-    <xsl:if test="not($man.output.better.ps.enabled = 0)">
-      <xsl:text>.fam&#10;</xsl:text>
-      <xsl:text>.ps +1&#10;</xsl:text>
-    </xsl:if>
-  </xsl:template>
-
-  <xsl:template name="synopsis-block-start">
-    <xsl:if test="not($man.output.better.ps.enabled = 0)">
-      <xsl:text>.fam C&#10;</xsl:text>
-    </xsl:if>
-  </xsl:template>
-
-  <xsl:template name="synopsis-block-end">
-    <xsl:if test="not($man.output.better.ps.enabled = 0)">
-      <xsl:text>.fam&#10;</xsl:text>
-    </xsl:if>
-  </xsl:template>
-
   <!-- ================================================================== -->
 
   <!-- * NOTE TO DEVELOPERS: For ease of maintenance, the current -->
@@ -169,7 +123,7 @@
     <xsl:variable name="dot-content">
       <xsl:call-template name="string.subst">
         <xsl:with-param name="string" select="$content"/>
-        <xsl:with-param name="target" select="'\&amp;.'"/>
+        <xsl:with-param name="target" select="'\.'"/>
         <xsl:with-param name="replacement" select="'.'"/>
       </xsl:call-template>
     </xsl:variable>
@@ -185,38 +139,27 @@
   <!-- * The nested-section-title template is called for refsect3, and any -->
   <!-- * refsection nested more than 2 levels deep. -->
   <xsl:template name="nested-section-title">
+    <!-- * The next few lines are some arcane roff code to control line -->
+    <!-- * spacing after headings. -->
     <xsl:text>.sp&#10;</xsl:text>
-    <xsl:call-template name="pinch.together"/>
-    <xsl:text>.ps +1&#10;</xsl:text>
-    <xsl:call-template name="make.bold.title"/>
-  </xsl:template>
-
-  <xsl:template name="pinch.together">
-    <!-- * arcane roff code to suppress line spacing after headings -->
     <xsl:text>.it 1 an-trap&#10;</xsl:text>
     <xsl:text>.nr an-no-space-flag 1&#10;</xsl:text>
     <xsl:text>.nr an-break-flag 1&#10;</xsl:text>
     <xsl:text>.br&#10;</xsl:text>
-  </xsl:template>
-
-  <xsl:template name="make.bold.title">
-    <!-- * make title wrapper so that we can use "bold" template to apply -->
-    <!-- * character formatting to it -->
+    <!-- * make title wrapper so that we can use mode="bold" template to -->
+    <!-- * apply character formatting to it -->
     <xsl:variable name="title.wrapper">
-      <xsl:choose>
+      <bold><xsl:choose>
         <xsl:when test="title">
           <xsl:value-of select="normalize-space(title[1])"/>
         </xsl:when>
         <xsl:otherwise>
           <xsl:apply-templates select="." mode="object.title.markup.textonly"/>
         </xsl:otherwise>
-      </xsl:choose>
+      </xsl:choose></bold>
     </xsl:variable>
     <xsl:call-template name="mark.subheading"/>
-    <xsl:call-template name="bold">
-      <xsl:with-param name="node" select="exsl:node-set($title.wrapper)"/>
-      <xsl:with-param name="context" select="."/>
-    </xsl:call-template>
+    <xsl:apply-templates mode="bold" select="exsl:node-set($title.wrapper)"/>
     <xsl:text>&#10;</xsl:text>
     <xsl:call-template name="mark.subheading"/>
   </xsl:template>
@@ -493,29 +436,8 @@
       <xsl:with-param name="replacement" select="'_'"/>
     </xsl:call-template>
   </xsl:template>
-
+  
   <!-- ================================================================== -->
-
-  <xsl:template name="make.subheading">
-    <xsl:param name="title"/>
-    <xsl:call-template name="mark.subheading"/>
-    <xsl:text>.SH</xsl:text>
-    <xsl:text> </xsl:text>
-    <xsl:text>"</xsl:text>
-    <xsl:choose>
-      <xsl:when test="not($man.output.better.ps.enabled = 0)">
-        <xsl:value-of select="$title"/>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:call-template name="string.upper">
-          <xsl:with-param name="string" select="$title"/>
-        </xsl:call-template>
-      </xsl:otherwise>
-    </xsl:choose>
-    <xsl:text>"</xsl:text>
-    <xsl:text>&#10;</xsl:text>
-    <xsl:call-template name="mark.subheading"/>
-  </xsl:template>
 
   <!-- * Put a horizontal rule or other divider around section titles -->
   <!-- * in roff source (just to make things easier to read). -->
@@ -525,31 +447,6 @@
       <xsl:value-of select="$man.subheading.divider"/>
       <xsl:text>&#10;</xsl:text>
     </xsl:if>
-  </xsl:template>
-
-  <!-- ================================================================== -->
-
-  <xsl:template name="roff-if-else-start">
-    <xsl:param name="condition">n</xsl:param>
-    <xsl:text>.ie </xsl:text>
-    <xsl:value-of select="$condition"/>
-    <xsl:text> \{\&#10;</xsl:text>
-  </xsl:template>
-
-  <xsl:template name="roff-if-start">
-    <xsl:param name="condition">n</xsl:param>
-    <xsl:text>.if </xsl:text>
-    <xsl:value-of select="$condition"/>
-    <xsl:text> \{\&#10;</xsl:text>
-  </xsl:template>
-
-  <xsl:template name="roff-else">
-    <xsl:text>.\}&#10;</xsl:text>
-    <xsl:text>.el \{\&#10;</xsl:text>
-  </xsl:template>
-
-  <xsl:template name="roff-if-end">
-    <xsl:text>.\}&#10;</xsl:text>
   </xsl:template>
 
 </xsl:stylesheet>

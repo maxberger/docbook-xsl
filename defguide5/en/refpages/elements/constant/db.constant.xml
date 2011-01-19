@@ -18,14 +18,15 @@
 <?tdg-refsynopsisdiv?>
 
 <refsection condition="ref.description">
-<title>Description</title><para>A <tag>constant</tag> identifies a value as immutable. It
-      is most often used to identify system limitations or other defined
-      constants.</para>
+<title>Description</title>
 
-      <refsection><info><title>Processing expectations</title></info>
-        
+<para>A <tag>constant</tag> identifies a value as immutable. It is most often
+used to identify system limitations or other defined constants.
+</para>
 
-        <para>Formatted inline.</para>
+<refsection><title>Processing expectations</title>
+<para><?tdg gentext='format.inline'?>
+</para>
 </refsection>
 
 <?tdg-attributes?>

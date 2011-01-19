@@ -137,6 +137,7 @@
 <gentext key="in" text="ውስጥ"/>
 <gentext key="lastlistcomma" text="፣"/>
 <gentext key="listcomma" text="፣"/>
+<gentext key="nonexistantelement" text="የሌለ መሠረታዊ ነገር"/>
 <gentext key="notes" text="ማስታወሻዎች"/>
 <gentext key="Notes" text="ማስታወሻዎች"/>
 <gentext key="Pgs" text="ገጾች"/>
@@ -178,7 +179,6 @@
 <gentext key="below"         text="ከስር"/>
 <gentext key="sectioncalled" text="የክፍሉ መጠሪያ"/>
 <gentext key="index symbols" text="ምልክቶች"/>
-<gentext key="writing-mode" text="lr-tb"/>
 
 <gentext key="lowercase.alpha" text="abcdefghijklmnopqrstuvwxyz"/>
 <gentext key="uppercase.alpha" text="ABCDEFGHIJKLMNOPQRSTUVWXYZ"/>
@@ -504,9 +504,8 @@
 </context>
 
 <context name="glossary">
-<template name="see"><GlossSee/> %t.</template>
-<template name="seealso"><GlossSeeAlso/> %t.</template>
-<template name="seealso-separator">, </template>
+<template name="see"><GlossSee/> %t</template>
+<template name="seealso"><GlossSeeAlso/> %t</template>
 </context>
 
 <context name="msgset">

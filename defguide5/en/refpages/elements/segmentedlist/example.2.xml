@@ -3,7 +3,6 @@
 
 <para><segmentedlist><title>State Capitals</title>
 <?dbhtml list-presentation="table"?>
-<?dbfo   list-presentation="table"?>
 <segtitle>State</segtitle>
 <segtitle>Capital</segtitle>
 <seglistitem><seg>Alabama</seg><seg>Montgomery</seg></seglistitem>

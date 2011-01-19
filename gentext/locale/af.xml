@@ -136,6 +136,7 @@
 <gentext key="in" text="in"/>
 <gentext key="lastlistcomma" text=","/>
 <gentext key="listcomma" text=","/>
+<gentext key="nonexistantelement" text="element bestaan nie"/>
 <gentext key="notes" text="Notas"/>
 <gentext key="Notes" text="notas"/>
 <gentext key="Pgs" text="bl."/>
@@ -173,7 +174,6 @@
 <gentext key="below"         text="onder"/>
 <gentext key="sectioncalled" text="die seksie genaamd"/>
 <gentext key="index symbols" text="indeks simbole"/>
-<gentext key="writing-mode" text="lr-tb"/>
 
 <gentext key="lowercase.alpha" text="abcdefghijklmnopqrstuvwxyz"/>
 <gentext key="uppercase.alpha" text="ABCDEFGHIJKLMNOPQRSTUVWXYZ"/>
@@ -473,9 +473,8 @@
 </context>
 
 <context name="glossary">
-<template name="see"><GlossSee/> %t.</template>
-<template name="seealso"><GlossSeeAlso/> %t.</template>
-<template name="seealso-separator">, </template>
+<template name="see"><GlossSee/> %t</template>
+<template name="seealso"><GlossSeeAlso/> %t</template>
 </context>
 
 <context name="msgset">

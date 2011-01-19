@@ -28,12 +28,10 @@
 # ======================================================================
 
 namespace rng  = "http://relaxng.org/ns/structure/1.0"
-namespace s = "http://purl.oclc.org/dsdl/schematron"
+namespace s = "http://www.ascc.net/xml/schematron"
 namespace db = "http://docbook.org/ns/docbook"
 namespace dbx = "http://sourceforge.net/projects/docbook/defguide/schema/extra-markup"
 default namespace = "http://docbook.org/ns/docbook"
-
-start |= db.partintro | db.simplesect
 
 db.status.attribute =
    [
@@ -114,10 +112,6 @@ div {
 
 # ======================================================================
 
-db.book.components = (db.navigation.components | db.components | db.divisions)*
-
-# ======================================================================
-
 [
    db:refname [ "book" ]
    db:refpurpose [ "A book" ]
@@ -141,7 +135,7 @@ div {
       element book {
          db.book.attlist,
          db.book.info,
-         db.book.components
+         (db.navigation.components | db.components | db.divisions)*
       }
 }
 
@@ -228,20 +222,15 @@ div {
       element colophon {
          db.colophon.attlist,
          db.colophon.info,
-         ((db.all.blocks+, db.simplesect*)
-          |(db.all.blocks*, db.simplesect+))
+         db.all.blocks+
       }
 }
 
 # ======================================================================
 
-db.appendix.contentmodel = db.component.contentmodel
-
-# ======================================================================
-
 [
    db:refname [ "appendix" ]
-   db:refpurpose [ "An appendix in a book or article" ]
+   db:refpurpose [ "An appendix in a Book or Article" ]
 ]
 div {
 
@@ -262,13 +251,9 @@ div {
       element appendix {
          db.appendix.attlist,
          db.appendix.info,
-         db.appendix.contentmodel
+         db.component.contentmodel
       }
 }
-
-# ======================================================================
-
-db.chapter.contentmodel = db.component.contentmodel
 
 # ======================================================================
 
@@ -295,14 +280,13 @@ div {
       element chapter {
          db.chapter.attlist,
          db.chapter.info,
-         db.chapter.contentmodel
+         db.component.contentmodel
       }
 }
 
 # ======================================================================
 
 db.part.components = db.navigation.components | db.components
-db.part.contentmodel = db.part.components+
 
 # ======================================================================
 
@@ -330,7 +314,7 @@ div {
          db.part.attlist,
          db.part.info,
          db.partintro?,
-         db.part.contentmodel
+         db.part.components+
       }
 }
 

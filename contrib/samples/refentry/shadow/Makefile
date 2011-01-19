@@ -1,27 +1,24 @@
-URL=svn://svn.debian.org/svn/pkg-shadow/upstream/trunk
+HOST=anoncvs.pld.org.pl
+USER=cvs
+BASE=/cvsroot
+MODULE=shadow
 SUBMODULE=man
 
 MAKEFILE_DOCBOOK = ../../../../xsl/tools/make/Makefile.DocBook
 
 TMP ?= /tmp
 
-SVN=svn
-SVNFLAGS=
+CVS=cvs
+CVSFLAGS=
 
-all: $(SUBMODULE)
+all: $(SUBMODULE) $(SUBMODULE)/Makefile
 
-$(TMP)/shadow/man:
-	$(RM) -r $(TMP)/shadow
-	cd $(TMP) \
-	  && $(SVN) co $(SVNFLAGS) $(URL) shadow \
-	  && cd $(TMP)/shadow \
-	  && ./autogen.sh \
-	  && cd $(TMP)/shadow/man \
-	  && make
-	
-$(SUBMODULE): $(TMP)/shadow/man
-	cp -pR $< $@
+$(SUBMODULE):
+	(cd $(TMP) && $(CVS) $(CVSFLAGS) -d:pserver:$(USER)@$(HOST):$(BASE) co $(MODULE)/$(SUBMODULE))
+	cp -pR $(TMP)/$(MODULE)/$(SUBMODULE) .
+
+$(SUBMODULE)/Makefile:
+	cp $(MAKEFILE_DOCBOOK) $(SUBMODULE)/Makefile
 
 clean:
 	$(RM) -r $(SUBMODULE)
-	$(RM) -r $(TMP)/shadow

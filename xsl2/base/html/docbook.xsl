@@ -11,11 +11,11 @@
                 version="2.0">
 
   <xsl:include href="param.xsl"/>
-  <xsl:include href="../common/control.xsl"/>
   <xsl:include href="../common/l10n.xsl"/>
   <xsl:include href="../common/spspace.xsl"/>
   <xsl:include href="../common/gentext.xsl"/>
   <xsl:include href="../common/normalize.xsl"/>
+  <xsl:include href="../common/root.xsl"/>
   <xsl:include href="../common/functions.xsl"/>
   <xsl:include href="../common/common.xsl"/>
   <xsl:include href="../common/titlepages.xsl"/>
@@ -41,7 +41,6 @@
   <xsl:include href="callouts.xsl"/>
   <xsl:include href="formal.xsl"/>
   <xsl:include href="blocks.xsl"/>
-  <xsl:include href="msgset.xsl"/>
   <xsl:include href="graphics.xsl"/>
   <xsl:include href="footnotes.xsl"/>
   <xsl:include href="admonitions.xsl"/>
@@ -56,66 +55,169 @@
   <xsl:include href="chunker.xsl"/>
 
 <!-- ============================================================ -->
+<!-- HACK HACK HACK for testing framework. Delete me! -->
 
-<xsl:output method="xhtml" encoding="utf-8" indent="no"/>
-<xsl:output name="xml" method="xml" encoding="utf-8" indent="no"/>
-
-<xsl:param name="stylesheet.result.type" select="'xhtml'"/>
-
-<xsl:template match="/">
-  <xsl:variable name="normalized" as="document-node()"
-		select="f:cleanup-docbook(/)"/>
-
-  <xsl:variable name="root" as="element()"
-		select="f:docbook-root-element($normalized,$rootid)"/>
-
-  <xsl:if test="$verbosity &gt; 3">
-    <xsl:message>Styling...</xsl:message>
-  </xsl:if>
-
-  <html>
-    <xsl:call-template name="t:head">
-      <xsl:with-param name="root" select="$root"/>
-    </xsl:call-template>
-    <body>
-      <xsl:call-template name="t:body-attributes"/>
-      <xsl:if test="$root/@status">
-        <xsl:attribute name="class" select="$root/@status"/>
-      </xsl:if>
-
-      <xsl:apply-templates select="$root"/>
-    </body>
-  </html>
-
-  <xsl:for-each select=".//db:mediaobject[db:textobject[not(db:phrase)]]">
-    <xsl:call-template name="t:write-longdesc"/>
-  </xsl:for-each>
+<xsl:template match="db:emphasis" mode="foobar">
+  <b><xsl:apply-templates/></b>
 </xsl:template>
 
-<xsl:template match="*">
-  <div class="unknowntag">
-    <xsl:call-template name="id"/>
-    <font color="red">
-      <xsl:text>&lt;</xsl:text>
-      <xsl:value-of select="name(.)"/>
-      <xsl:for-each select="@*">
-	<xsl:text> </xsl:text>
-	<xsl:value-of select="name(.)"/>
-	<xsl:text>="</xsl:text>
-	<xsl:value-of select="."/>
-	<xsl:text>"</xsl:text>
-      </xsl:for-each>
-      <xsl:text>&gt;</xsl:text>
-    </font>
-    <xsl:apply-templates/>
-    <font color="red">
-      <xsl:text>&lt;/</xsl:text>
-      <xsl:value-of select="name(.)"/>
-      <xsl:text>&gt;</xsl:text>
-    </font>
-  </div>
-</xsl:template>
+<xsl:param name="save.normalized.xml" select="0"/>
 
 <!-- ============================================================ -->
+
+  <xsl:output method="xml" encoding="utf-8" indent="yes"/>
+  <xsl:output name="final" method="xhtml" encoding="utf-8" indent="yes"/>
+
+  <xsl:param name="stylesheet.result.type" select="'xhtml'"/>
+  <xsl:param name="input" select="/"/>
+
+  <xsl:template match="*" mode="m:root">
+    <xsl:if test="$save.normalized.xml != 0">
+      <xsl:message>Saving normalized xml.</xsl:message>
+      <xsl:result-document href="normalized.xml">
+	<xsl:copy-of select="."/>
+      </xsl:result-document>
+    </xsl:if>
+
+    <xsl:result-document format="final">
+      <html>
+	<head>
+	  <title>
+	    <xsl:choose>
+	      <xsl:when test="db:info/db:title">
+		<xsl:value-of select="db:info/db:title"/>
+	      </xsl:when>
+	      <xsl:when test="db:refmeta/db:refentrytitle">
+		<xsl:value-of select="db:refmeta/db:refentrytitle"/>
+	      </xsl:when>
+	      <xsl:when test="db:refmeta/db:refnamediv/db:refname">
+		<xsl:value-of select="db:refmeta/db:refnamediv/db:refname"/>
+	      </xsl:when>
+	      <xsl:otherwise>
+		<xsl:text>???</xsl:text>
+		<xsl:message>
+		  <xsl:text>Warning: no title for root element: </xsl:text>
+		  <xsl:value-of select="local-name(.)"/>
+		</xsl:message>
+	      </xsl:otherwise>
+	    </xsl:choose>
+	  </title>
+	  <xsl:call-template name="t:head-meta"/>
+	  <xsl:call-template name="t:head-links"/>
+	  <xsl:call-template name="css-style"/>
+	  <xsl:call-template name="javascript"/>
+	</head>
+	<body>
+	  <xsl:call-template name="t:body-attributes"/>
+	  <xsl:if test="@status">
+	    <xsl:attribute name="class" select="@status"/>
+	  </xsl:if>
+
+	  <xsl:apply-templates select="."/>
+	</body>
+      </html>
+    </xsl:result-document>
+
+    <xsl:for-each select=".//db:mediaobject[db:textobject[not(db:phrase)]]">
+      <xsl:call-template name="t:write-longdesc"/>
+    </xsl:for-each>
+  </xsl:template>
+
+  <xsl:template match="*">
+    <div class="unknowntag">
+      <xsl:call-template name="id"/>
+      <font color="red">
+	<xsl:text>&lt;</xsl:text>
+	<xsl:value-of select="name(.)"/>
+	<xsl:for-each select="@*">
+	  <xsl:text> </xsl:text>
+	  <xsl:value-of select="name(.)"/>
+	  <xsl:text>="</xsl:text>
+	  <xsl:value-of select="."/>
+	  <xsl:text>"</xsl:text>
+	</xsl:for-each>
+	<xsl:text>&gt;</xsl:text>
+      </font>
+      <xsl:apply-templates/>
+      <font color="red">
+	<xsl:text>&lt;/</xsl:text>
+	<xsl:value-of select="name(.)"/>
+	<xsl:text>&gt;</xsl:text>
+      </font>
+    </div>
+  </xsl:template>
+
+<!-- ============================================================ -->
+
+<!-- blocks -->
+<xsl:template match="db:para|db:simpara|db:cmdsynopsis" priority="100000">
+  <xsl:param name="content">
+    <xsl:next-match/>
+  </xsl:param>
+
+  <xsl:call-template name="t:block-element">
+    <xsl:with-param name="content">
+      <xsl:copy-of select="$content"/>
+    </xsl:with-param>
+  </xsl:call-template>
+</xsl:template>
+
+<xsl:template name="t:block-element">
+  <xsl:param name="content">
+    <xsl:apply-templates/>
+  </xsl:param>
+
+  <xsl:variable name="inherit" select="self::db:para or self::db:simpara"/>
+  <xsl:variable name="changed" select=".//*[@revisionflag and
+                                            @revisionflag != 'off']"/>
+
+  <xsl:choose>
+    <xsl:when test="@revisionflag">
+      <div class="revision-inherited">
+	<div class="revision-{@revisionflag}">
+	  <xsl:copy-of select="$content"/>
+	</div>
+      </div>
+    </xsl:when>
+    <xsl:when test="$inherit and $changed">
+      <div class="revision-inherited">
+	<xsl:copy-of select="$content"/>
+      </div>
+    </xsl:when>
+    <xsl:otherwise>
+      <xsl:copy-of select="$content"/>
+    </xsl:otherwise>
+  </xsl:choose>
+</xsl:template>
+
+<!-- inlines -->
+<xsl:template match="db:emphasis|db:phrase" priority="100000">
+  <xsl:param name="content">
+    <xsl:next-match/>
+  </xsl:param>
+
+  <xsl:call-template name="t:inline-element">
+    <xsl:with-param name="content">
+      <xsl:copy-of select="$content"/>
+    </xsl:with-param>
+  </xsl:call-template>
+</xsl:template>
+
+<xsl:template name="t:inline-element">
+  <xsl:param name="content">
+    <xsl:apply-templates/>
+  </xsl:param>
+
+  <xsl:choose>
+    <xsl:when test="@revisionflag">
+      <span class="revision-{@revisionflag}">
+	<xsl:copy-of select="$content"/>
+      </span>
+    </xsl:when>
+    <xsl:otherwise>
+      <xsl:copy-of select="$content"/>
+    </xsl:otherwise>
+  </xsl:choose>
+</xsl:template>
 
 </xsl:stylesheet>

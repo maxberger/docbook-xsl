@@ -145,6 +145,7 @@
 <gentext key="notes" text="merknader"/>
 <gentext key="TableNotes" text="Merknader"/>
 <gentext key="tablenotes" text="merknader"/>
+<gentext key="nonexistantelement" text="ikkje-eksisterande element"/>
 <gentext key="Pgs" text="Sider"/>
 <gentext key="pgs" text="sider"/>
 <gentext key="unsupported" text="ikkje støtta"/>
@@ -175,7 +176,6 @@
 <gentext key="above" text="above"/> <!-- en -->
 <gentext key="below" text="below"/> <!-- en -->
 <gentext key="index symbols" text="Symbols"/> <!-- en -->
-<gentext key="writing-mode" text="lr-tb"/>
 
 <gentext key="lowercase.alpha" text="abcdefghijklmnopqrstuvwxyz"/> <!--en-->
 <gentext key="uppercase.alpha" text="ABCDEFGHIJKLMNOPQRSTUVWXYZ"/> <!--en-->
@@ -476,9 +476,10 @@
 </context>
 
 <context name="glossary">
-<template name="see"><GlossSee/> %t.</template>
-<template name="seealso"><GlossSeeAlso/> %t.</template>
-<template name="seealso-separator">, </template>
+
+<template name="see"><GlossSee/> %t</template>
+<template name="seealso"><GlossSeeAlso/> %t</template>
+
 </context>
 
 <context name="msgset">

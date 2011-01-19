@@ -18,17 +18,17 @@
 <?tdg-refsynopsisdiv?>
 
 <refsection condition="ref.description">
-<title>Description</title><para>The <tag>refmiscinfo</tag> element is an escape hatch for
-      additional meta-information about a reference page. It may hold
-      copyright information, release or revision information, descriptive text
-      for use in a print header or footer, or any other information not
-      explicitly provided for in <tag>refmeta</tag>.</para>
+<title>Description</title>
 
-      <refsection><info><title>Processing expectations</title></info>
-        
+<para>The <tag>refmiscinfo</tag> element is an escape hatch for
+additional meta-information about a reference page. It may hold
+copyright information, release or revision information, descriptive
+text for use in a print header or footer, or any other information not
+explicitly provided for in <tag>refmeta</tag>.
+</para>
 
-        <para>May be formatted inline or as a displayed block, depending on
-        context.</para>
+<refsection><title>Processing expectations</title>
+<para><?tdg gentext='format.context'?></para>
 </refsection>
 
 <?tdg-attributes?>

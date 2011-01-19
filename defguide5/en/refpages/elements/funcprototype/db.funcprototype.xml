@@ -18,14 +18,17 @@
 <?tdg-refsynopsisdiv?>
 
 <refsection condition="ref.description">
-<title>Description</title><para>A wrapper for a function prototype in a
-      <tag>funcsynopsis</tag>.</para>
+<title>Description</title>
 
-      <refsection><info><title>Processing expectations</title></info>
-        
 
-        <para>See <tag>funcsynopsis</tag>.</para>
+<para>A wrapper for a function prototype in a <tag>funcsynopsis</tag>.
+</para>
+
+<refsection><title>Processing expectations</title>
+<para>See <tag>funcsynopsis</tag>.
+</para>
 </refsection>
+
 
 <?tdg-attributes?>
 <?tdg-parents?>

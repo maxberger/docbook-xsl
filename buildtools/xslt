@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# USAGE:
-#   xslt [-xsltproc|-xalan|-saxon]  inputfile  xslfile  outputfile  [param1=value1 [param2=value2 ...]]
-
 PROC=saxon
 
 case $1 in

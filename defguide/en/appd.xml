@@ -5,9 +5,9 @@
 <releaseinfo>$Revision$</releaseinfo>
 </appendixinfo>
 <title>Resources</title>
-<indexterm><primary>XML</primary>
+<indexterm id="infoappd" class="startofrange"><primary>XML</primary>
   <secondary>resources, reference</secondary></indexterm>
-<indexterm><primary>SGML</primary>
+<indexterm id="SGMLinfoappc" class="startofrange"><primary>SGML</primary>
   <secondary>resources, reference</secondary></indexterm>
 
 <para>The quantity of information about &SGML; and &XML; is growing

@@ -18,13 +18,17 @@
 <?tdg-refsynopsisdiv?>
 
 <refsection condition="ref.description">
-<title>Description</title><para>An abbreviation, especially one followed by a period.</para>
+<title>Description</title>
 
-      <refsection><info><title>Processing expectations</title></info>
-        
 
-        <para>Formatted inline.</para>
+<para>An abbreviation, especially one followed by a period.
+</para>
+
+<refsection><title>Processing expectations</title>
+<para><?tdg gentext='format.inline'?>
+</para>
 </refsection>
+
 
 <?tdg-attributes?>
 <?tdg-parents?>

@@ -148,6 +148,7 @@
 <gentext key="in" text="дотор"/>
 <gentext key="lastlistcomma" text=","/>
 <gentext key="listcomma" text=","/>
+<gentext key="nonexistantelement" text="байхгүй элемент"/>
 <gentext key="notes" text="тайлбар"/>
 <gentext key="Notes" text="Тайлбар"/>
 <gentext key="Pgs" text="Хуудас"/>
@@ -200,7 +201,6 @@
 <gentext key="below"         text="доор"/> 
 <gentext key="sectioncalled" text="Хэсгийн нэр"/>
 <gentext key="index symbols" text="тэмдэгтүүд"/>
-<gentext key="writing-mode" text="lr-tb"/>
 
 
 <gentext key="lowercase.alpha" text="абвгдеёжзийклмноөпрстуүфхцчшщъыьэюя"/> 
@@ -531,9 +531,8 @@
 </context>
 
 <context name="glossary">
-<template name="see"><GlossSee/> %t.</template>
-<template name="seealso"><GlossSeeAlso/> %t.</template>
-<template name="seealso-separator">, </template>
+<template name="see"><GlossSee/> %t</template>
+<template name="seealso"><GlossSeeAlso/> %t</template>
 </context>
 
 <context name="msgset">

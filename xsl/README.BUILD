@@ -1,16 +1,5 @@
 $Id$
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-The DocBook XSL Stylesheets release build has been tested under
-the bash shell on Linux, Darwin/OSX with MacPorts, and Cygwin. You
-should be able to build successfully on those platforms -- if you
-run the build under bash and have the necessary build dependencies
-installed (see Part 0.0 below) and have your user environment set
-up correctly (with environment variables set, and for doc/release
-builds, with properly configured ~/.xmlc and ~/.antrc files -- see
-sections 0.3, 0.4, and 0.5 below).
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 Parts 0 and 1 of this document provide how-to instructions for
 building the DocBook XSL Stylesheets.
 
@@ -36,36 +25,10 @@ Part 0: Build Setup
 Before building, make sure your environment is set up correctly
 with information about some of the dependencies needed to build.
 
-FIXME: The 0.0 section is probably not complete and should provide
-more details about other the third-party build dependencies. Doc
-contributions welcome...
-
-0. Third-party build dependencies.
-   The following is an incomplete list of some of the third-party
-   tools and libraries you need to have installed before building.
-
-   - xsltproc and xmllint
-   - egrep and sed
-   - Perl and the XML::XPath module
-   - Java and Apache ant (for building the extension jar files)
-
-   And if you want to build with Saxon instead of xsltproc:
-
-   - Java
-   - Saxon 6 jar file
-   - Xerces-J jar files
-   - Apache XML Commons Resolver jar file
-
-   You probably should also have the Xalan 2 jar file installed.
-
-   In addition to the above, the doc/distrib/release build requires:
-
-   - tar, gzip, bzip2, and zip
-   - openssh
-   - lftp (for uploads to the Sourceforge FTP site)
-   - w3m browser (default) or optionally lynx or elinks
-     (for generating the plain-text release notes)
-   - dblatex, xep, or fop (for building doc PDFs)
+FIXME: Ideally, this Part 0 section should also provide more
+details about what the third-party build dependencies are, not
+just what other DocBook Project modules are needed or how to do
+configuration to prepare for builds. Contributions welcome...
 
 1. Core DocBook Project modules (stylesheets build)
    If you want to build and test the stylesheets (or
@@ -118,25 +81,15 @@ contributions welcome...
      export CLASSPATH=$CLASSPATH:/etc/xml/resolver/
      export SGML_CATALOG_FILES=/etc/sgml/catalog
 
-   For Darwin/OSX with MacPorts, you should use these values instead:
-
-     export JARDIR=/opt/local/share/java
-     export JAVA_HOME=/System/Library/Frameworks/JavaVM.framework/Versions/CurrentJDK/Home
-
-   And for Cygwin, something like:
-
-     export JAVA_HOME="c:/Java/jdk1.6.0_05" (or wherever Java is)
-     export JARDIR="c:/cygwin/usr/share/java"
-
-   You can then source that ~/docbk.sh by putting the following in
-   your ~/.bashrc file:
+   You can then source that by putting the following in your
+   ~/.bashrc file:
 
      # set up some environment variables for DocBook/XML stuff
      . ~/docbk.sh
 
-4. ~/.xmlc
+4. .xmlrc
 
-   You need an .xmlc file with some system-specific data for Java
+   You need an .xmlrc file with some system-specific data for Java
    and XML tools in your environment. For example:
 
    <?xml version='1.0' encoding='utf-8'?> <!-- -*- nxml -*- -->
@@ -170,36 +123,6 @@ contributions welcome...
      <xsltproc xml:id="xsltproc" exec="xsltproc"></xsltproc>
      <xmllint xml:id="xmllint" exec="xmllint"></xmllint>
    </config>
-
-   For Darwin/OSX with MacPorts, use /opt/local/share/java/ in
-   place of /usr/share/java//opt/local/share/ja in place of
-   /usr/share/java/
-
-5. ~/.antrc
-
-   To build the Saxon and Xalan XSLT extensions, you need an
-   ~/.antrc file with system-specific data for your environment.
-
-   Example for Debian with Sun JDK:
-
-     ANT_OPTS="$ANT_OPTS \
-      -Dfile.reference.saxon.jar=/usr/share/java/saxon-6.5.5.jar \
-      -Dfile.reference.xalan.jar=/usr/share/java/xalan2.jar \
-      -Dplatform.home=/usr/lib/jvm/java-6-sun"
-
-   Example for Darwin/OSX with MacPorts:
-
-     ANT_OPTS="$ANT_OPTS \
-      -Dfile.reference.saxon.jar=/opt/local/share/java/saxon-6.5.5.jar \
-      -Dfile.reference.xalan.jar=/opt/local/share/java/xalan.jar \
-      -Dplatform.home=/System/Library/Frameworks/JavaVM.framework/Versions/CurrentJDK/Home"
-
-   Example for Cygwin:
-
-     ANT_OPTS="$ANT_OPTS \
-      -Dfile.reference.saxon.jar=c:/cygwin/usr/share/java/saxon-6.5.5.jar \
-      -Dfile.reference.xalan.jar=c:/cygwin/usr/share/java/xalan2.jar \
-      -Dplatform.home=’c:/Java/jdk1.6.0_05’"
 
 -----------------------------------------------------------------
 Part 1: Build and test the stylesheets
@@ -241,15 +164,25 @@ and all other Parts following it).
        DOCBOOK-BUILD.LOG log file
      - checks the DOCBOOK-BUILD.LOG file for errors & reports them
 
+   NOTE: The build-clean script is just a "safe" wrapper around
+   the svn-clean command; svn-clean is a perl script that's not
+   part of the core subversion distribution (on my system, it's
+   in the subversion-tools package). Its function is to "wipe out
+   unversioned files from Subversion working copy". It is a good
+   idea to use it because our own "clean" make target doesn't
+   clean out everything that needs to be cleaned out to get your
+   working directory back to a fresh state, and also doesn't
+   prevent cruft in your workspace from accidentally getting
+   packaged into a release build. So running build-clean
+   (svn-clean) gives you a clean build environment and alerts you
+   to cruft that needs to be deleted and also to any new files
+   that you make have created but forgotten to actually check in.
+
 3. make check (optional step)
    As an optional step to check for any major brokenness, run
    "make check", which will run a test transformation against
    the driver stylesheets for each output format (e.g.,
    html/docbook.xsl, fo/docbook.xsl, etc.).
-
-   Because of problems with the 1.74.* releases, it is now
-   recommended that "make check" be run multiple times with
-   different XSLT processors.
 
    One recommended way to invoke "make check" is the following:
 
@@ -257,15 +190,6 @@ and all other Parts following it).
      . ~/docbk.sh && \
      make check 2>&1 \
        XSLTENGINE=xsltproc \
-       | tee DOCBOOK-BUILD.LOG && \
-     $DOCBOOK_SVN/buildtools/build-check DOCBOOK-BUILD.LOG
-
-   After running with "xsltproc", you should run it again with
-   "saxon":
-     rm -f DOCBOOK-BUILD.LOG && \
-     . ~/docbk.sh && \
-     make check 2>&1 \
-       XSLTENGINE=saxon \
        | tee DOCBOOK-BUILD.LOG && \
      $DOCBOOK_SVN/buildtools/build-check DOCBOOK-BUILD.LOG
 
@@ -277,7 +201,7 @@ and all other Parts following it).
    Once you have any obvious problems fixed (that is, the kind
    that build-check and "make check" can catch, you should
    do further testing of the changes (if any) that you have made
-   m to the stylesheet code. Try to test with a variety of test
+   to the stylesheet code. Try to test with a variety of test
    files, not just with DocBook XML source files you've created
    yourself. Consider using the files in the "testdocs" module
    (see step 1 of the "Build Setup" section above).
@@ -329,11 +253,6 @@ the stylesheets -- then you can ignore this "Part 2" section; the
       the stylesheets (currently, that means the DocBook
       Saxon Extensions and the DocBook Xalan extensions)
   -----------------------------------------------------------
-
-0. Ensure repository is fully updated.
-   If you're hoping to make a release of the current trunk of the
-   stylesheets, make sure to "svn up" from the parent of this 
-   directory (trunk/, not xsl/).
 
 1. make distrib
    If you have followed the steps in Part 1 above to successfully
@@ -438,9 +357,7 @@ safely ignore this part.
    doesn't need to be included in the final release notes. In
    general, that means removing most bug fixes and "housekeeping"
    changes that do not need to be exposed to users, but changes
-   for feature enhancements or changes to public APIs. Do remember
-   to modify the @xml:ids for each pasted sect2 or you'll get a
-   conflict later.
+   for feature enhancements or changes to public APIs.
 
 7. After making all changes/additions to the RELEASE-NOTES.xml
    file, check it back in with 
@@ -544,78 +461,17 @@ release.
    packages) to the Sourceforge "incoming" area and to the DocBook
    Project webspace, run "make install-ns":
 
-*****************************************************************
-* NOTE: The part of the build that installs releases at the
-* Sourceforge project site is currently NOT working (due to SF
-* disabling non-interactive ssh access).
-
------------------------------------------------------------------
-Manual upload of release packages
------------------------------------------------------------------
-Below are instructions for manually uploading and installing 
-release packages in order to make them available at the project
-site (http://docbook.sourceforge.net/release/).
-
-1. Transfer the following files 
-
-   - docbook-xsl-<version>.zip
-   - docbook-xsl-ns-<version>.zip
-   - docbook-xsl-doc-<version>.zip 
-
-   to the /home/groups/d/do/docbook/htdocs/release/xsl 
-   directory at web.sourceforge.net using scp, WinSCP, or another 
-   equivalent tool. The login string is 
-
-     <username>,docbook@web.sourceforge.net
-
-2. Start a SourceForge shell session, like so:
-
-     ssh -t <username>,docbook@shell.sourceforge.net create
-
-3. In the shell, execute commands as follows for the docbook-xsl 
-   package (the 1.75.2 version is used as an example):
-
-     cd /home/groups/d/do/docbook/htdocs/release/xsl
-     rm -rf current
-     unzip docbook-xsl-1.75.2.zip
-     mv docbook-xsl-1.75.2 1.75.2
-     chmod -R g+w 1.75.2
-     ln -s 1.75.2 current
-
-4. Repeat (and modify where applicable) the commands in step 3 for 
-   the docbook-xsl-ns package.
-
-5. Extract the contents of the docbook-xsl-doc package into the 
-   xsl/<version> and xsl-ns/<version> directories. 
-
-6. The documentation packages contain reference.txt.gz and 
-   reference.pdf.gz. Unzip these archives (to ensure working links 
-   on the documentation index page).
-
-7. Delete ZIP files and temporary directories.
-
-For more information about file management and shell services at 
-SourceForge, see
-
-     https://sourceforge.net/apps/trac/sourceforge/wiki/WikiStart
-
-*****************************************************************
-
      make install-ns
 
 -----------------------------------------------------------------
 Part 6: Manage release files
 -----------------------------------------------------------------
-
+This section explains how to manage release files using the
+file-management interface at Sourceforge.
 
 Unfortunately, Sourceforge provides no automated way to manage
 file releases, so you must complete all the following steps using
 the SF file-management Web interface.
-
-The file-management Web interface has been updated. Please ee:
-https://sourceforge.net/apps/trac/sourceforge/wiki/Release%20files%20for%20download
-
-Here are the legacy instructions for reference *only*:
 
 NOTE: Try hard to make sure you've got everything prepared OK,
 because the SF file-management system is extremely unwieldy, and
@@ -675,7 +531,7 @@ a mistake, see the next section for details on how to fix it.
 13. Go to the project "Latest File Releases" page and confirm
     that releases you have created appear there.
 
-      https://sourceforge.net/projects/docbook/files/
+      http://sourceforge.net/project/showfiles.php?group_id=21935
 
 -----------------------------------------------------------------
 Part 7: Fix upload mistakes
@@ -777,7 +633,7 @@ This section explains how to announce a release.
 
         This release includes bug fixes and a few feature changes.
 
-        https://sourceforge.net/projects/docbook/files/
+        http://sourceforge.net/project/showfiles.php?group_id=21935
 
    E. Click the Submit button.
       The News submission form re-appears.
@@ -796,7 +652,7 @@ This section explains how to announce a release.
 
         This release includes bug fixes and a few feature changes.
 
-        https://sourceforge.net/projects/docbook/files/
+        http://sourceforge.net/project/showfiles.php?group_id=21935
 
    H. Go to the project News page and confirm that the announcements
       appear:
@@ -804,40 +660,8 @@ This section explains how to announce a release.
         http://sourceforge.net/news/?group_id=21935
 
 -----------------------------------------------------------------
-Part 11: Do post-release wrap-up
------------------------------------------------------------------
-This section explains the "wrap up" steps you need to do
-following an official release.
-
-1. Open the VERSION file.
-
-2. Change the content of the PreviousRelease element to the
-   version number you have just released.
-
-3. Change the content of the PreviousReleaseRevision element to
-   the number of the repository revision from which you built the
-   release.
-
-4. Change the content of the fm:Version element to the version
-   number of the next anticipated release, with the string "-pre"
-   appended; for example:
-
-     <fm:Version>1.73.1-pre</fm:Version>
-
-9. Check the VERSION file back in.
-
-    svn commit \
-      -m "Restored VERSION file to snapshot state" VERSION
-
------------------------------------------------------------------
 Part 9: Prepare for Freshmeat update
 -----------------------------------------------------------------
-
-*****************************************************************
-* NOTE: The part of the build that updates Freshmeat is not
-* currently working, so you can ignore this section.
-*****************************************************************
-
 This section explains how to prepare for updating Freshmeat with
 information about a release.
 
@@ -857,12 +681,6 @@ your freshmeat password.
 -----------------------------------------------------------------
 Part 10: Update Freshmeat
 -----------------------------------------------------------------
-
-*****************************************************************
-* NOTE: The part of the build that updates Freshmeat is not
-* currently working, so you can ignore this section.
-*****************************************************************
-
 This section explains how to update Freshmeat with information
 about a release.
 
@@ -895,6 +713,31 @@ following steps.
 
      make freshmeat-ns SFRELID=NNNNNN FMGO=
 
+-----------------------------------------------------------------
+Part 11: Do post-release wrap-up
+-----------------------------------------------------------------
+This section explains the "wrap up" steps you need to do
+following an official release.
+
+1. Open the VERSION file.
+
+2. Change the content of the PreviousRelease element to the
+   version number you have just released.
+
+3. Change the content of the PreviousReleaseRevision element to
+   the number of the repository revision from which you built the
+   release.
+
+4. Change the content of the fm:Version element to the version
+   number of the next anticipated release, with the string "-pre"
+   appended; for example:
+
+     <fm:Version>1.73.1-pre</fm:Version>
+
+9. Check the VERSION file back in.
+
+    svn commit \
+      -m "Restored VERSION file to snapshot state" VERSION
 
 -----------------------------------------------------------------
 NOTES

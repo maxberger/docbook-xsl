@@ -3,10 +3,9 @@
 		xmlns:fo="http://www.w3.org/1999/XSL/Format"
 		xmlns:f="http://docbook.org/xslt/ns/extension"
 		xmlns:m="http://docbook.org/xslt/ns/mode"
-		xmlns:t="http://docbook.org/xslt/ns/template"
 		xmlns:fn="http://www.w3.org/2005/xpath-functions"
 		xmlns:db="http://docbook.org/ns/docbook"
-		exclude-result-prefixes="f m fn db t"
+		exclude-result-prefixes="f m fn db"
                 version="2.0">
 
 <!-- ============================================================ -->
@@ -40,7 +39,7 @@
       </xsl:choose>
     </xsl:when>
     <xsl:otherwise>
-      <fo:block xsl:use-attribute-sets="normal.para.spacing">
+      <fo:block>
 	<xsl:call-template name="id"/>
 	<xsl:copy-of select="$runin"/>
 	<xsl:apply-templates/>
@@ -112,29 +111,27 @@
 
 <!-- ==================================================================== -->
 
-<xsl:template name="t:floater">
-  <xsl:param name="position" select="'none'"/>
-  <xsl:param name="clear" select="'both'"/>
-  <xsl:param name="width"/>
-  <xsl:param name="content"/>
-  <xsl:param name="start.indent">0pt</xsl:param>
-  <xsl:param name="end.indent">0pt</xsl:param>
-
-  <!-- FIXME: -->
-  <xsl:copy-of select="$content"/>
-</xsl:template>
-
-<!-- ==================================================================== -->
-
 <xsl:template match="db:sidebar">
+  <xsl:variable name="titlepage"
+		select="$titlepages/*[node-name(.)=node-name(current())][1]"/>
+
   <fo:block>
     <xsl:call-template name="id"/>
 
-    <!-- FIXME: titlepage -->
+    <xsl:call-template name="titlepage">
+      <xsl:with-param name="content" select="$titlepage"/>
+    </xsl:call-template>
 
     <fo:block>
       <xsl:apply-templates select="*[not(self::db:info)]"/>
     </fo:block>
+  </fo:block>
+</xsl:template>
+
+<xsl:template match="db:sidebar/db:info/db:title"
+	      mode="m:titlepage-mode">
+  <fo:block>
+    <xsl:apply-templates/>
   </fo:block>
 </xsl:template>
 

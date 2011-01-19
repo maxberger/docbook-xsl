@@ -18,16 +18,20 @@
 <?tdg-refsynopsisdiv?>
 
 <refsection condition="ref.description">
-<title>Description</title><para>A <tag>phone</tag> identifies a telephone number in an
-      <tag>address</tag>.</para>
+<title>Description</title>
 
-      <refsection><info><title>Processing expectations</title></info>
-        
+<para>A <tag>phone</tag> identifies a telephone number in an
+<tag>address</tag>.
+</para>
 
-        <para>Formatted inline. Sometimes suppressed. In an
-        <tag>address</tag>, this element may inherit the verbatim
-        qualities of an address.</para>
+<refsection><title>Processing expectations</title>
+<para><?tdg gentext='format.inline'?>
+<?tdg gentext='format.csuppress'?>
+In an <tag>address</tag>,
+this element may inherit the verbatim qualities of an address.
+</para>
 </refsection>
+
 
 <?tdg-attributes?>
 <?tdg-parents?>

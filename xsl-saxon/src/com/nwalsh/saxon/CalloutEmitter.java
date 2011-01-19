@@ -2,9 +2,8 @@ package com.nwalsh.saxon;
 
 import java.util.Stack;
 import java.util.StringTokenizer;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.w3c.dom.Element;
+import org.xml.sax.*;
+import org.w3c.dom.*;
 import javax.xml.transform.TransformerException;
 import com.icl.saxon.Controller;
 import com.icl.saxon.om.NamePool;

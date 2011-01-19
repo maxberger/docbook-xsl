@@ -139,6 +139,7 @@
 <gentext key="in" text="v"/>
 <gentext key="lastlistcomma" text=","/>
 <gentext key="listcomma" text=","/>
+<gentext key="nonexistantelement" text="neexistujúci prvok"/>
 <gentext key="notes" text="Poznámky"/>
 <gentext key="Notes" text="Poznámky"/>
 <gentext key="Pgs" text="Str."/>
@@ -176,7 +177,6 @@
 <gentext key="above" text="nad"/> 
 <gentext key="below" text="pod"/> 
 <gentext key="index symbols" text="Symboly"/>
-<gentext key="writing-mode" text="lr-tb"/>
 
 <gentext key="lowercase.alpha" text="aáäbcčdďeéfghiíjklĺľmnňoóôpqrŕsštťuúvwxyýzž"/> 
 <gentext key="uppercase.alpha" text="AÁÄBCČDĎEÉFGHIÍJKLĹĽMNŇOÓÔPQRŔSŠTŤUÚVWXYÝZŽ"/> 
@@ -476,9 +476,8 @@
 </context>
 
 <context name="glossary">
-<template name="see"><GlossSee/> %t.</template>
-<template name="seealso"><GlossSeeAlso/> %t.</template>
-<template name="seealso-separator">, </template>
+<template name="see"><GlossSee/> %t</template>
+<template name="seealso"><GlossSeeAlso/> %t</template>
 </context>
 
 <context name="msgset">

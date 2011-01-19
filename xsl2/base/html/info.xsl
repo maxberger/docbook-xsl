@@ -6,17 +6,13 @@
 		xmlns:fn="http://www.w3.org/2005/xpath-functions"
 		xmlns:h="http://www.w3.org/1999/xhtml"
 		xmlns:m="http://docbook.org/xslt/ns/mode"
-                xmlns:t="http://docbook.org/xslt/ns/template"
 		xmlns:xs="http://www.w3.org/2001/XMLSchema"
-		exclude-result-prefixes="db f fn h m t xs"
+		exclude-result-prefixes="db f fn h m xs"
                 version="2.0">
 
 <!-- many info elements are handled by ../common/inlines.xsl -->
 
-<xsl:template match="db:orgname|db:orgdiv|db:shortaffil|db:subtitle|db:artpagenums
-                     |db:confdates|db:conftitle|db:confnum
-                     |db:confsponsor|db:contractnum|db:contractsponsor
-                     |db:volumenum|db:issuenum|db:seriesvolnums">
+<xsl:template match="db:orgname">
   <span class="{local-name(.)}">
     <xsl:call-template name="id"/>
     <xsl:call-template name="class"/>
@@ -36,7 +32,7 @@
     <xsl:text>&#160;©&#160;</xsl:text>
 
     <span class="years">
-      <xsl:call-template name="t:copyright-years">
+      <xsl:call-template name="copyright-years">
 	<xsl:with-param name="years" select="db:year"/>
 	<xsl:with-param name="print.ranges" select="$make.year.ranges"/>
 	<xsl:with-param name="single.year.ranges"
@@ -70,13 +66,6 @@
   <xsl:variable name="cols" select="sum($colspec)"/>
 
   <table class="{local-name(.)}" border="0" summary="Revision History">
-    <tr>
-      <td colspan="{$cols}">
-        <span class="title">
-          <xsl:value-of select="f:gentext(.)"/>
-        </span>
-      </td>
-    </tr>
     <xsl:for-each select="db:revision">
       <tr class="{local-name}">
 	<xsl:if test="$has-revnumber">

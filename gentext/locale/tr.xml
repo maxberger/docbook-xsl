@@ -145,6 +145,7 @@
 <gentext key="in" text=""/>
 <gentext key="lastlistcomma" text=","/>
 <gentext key="listcomma" text=","/>
+<gentext key="nonexistantelement" text="varolmayan eleman"/>
 <gentext key="notes" text="Notlar"/>
 <gentext key="Notes" text="Notlar"/>
 <gentext key="Pgs" text="Sayfa"/>
@@ -186,7 +187,6 @@
 <gentext key="above"         text="üstünde"/> 
 <gentext key="below"         text="altında"/> 
 <gentext key="index symbols"            text="Semboller"/>
-<gentext key="writing-mode" text="lr-tb"/>
 
 <gentext key="lowercase.alpha" text="abcçdefgğhıijklmnoöprsştuüvyz"/>
 <gentext key="uppercase.alpha" text="ABCÇDEFGĞHIİJKLMNOÖPRSŞTUÜVYZ"/>
@@ -503,9 +503,8 @@
 </context>
 
 <context name="glossary">
-<template name="see"><GlossSee/> %t.</template>
-<template name="seealso"><GlossSeeAlso/> %t.</template>
-<template name="seealso-separator">, </template>
+<template name="see"><GlossSee/> %t</template>
+<template name="seealso"><GlossSeeAlso/> %t</template>
 </context>
 
 <context name="msgset">

@@ -18,18 +18,21 @@
 <?tdg-refsynopsisdiv?>
 
 <refsection condition="ref.description">
-<title>Description</title><para>In a <tag>msgset</tag>, each <tag>msgentry</tag>
-      contains some number of messages (<tag>msg</tag>s) and
-      additional informative and explanatory material about them.</para>
+<title>Description</title>
 
-      <refsection><info><title>Processing expectations</title></info>
-        
+<para>In a <tag>msgset</tag>, each <tag>msgentry</tag> contains
+some number of messages (<tag>msg</tag>s) and additional informative and
+explanatory material about them.
+</para>
 
-        <para>Formatted as a displayed block.</para>
+<refsection><title>Processing expectations</title>
+<para><?tdg gentext='format.block'?>
+</para>
+<para>On the whole, the semantics of <tag>msgset</tag>
+are not clearly defined.
+</para>
+</refsection>
 
-        <para>On the whole, the semantics of <tag>msgset</tag> are not
-        clearly defined.</para>
-      </refsection>
 
 <?tdg-attributes?>
 <?tdg-parents?>

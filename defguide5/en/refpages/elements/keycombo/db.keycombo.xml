@@ -18,15 +18,20 @@
 <?tdg-refsynopsisdiv?>
 
 <refsection condition="ref.description">
-<title>Description</title><para>For actions that require multiple keystrokes, mouse actions, or
-      other physical input selections, the <tag>keycombo</tag> element
-      provides a wrapper for the entire set of events.</para>
+<title>Description</title>
 
-      <refsection><info><title>Processing expectations</title></info>
-        
 
-        <para>Formatted inline.</para>
+<para>For actions that require multiple keystrokes, mouse actions, or other
+physical input selections, the <tag>keycombo</tag> element provides a
+wrapper for the entire set of events.
+</para>
+
+<refsection><title>Processing expectations</title>
+<para><?tdg gentext='format.inline'?>
+
+</para>
 </refsection>
+
 
 <?tdg-attributes?>
 <?tdg-parents?>

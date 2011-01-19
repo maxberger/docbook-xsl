@@ -95,7 +95,9 @@ title.</para>
     </xsl:apply-templates>
   </xsl:param>
 
-  <xsl:sequence select="$title"/>
+  <div class="title">
+    <xsl:sequence select="$title"/>
+  </div>
 </xsl:template>
 
 <!-- ============================================================ -->
@@ -116,9 +118,6 @@ title.</para>
 
   <xsl:variable name="wrapper">
     <div class="{$class}-wrapper">
-      <xsl:call-template name="id">
-	<xsl:with-param name="node" select="$context"/>
-      </xsl:call-template>
       <xsl:sequence select="$object"/>
       <xsl:apply-templates select="$context/db:caption"/>
     </div>

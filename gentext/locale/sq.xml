@@ -137,6 +137,7 @@
 <gentext key="in" text="n&#0235;"/>
 <gentext key="lastlistcomma" text=","/>
 <gentext key="listcomma" text=","/>
+<gentext key="nonexistantelement" text="element jo ekzistues"/>
 <gentext key="notes" text="Sh&#0235;nime"/>
 <gentext key="Notes" text="Sh&#0235;nime"/>
 <gentext key="Pgs" text="Fq."/>
@@ -178,7 +179,6 @@
 <gentext key="below"         text="posht&#0235;"/>
 <gentext key="sectioncalled" text="seksioni i quajtur"/>
 <gentext key="index symbols" text="Simbole"/>
-<gentext key="writing-mode" text="lr-tb"/>
 
 <gentext key="lowercase.alpha" text="abcdefghijklmnopqrstuvwxyz"/>
 <gentext key="uppercase.alpha" text="ABCDEFGHIJKLMNOPQRSTUVWXYZ"/>
@@ -503,9 +503,8 @@
 </context>
 
 <context name="glossary">
-<template name="see"><GlossSee/> %t.</template>
-<template name="seealso"><GlossSeeAlso/> %t.</template>
-<template name="seealso-separator">, </template>
+<template name="see"><GlossSee/> %t</template>
+<template name="seealso"><GlossSeeAlso/> %t</template>
 </context>
 
 <context name="msgset">

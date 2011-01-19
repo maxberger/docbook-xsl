@@ -18,15 +18,17 @@
 <?tdg-refsynopsisdiv?>
 
 <refsection condition="ref.description">
-<title>Description</title><para>The <tag>taskrelated</tag> element provides other,
-      relevant information about a task (<phrase role="keep-together">cross-</phrase><phrase role="keep-together">references</phrase> to other parts of the document,
-      suggested next steps, etc.).</para>
+<title>Description</title>
 
-      <refsection><info><title>Processing expectations</title></info>
-        
 
-        <para>Formatted as a displayed block.</para>
+<para>The <tag>taskrelated</tag> element provides other, relevant
+information about a task (cross references to other parts of the document,
+suggested next steps, etc.).</para>
+
+<refsection><title>Processing expectations</title>
+<para><?tdg gentext='format.block'?></para>
 </refsection>
+
 
 <?tdg-attributes?>
 <?tdg-parents?>

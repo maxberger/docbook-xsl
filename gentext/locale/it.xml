@@ -154,6 +154,7 @@
 <gentext key="in" text="in"/>
 <gentext key="lastlistcomma" text=","/>
 <gentext key="listcomma" text=","/>
+<gentext key="nonexistantelement" text="elemento non esistente"/>
 <gentext key="notes" text="Note"/>
 <gentext key="Notes" text="Note"/>
 <gentext key="Pgs" text="pp."/>
@@ -204,9 +205,8 @@
 <gentext key="Draft" text="Bozza"/>
 <gentext key="above" text="sopra"/>
 <gentext key="below" text="sotto"/>
-<gentext key="sectioncalled" text="sezione chiamata"/>
+<gentext key="sectioncalled" text="la sezione chiamata"/>
 <gentext key="index symbols" text="Simboli"/>
-<gentext key="writing-mode" text="lr-tb"/>
 
 <gentext key="lowercase.alpha" text="abcdefghijklmnopqrstuvwxyz"/>
 <gentext key="uppercase.alpha" text="ABCDEFGHIJKLMNOPQRSTUVWXYZ"/>
@@ -539,9 +539,8 @@
 </context>
 
 <context name="glossary">
-<template name="see"><GlossSee/> %t.</template>
-<template name="seealso"><GlossSeeAlso/> %t.</template>
-<template name="seealso-separator">, </template>
+<template name="see"><GlossSee/> %t</template>
+<template name="seealso"><GlossSeeAlso/> %t</template>
 </context>
 
 <context name="msgset">
@@ -1333,5 +1332,3 @@
 </letters>
 
 </locale>
-
- 	  	 

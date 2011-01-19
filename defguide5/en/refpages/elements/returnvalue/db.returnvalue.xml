@@ -18,14 +18,17 @@
 <?tdg-refsynopsisdiv?>
 
 <refsection condition="ref.description">
-<title>Description</title><para>A <tag>returnvalue</tag> identifies the value returned by
-      a function or command.</para>
+<title>Description</title>
 
-      <refsection><info><title>Processing expectations</title></info>
-        
+<para>A <tag>returnvalue</tag> identifies the value returned by a
+function or command.  
+</para>
 
-        <para>Formatted inline.</para>
+<refsection><title>Processing expectations</title>
+<para><?tdg gentext='format.inline'?>
+</para>
 </refsection>
+
 
 <?tdg-attributes?>
 <?tdg-parents?>

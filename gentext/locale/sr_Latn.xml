@@ -19,8 +19,6 @@
 
 <gentext key="Abstract" text="Sažetak"/>
 <gentext key="abstract" text="sažetak"/>
-<gentext key="Acknowledgements" text="Priznanja"/>
-<gentext key="acknowledgements" text="priznanja"/>
 <gentext key="Answer" text="O:"/>
 <gentext key="answer" text="o:"/>
 <gentext key="Appendix" text="Dodatak"/>
@@ -93,15 +91,15 @@
 <gentext key="QandASet" text="Često postavljana pitanja"/>
 <gentext key="Question" text="P:"/>
 <gentext key="question" text="p:"/>
-<gentext key="RefEntry" text="Stranica"/>
-<gentext key="refentry" text="stranica"/>
+<gentext key="RefEntry" text=""/>
+<gentext key="refentry" text=""/>
 <gentext key="Reference" text="Referenca"/>
 <gentext key="reference" text="referenca"/>
 <gentext key="References" text="Reference"/>
 <gentext key="RefName" text="Ime"/>
 <gentext key="refname" text="ime"/>
-<gentext key="RefSection" text="Odeljak"/>
-<gentext key="refsection" text="odeljak"/>
+<gentext key="RefSection" text=""/>
+<gentext key="refsection" text=""/>
 <gentext key="RefSynopsisDiv" text="Pregled"/>
 <gentext key="refsynopsisdiv" text="pregled"/>
 <gentext key="RevHistory" text="Istorija revizija"/>
@@ -148,6 +146,7 @@
 <gentext key="in" text="u"/>
 <gentext key="lastlistcomma" text=","/>
 <gentext key="listcomma" text=","/>
+<gentext key="nonexistantelement" text="nepostojeći element"/>
 <gentext key="notes" text="primedbe"/>
 <gentext key="Notes" text="Primedbe"/>
 <gentext key="Pgs" text="Str."/>
@@ -200,7 +199,6 @@
 <gentext key="below" text="ispod"/>
 <gentext key="sectioncalled" text="odeljak pod imenom"/>
 <gentext key="index symbols" text="Simboli"/>
-<gentext key="writing-mode" text="lr-tb"/>
 
 <gentext key="lowercase.alpha" text="abcčćdđefghijklmnopqrsštuvwxyzž"/>
 <gentext key="uppercase.alpha" text="ABCČĆDĐEFGHIJKLMNOPQRSŠTUVWXYZŽ"/>
@@ -530,9 +528,8 @@
 </context>
 
 <context name="glossary">
-<template name="see"><GlossSee/> %t.</template>
-<template name="seealso"><GlossSeeAlso/> %t.</template>
-<template name="seealso-separator">, </template>
+<template name="see"><GlossSee/> %t</template>
+<template name="seealso"><GlossSeeAlso/> %t</template>
 </context>
 
 <context name="msgset">

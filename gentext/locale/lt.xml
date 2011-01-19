@@ -6,12 +6,12 @@
 
 <doc:localeinfo xmlns="">
 <authorgroup>
-  <author><firstname>Kęstutis</firstname><surname>Biliūnas</surname>
-          <affiliation><address><email>kebil@kaunas.init.lt</email></address>
-          </affiliation>
-  </author>
   <author><firstname>Nikolajus</firstname><surname>Krauklis</surname>
           <affiliation><address><email>nikolajus@avc.lt</email></address>
+          </affiliation>
+  </author>
+  <author><firstname>Kęstutis</firstname><surname>Biliūnas</surname>
+          <affiliation><address><email>kebil@kaunas.init.lt</email></address>
           </affiliation>
   </author>
 </authorgroup>
@@ -25,7 +25,6 @@
 <gentext key="appendix" text="Priedas"/>
 <gentext key="Article" text="Straipsnis"/>
 <gentext key="article" text="Straipsnis"/>
-<gentext key="Author" text="Autorius"/>
 <gentext key="Bibliography" text="Bibliografija"/>
 <gentext key="bibliography" text="Bibliografija"/>
 <gentext key="Book" text="Knyga"/>
@@ -92,7 +91,6 @@
 <gentext key="refentry" text=""/>
 <gentext key="Reference" text="Nuoroda"/>
 <gentext key="reference" text="Nuoroda"/>
-<gentext key="References" text="Nuorodos"/>
 <gentext key="RefName" text="Pavadinimas"/>
 <gentext key="refname" text="Pavadinimas"/>
 <gentext key="RefSection" text=""/>
@@ -142,6 +140,7 @@
 <gentext key="in" text=""/>
 <gentext key="lastlistcomma" text=","/>
 <gentext key="listcomma" text=","/>
+<gentext key="nonexistantelement" text="neegzistuojantis elementas"/>
 <gentext key="notes" text="Pastabos"/>
 <gentext key="Notes" text="Pastabos"/>
 <gentext key="Pgs" text="P."/>
@@ -171,7 +170,7 @@
 <gentext key="listofunknown" text="Nežinomas sąrašas"/>
 
 <gentext key="nav-home" text="Į pradžią"/>
-<gentext key="nav-next" text="Tolesnis"/>
+<gentext key="nav-next" text="Sekantis"/>
 <gentext key="nav-next-sibling" text="Spartus pirmyn"/>
 <gentext key="nav-prev" text="Ankstesnis"/>
 <gentext key="nav-prev-sibling" text="Spartus atgal"/>
@@ -183,7 +182,6 @@
 <gentext key="below"         text="žemiau"/>
 <gentext key="sectioncalled" text="skyrius pavadinimu"/>
 <gentext key="index symbols" text="Simboliai"/>
-<gentext key="writing-mode" text="lr-tb"/>
 
 <gentext key="lowercase.alpha" text="aąbcčdeęėfghiįyjklmnoprsštuųūvzžqwx"/>
 <gentext key="uppercase.alpha" text="AĄBCČDEĘĖFGHIĮYJKLMNOPRSŠTUŲŪVZŽQWX"/>
@@ -300,7 +298,6 @@
 <template name="sect5">%t</template>
 <template name="section">%t</template>
 <template name="simplesect">%t</template>
-<template name="part">%t</template>
 
 </context>
 
@@ -310,6 +307,7 @@
 <template name="article/appendix">%n.&#160;%t</template>
 <template name="bridgehead">%n.&#160;%t</template>
 <template name="chapter"><Chapter/>&#160;%n.&#160;%t</template>
+<template name="part"><Part/>&#160;%n.&#160;%t</template>
 <template name="sect1">%n.&#160;%t</template>
 <template name="sect2">%n.&#160;%t</template>
 <template name="sect3">%n.&#160;%t</template>
@@ -317,7 +315,6 @@
 <template name="sect5">%n.&#160;%t</template>
 <template name="section">%n.&#160;%t</template>
 <template name="simplesect">%t</template>
-<template name="part"><Part/>&#160;%n.&#160;%t</template>
 
 </context>
 
@@ -429,11 +426,11 @@
 <template name="olink.document.citation"> in %o</template>
 <template name="olink.page.citation"> (page %p)</template>
 <template name="page.citation"> [%p]</template>
-<template name="page">(%p puslapis)</template>
-<template name="docname"> dokumente %o</template>
-<template name="docnamelong"> dokumente %o</template>
-<template name="pageabbrev">(%p p.)</template>
-<template name="Page">%p puslapis</template>
+<template name="page">(page %p)</template>
+<template name="docname"> in %o</template>
+<template name="docnamelong"> in the document titled %o</template>
+<template name="pageabbrev">(p. %p)</template>
+<template name="Page">Page %p</template>
 
 <template name="bridgehead"><sectioncalled/> <startquote/>%t<endquote/></template>
 <template name="refsection"><sectioncalled/> <startquote/>%t<endquote/></template>
@@ -509,9 +506,8 @@
 </context>
 
 <context name="glossary">
-<template name="see"><GlossSee/> %t.</template>
-<template name="seealso"><GlossSeeAlso/> %t.</template>
-<template name="seealso-separator">, </template>
+<template name="see"><GlossSee/> %t</template>
+<template name="seealso"><GlossSeeAlso/> %t</template>
 </context>
 
 <context name="msgset">
@@ -522,11 +518,6 @@
 
 <context name="datetime">
 <template name="format">Y-m-d</template>
-</context>
-
-<context name="termdef">
-<template name="prefix">[Apibrėžimas: </template>
-<template name="suffix">]</template>
 </context>
 
 <context name="datetime-full">
@@ -575,12 +566,6 @@
 
 <context name="htmlhelp">
 <template name="langcode">0x0427 Lithuanian</template>
-</context>
-
-<context name="index">
-<template name="term-separator">, </template>
-<template name="number-separator">, </template>
-<template name="range-separator">-</template>
 </context>
 
 <letters>

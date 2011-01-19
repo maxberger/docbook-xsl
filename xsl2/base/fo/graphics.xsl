@@ -25,14 +25,7 @@
 <xsl:template name="t:fo-external-image">
   <xsl:param name="filename"/>
 
-  <xsl:choose>
-    <xsl:when test="$fo.processor = 'fop' or $fo.processor = 'passivetex'">
-      <xsl:value-of select="$filename"/>
-    </xsl:when>
-    <xsl:otherwise>
-      <xsl:value-of select="concat('url(', $filename, ')')"/>
-    </xsl:otherwise>
-  </xsl:choose>
+  <xsl:value-of select="concat('url(', $filename, ')')"/>
 </xsl:template>
 
 </xsl:stylesheet>

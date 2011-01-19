@@ -137,6 +137,7 @@
 <gentext key="in" text="i"/>
 <gentext key="lastlistcomma" text=","/>
 <gentext key="listcomma" text=","/>
+<gentext key="nonexistantelement" text="eilimint nach ann"/>
 <gentext key="notes" text="Nótaí"/>
 <gentext key="Notes" text="Nótaí"/>
 <gentext key="Pgs" text="Lgh."/>
@@ -178,7 +179,6 @@
 <gentext key="below"         text="thíos"/>
 <gentext key="sectioncalled" text="an rannán dar teideal"/>
 <gentext key="index symbols" text="Siombailí"/>
-<gentext key="writing-mode" text="lr-tb"/>
 
 <gentext key="lowercase.alpha" text="abcdefghijklmnopqrstuvwxyzáéíóú"/>
 <gentext key="uppercase.alpha" text="ABCDEFGHIJKLMNOPQRSTUVWXYZÁÉÍÓÚ"/>
@@ -503,9 +503,8 @@
 </context>
 
 <context name="glossary">
-<template name="see"><GlossSee/> %t.</template>
-<template name="seealso"><GlossSeeAlso/> %t.</template>
-<template name="seealso-separator">, </template>
+<template name="see"><GlossSee/> %t</template>
+<template name="seealso"><GlossSeeAlso/> %t</template>
 </context>
 
 <context name="msgset">

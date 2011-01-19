@@ -41,13 +41,10 @@
 # of the thisBinDir to a colon-separated list of the pathnames of
 # the directories that contain those executables.
 
-# mydir is the "canonical" absolute pathname for install.sh
-mydir=$(cd -P $(dirname $0) && pwd -P) || exit 1
-
+mydir=$(readlink -f $(dirname $0))
 thisLocatingRules=$mydir/locatingrules.xml
 thisXmlCatalog=$mydir/catalog.xml
 thisSgmlCatalog=$mydir/catalog
-
 # .urilist file contains a list of pairs of local pathnames and
 # URIs to test for catalog resolution
 thisUriList=$mydir/.urilist
@@ -80,11 +77,7 @@ else
   fi
 fi
 
-osName="Unidentified"
-if uname -s | grep -qi "cygwin"; then
-  osName="Cygwin"
-fi
-
+osName=$(uname -o)
 classPathSeparator=":"
 if [ "$osName" = "Cygwin" ]; then
   thisJavaXmlCatalog=$(cygpath -m $thisXmlCatalog)
@@ -718,7 +711,9 @@ EOF
           ;;
           *)
           dotEmacsBackup=$myEmacsFile.$$.bak
-          sed -e "/$revertLine/d" -i".$$.bak" $myEmacsFile  || exit 1
+          mv $myEmacsFile $dotEmacsBackup       || exit 1
+          cp $dotEmacsBackup $myEmacsFile       || exit 1
+          sed -i "/$revertLine/d" $myEmacsFile  || exit 1
           cat 1>&2 <<EOF
 NOTE: successfully reverted the following file:
       $myEmacsFile
@@ -769,7 +764,9 @@ EOF
           ;;
           *)
           dotFileBackup=$HOME/$file.$$.bak
-          sed -e "/$revertLineEsc/d" -i".$$.bak" $HOME/$file  || exit 1
+          mv $HOME/$file $dotFileBackup           || exit 1
+          cp $dotFileBackup $HOME/$file           || exit 1
+          sed -i "/$revertLineEsc/d" $HOME/$file  || exit 1
           cat 1>&2 <<EOF
 NOTE: Successfully updated the following file:
       $HOME/$file
@@ -794,21 +791,21 @@ EOF
 
 writeUninstallFile() {
   uninstallFile=$mydir/uninstall.sh
-  echo '#!/bin/bash'                               > $uninstallFile || exit 1
-  echo 'mydir=$(cd -P $(dirname $0) && pwd -P)'   >> $uninstallFile || exit 1
+  echo "#!/bin/bash"                               > $uninstallFile || exit 1
+  echo "mydir=\$(readlink -f \$(dirname \$0))"    >> $uninstallFile || exit 1
   echo "\$mydir/install.sh \\"                    >> $uninstallFile || exit 1
   echo "  --uninstall \\"                         >> $uninstallFile || exit 1
   echo "  --catalogManager=$myCatalogManager \\"  >> $uninstallFile || exit 1
-  echo "  --dotEmacs='$myEmacsFile' \\"           >> $uninstallFile || exit 1
-  echo '  $@'                                     >> $uninstallFile || exit 1
+  echo "  --dotEmacs=$myEmacsFile \\"             >> $uninstallFile || exit 1
+  echo "  \$@"                                    >> $uninstallFile || exit 1
   chmod 755 $uninstallFile || exit 1
 }
 
 writeTestFile() {
   testFile=$mydir/test.sh
   echo "#!/bin/bash"                                > $testFile || exit 1
-  echo 'mydir=$(cd -P $(dirname $0) && pwd -P)'    >> $testFile || exit 1
-  echo '$mydir/install.sh --test'                  >> $testFile || exit 1
+  echo "mydir=\$(readlink -f \$(dirname \$0))"     >> $testFile || exit 1
+  echo "\$mydir/install.sh --test"                 >> $testFile || exit 1
   chmod 755 $testFile || exit 1
 }
 
@@ -851,6 +848,15 @@ EOF
 }
 
 testCatalogs() {
+  readlinkResponse="$(readlink -f . 2>/dev/null)"
+  if [ -z "$readlinkResponse" ]; then
+    cat 1>&2 <<EOF
+
+FATAL: Cannot locate the "readlink" command. Stopping.
+EOF
+  exit
+  fi
+
   if [ ! -f "$thisXmlCatalog" ]; then
     cat 1>&2 <<EOF
 
@@ -875,18 +881,13 @@ WARNING: Cannot locate the "xmlcatalog" command. Make sure that
 EOF
     else
       emit_message "Testing with xmlcatalog..."
-      # read in pathname-uri pairs from .urilist file
       while read pair; do
-        if [ ! "${pair%* *}" = "." ]; then
-          path=$mydir/${pair%* *}
-        else
-          path=$mydir/
-        fi
+        path=$(readlink -f "$mydir/${pair%* *}")
         uri=${pair#* *}
         emit_message
         emit_message "  Tested: $uri"
         for catalog in $XML_CATALOG_FILES; do
-          response="$(xmlcatalog $catalog $uri| grep -v "No entry")"
+          response="$(readlink -f "$(xmlcatalog $catalog $uri| grep -v "No entry")")"
           if [ -n "$response" ]; then
             if [ "$response" = "$path" ]; then
               emit_message "  Result: $path"
@@ -909,13 +910,8 @@ EOF
     else
       emit_message
       emit_message "Testing with Apache XML Commons Resolver..."
-      # read in pathname-uri pairs from .urilist file
       while read pair; do
-        if [ ! "${pair%* *}" = "." ]; then
-          path=$mydir/${pair%* *}
-        else
-          path=$mydir/
-        fi
+        path=$(readlink -f "$mydir/${pair%* *}")
         uri=${pair#* *}
         emit_message
         emit_message "  Tested: $uri"

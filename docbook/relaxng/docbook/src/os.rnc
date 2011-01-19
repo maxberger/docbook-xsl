@@ -30,11 +30,9 @@
 default namespace = "http://docbook.org/ns/docbook"
 namespace ctrl = "http://nwalsh.com/xmlns/schema-control/"
 namespace rng  = "http://relaxng.org/ns/structure/1.0"
-namespace s = "http://purl.oclc.org/dsdl/schematron"
+namespace s = "http://www.ascc.net/xml/schematron"
 namespace db = "http://docbook.org/ns/docbook"
 namespace a = "http://relaxng.org/ns/compatibility/annotations/1.0"
-
-start |= db.cmdsynopsis
 
 db.domain.inlines |= db.os.inlines
 
@@ -311,7 +309,7 @@ db.choice.req.attribute =
 
 [
    db:refname [ "arg" ]
-   db:refpurpose [ "An argument in a cmdsynopsis" ]
+   db:refpurpose [ "An argument in a CmdSynopsis" ]
 ]
 div {
 
@@ -342,7 +340,7 @@ div {
 
 [
    db:refname [ "group" ]
-   db:refpurpose [ "A group of elements in a cmdsynopsis" ]
+   db:refpurpose [ "A group of elements in a CmdSynopsis" ]
 ]
 div {
 
@@ -394,7 +392,7 @@ div {
 
 [
    db:refname [ "synopfragment" ]
-   db:refpurpose [ "A portion of a cmdsynopsis broken out from the main body of the synopsis" ]
+   db:refpurpose [ "A portion of a CmdSynopsis broken out from the main body of the synopsis" ]
 ]
 div {
 

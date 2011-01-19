@@ -1,7 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE xsl:stylesheet [
-<!ENTITY % common.entities SYSTEM "entities.ent">
-%common.entities;
+<!ENTITY primary   'normalize-space(concat(primary/@sortas, primary[not(@sortas)]))'>
 <!-- Documents using the kimber index method must have a lang attribute -->
 <!-- Only one of these should be present in the entity -->
 

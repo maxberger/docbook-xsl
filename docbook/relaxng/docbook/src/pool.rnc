@@ -29,42 +29,13 @@
 
 namespace ctrl = "http://nwalsh.com/xmlns/schema-control/"
 namespace rng  = "http://relaxng.org/ns/structure/1.0"
-namespace s = "http://purl.oclc.org/dsdl/schematron"
+namespace s = "http://www.ascc.net/xml/schematron"
 namespace db = "http://docbook.org/ns/docbook"
 namespace dbx = "http://sourceforge.net/projects/docbook/defguide/schema/extra-markup"
 namespace xlink = "http://www.w3.org/1999/xlink"
 namespace html = "http://www.w3.org/1999/xhtml"
 namespace a = "http://relaxng.org/ns/compatibility/annotations/1.0"
 default namespace = "http://docbook.org/ns/docbook"
-
-# ======================================================================
-
-# The start tokens are somewhat arbitrary. To resolve RFE #1899655, the
-# TC concluded that anything with an info element was a reasonable start
-# element. That's mostly what has been done, with a few extra elements
-# where the patterns seemed to warrant it. If you need more, just ask.
-
-start |= db.abstract
- | db.mediaobject.content
- | db.audiodata
- | db.imagedata
- | db.textdata
- | db.videodata
- | db.caption
- | db.publishing.blocks
- | db.formal.blocks
- | db.informal.blocks
- | db.formalpara
- | db.inlinemediaobject
- | db.list.blocks
- | db.legalnotice
- | db.verbatim.blocks
- | db.graphic.blocks
- | db.personblurb
- | db.revhistory
- | db.simpara
- | db.step
- | db.stepalternatives
 
 # ======================================================================
 
@@ -76,7 +47,7 @@ div {
 
    db._any.attribute =
       [
-         db:refpurpose [ "Any attribute, including any attribute in any namespace." ]
+         db:refpurpose [ "Any attribute including in any attribute in any namespace." ]
       ]
       attribute * { text }
 
@@ -251,7 +222,7 @@ db.xlink.title.attribute =
    [
       db:refpurpose [ "Identifies the XLink title of the link" ]
    ]
-   attribute xlink:title { text }
+   attribute xlink:title { text }?
 
 db.xlink.show.enumeration =
    ## An application traversing to the ending resource should load it in a new window, frame, pane, or other relevant presentation context.
@@ -592,7 +563,7 @@ ctrl:other-attribute [ name="db.biblio.class.attribute"
                        other-name="db.biblio.class-other.attributes" ]
 
 db.biblio.class.enumeration =
-   ## A digital object identifier.
+   ## A document object identifier.
    "doi"
  | ## An international standard book number.
    "isbn"
@@ -637,22 +608,10 @@ db.biblio.class.attribute =
 db.ubiq.inlines =
    db.inlinemediaobject
  | db.remark
+ | db.superscript
+ | db.subscript
  | db.link.inlines
  | db.alt
- | db.trademark
- # below, effectively the publishing inlines (as of 5.0)
- | db.abbrev
- | db.acronym
- | db.date
- | db._emphasis
- | db.footnote
- | db.footnoteref
- | db._foreignphrase
- | db._phrase
- | db._quote
- | db.subscript
- | db.superscript
- | db.wordasword
 
 db._text         = (text | db.ubiq.inlines | db._phrase | db.replaceable)*
 
@@ -1272,16 +1231,14 @@ div {
 
    ctrl:exclude [ from="db.sidebar" exclude="db.sidebar" ]
 
-   db.sidebar.floatstyle.attribute = db.floatstyle.attribute
    db.sidebar.role.attribute = attribute role { text }
 
    db.sidebar.attlist =
       db.sidebar.role.attribute?
-    & db.sidebar.floatstyle.attribute?
     & db.common.attributes
     & db.common.linking.attributes
 
-   db.sidebar.info = db._info
+   db.sidebar.info = db._info.title.only
 
    db.sidebar =
       element sidebar {
@@ -1470,7 +1427,7 @@ div {
 
    db.remark = element remark {
       db.remark.attlist,
-      db.all.inlines*
+      db._text
    }
 }
 
@@ -1510,6 +1467,7 @@ div {
 
    ctrl:exclude [ from="db.footnote" exclude="db.footnote" ]
    ctrl:exclude [ from="db.footnote" exclude="db.formal.blocks" ]
+   ctrl:exclude [ from="db.footnote" exclude="db.indexterm" ]
    ctrl:exclude [ from="db.footnote" exclude="db.sidebar" ]
    ctrl:exclude [ from="db.footnote" exclude="db.task" ]
    ctrl:exclude [ from="db.footnote" exclude="db.epigraph" ]
@@ -2611,7 +2569,6 @@ div {
          db.address.attlist,
          (db._text
           | db.personname
-          | db.orgname
           | db.pob
           | db.street
           | db.city
@@ -3014,9 +2971,11 @@ div {
       element personname {
          db.personname.attlist,
          (db._text
-          | (db.honorific | db.firstname | db.surname | db.lineage | db.othername)+
-          | (db.honorific | db.givenname | db.surname | db.lineage | db.othername)+
-         )
+          | (db.honorific
+           | db.firstname
+           | db.surname
+           | db.lineage
+           | db.othername)+)
       }
 }
 
@@ -3068,7 +3027,7 @@ div {
 
 [
    db:refname [ "authorgroup" ]
-   db:refpurpose [ "Wrapper for author information when a document has multiple authors or collaborators" ]
+   db:refpurpose [ "Wrapper for author information when a document has multiple authors or collabarators" ]
 ]
 div {
 
@@ -3798,22 +3757,6 @@ div {
       "technicaleditor"
     | ## A translator
       "translator"
-    | ## An indexer
-      "indexer"
-    | ## A proof-reader
-      "proofreader"
-    | ## A cover designer
-      "coverdesigner"
-    | ## An interior designer
-      "interiordesigner"
-    | ## An illustrator
-      "illustrator"
-    | ## A reviewer
-      "reviewer"
-    | ## A typesetter
-      "typesetter"
-    | ## A converter (a persons responsible for conversion, not an application)
-      "conversion"
 
    db.othercredit.class-enum.attribute =
       [
@@ -3926,7 +3869,7 @@ div {
 
 [
    db:refname [ "firstname" ]
-   db:refpurpose [ "A given name of a person" ]
+   db:refpurpose [ "The first name of a person" ]
 ]
 div {
 
@@ -3947,30 +3890,8 @@ div {
 # ======================================================================
 
 [
-   db:refname [ "givenname" ]
-   db:refpurpose [ "The given name of a person" ]
-]
-div {
-
-   db.givenname.role.attribute = attribute role { text }
-
-   db.givenname.attlist =
-      db.givenname.role.attribute?
-    & db.common.attributes
-    & db.common.linking.attributes
-
-   db.givenname =
-      element givenname {
-         db.givenname.attlist,
-         db._text
-      }
-}
-
-# ======================================================================
-
-[
    db:refname [ "surname" ]
-   db:refpurpose [ "An inherited or family name; in western cultures the last name" ]
+   db:refpurpose [ "A family name; in western cultures the last name" ]
 ]
 div {
 
@@ -4014,7 +3935,7 @@ div {
 
 [
    db:refname [ "othername" ]
-   db:refpurpose [ "A component of a person's name that is not a first name, surname, or lineage" ]
+   db:refpurpose [ "A component of a persons name that is not a first name, surname, or lineage" ]
 ]
 div {
 
@@ -4739,7 +4660,7 @@ div {
    db._emphasis =
       element emphasis {
          db.emphasis.attlist,
-         db._text
+         (db._text | db._emphasis)*
       }
 }
 
@@ -4762,28 +4683,6 @@ div {
       element foreignphrase {
          db.foreignphrase.attlist,
          (text | db.general.inlines)*
-      }
-}
-
-# ======================================================================
-
-[
-   db:refname [ "foreignphrase" ]
-   db:refpurpose [ "A limited word or phrase in a language other than the primary language of the document" ]
-]
-div {
-
-   db._foreignphrase.role.attribute = attribute role { text }
-
-   db._foreignphrase.attlist =
-      db._foreignphrase.role.attribute?
-    & db.common.attributes
-    & db.common.linking.attributes
-
-   db._foreignphrase =
-      element foreignphrase {
-         db._foreignphrase.attlist,
-         db._text
       }
 }
 
@@ -4849,28 +4748,6 @@ div {
 # ======================================================================
 
 [
-   db:refname [ "quote" ]
-   db:refpurpose [ "A limited inline quotation" ]
-]
-div {
-
-   db._quote.role.attribute = attribute role { text }
-
-   db._quote.attlist =
-      db._quote.role.attribute?
-    & db.common.attributes
-    & db.common.linking.attributes
-
-   db._quote =
-      element quote {
-         db._quote.attlist,
-         db._text
-      }
-}
-
-# ======================================================================
-
-[
    db:refname [ "subscript" ]
    db:refpurpose [ "A subscript (as in H" db:subscript [ "2" ] "O, the molecular formula for water)" ]
 ]
@@ -4894,7 +4771,7 @@ div {
 
 [
    db:refname [ "superscript" ]
-   db:refpurpose [ "A superscript (as in x" db:superscript [ "2" ] ", the mathematical notation for x multiplied by itself)" ]
+   db:refpurpose [ "A superscript (as in x^2, the mathematical notation for x multiplied by itself)" ]
 ]
 div {
 
@@ -5074,7 +4951,7 @@ div {
 
    db.olink.localinfo.attribute =
       [
-         db:refpurpose [ "Holds additional information that may be used by the application when resolving the link" ]
+         db:refpurpose [ "Holds additional information that may be used by the applicatoin when resolving the link" ]
       ]
       attribute localinfo { text }
 

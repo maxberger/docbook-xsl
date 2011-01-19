@@ -137,6 +137,7 @@
 <gentext key="in" text="sa"/>
 <gentext key="lastlistcomma" text=","/>
 <gentext key="listcomma" text=","/>
+<gentext key="nonexistantelement" text="hindi kilalang element"/>
 <gentext key="notes" text="Mga tala"/>
 <gentext key="Notes" text="Mga Tala"/>
 <gentext key="Pgs" text="p."/>
@@ -178,7 +179,6 @@
 <gentext key="below"         text="baba"/>
 <gentext key="sectioncalled" text="ang bahaging tinatawag na"/>
 <gentext key="index symbols" text="Mga simbolo"/>
-<gentext key="writing-mode" text="lr-tb"/>
 
 <gentext key="lowercase.alpha" text="abcdefghijklmnopqrstuvwxyz"/>
 <gentext key="uppercase.alpha" text="ABCDEFGHIJKLMNOPQRSTUVWXYZ"/>
@@ -503,9 +503,8 @@
 </context>
 
 <context name="glossary">
-<template name="see"><GlossSee/> %t.</template>
-<template name="seealso"><GlossSeeAlso/> %t.</template>
-<template name="seealso-separator">, </template>
+<template name="see"><GlossSee/> %t</template>
+<template name="seealso"><GlossSeeAlso/> %t</template>
 </context>
 
 <context name="msgset">

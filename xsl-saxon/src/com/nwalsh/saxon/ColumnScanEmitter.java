@@ -1,7 +1,10 @@
 package com.nwalsh.saxon;
 
+import org.xml.sax.*;
 import javax.xml.transform.TransformerException;
-import com.icl.saxon.om.NamePool;
+import com.icl.saxon.output.*;
+import com.icl.saxon.om.*;
+import com.icl.saxon.expr.FragmentValue;
 
 /**
  * <p>Saxon extension to scan the column widths in a result tree fragment.</p>
@@ -41,8 +44,6 @@ public class ColumnScanEmitter extends com.icl.saxon.output.Emitter {
 
   /** The FO namespace name. */
   protected static String foURI = "http://www.w3.org/1999/XSL/Format";
-  /** The XHTML namespace name. */
-  protected static String xhtmlURI = "http://www.w3.org/1999/xhtml";
 
   /** Construct a new ColumnScanEmitter. */
   public ColumnScanEmitter(NamePool namePool) {
@@ -137,11 +138,10 @@ public class ColumnScanEmitter extends com.icl.saxon.output.Emitter {
 
     int thisFingerprint = namePool.getFingerprint(nameCode);
     int colFingerprint = namePool.getFingerprint("", "col");
-    int XHTMLcolFingerprint = namePool.getFingerprint(xhtmlURI, "col");
     int foColFingerprint = namePool.getFingerprint(foURI, "table-column");
 
     if (thisFingerprint == colFingerprint
-	|| thisFingerprint == foColFingerprint || thisFingerprint == XHTMLcolFingerprint) {
+	|| thisFingerprint == foColFingerprint) {
       if (numColumns >= width.length) {
 	String newWidth[] = new String[width.length+10];
 	for (int count = 0; count < width.length; count++) {
@@ -150,7 +150,7 @@ public class ColumnScanEmitter extends com.icl.saxon.output.Emitter {
 	width = newWidth;
       }
 
-      if (thisFingerprint == colFingerprint || thisFingerprint == XHTMLcolFingerprint) {
+      if (thisFingerprint == colFingerprint) {
 	if (attributes.getValue("width") == null) {
 	  width[numColumns++] = "1*";
 	} else {

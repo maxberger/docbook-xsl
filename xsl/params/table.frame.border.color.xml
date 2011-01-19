@@ -10,7 +10,7 @@
 </refmeta>
 <refnamediv>
 <refname>table.frame.border.color</refname>
-<refpurpose>Specifies the border color of table frames</refpurpose>
+<refpurpose/>
 </refnamediv>
 
 <refsynopsisdiv>
@@ -22,7 +22,7 @@
 
 <refsection><info><title>Description</title></info>
 
-<para>Specifies the border color of table frames.</para>
+<para>FIXME:</para>
 
 </refsection>
 </refentry>

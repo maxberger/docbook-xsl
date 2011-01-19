@@ -51,13 +51,8 @@
   <title>Fonts</title>
 &man.font.funcprototype;
 &man.font.funcsynopsisinfo;
-&man.font.links;
 &man.font.table.headings;
 &man.font.table.title;
-  </reference>
-  <reference xml:id="synopsis">
-  <title>SYNOPSIS section</title>
-&man.funcsynopsis.style;
   </reference>
   <reference xml:id="authors">
   <title>AUTHORS and COPYRIGHT sections</title>
@@ -69,7 +64,7 @@
 &man.endnotes.list.enabled;
 &man.endnotes.list.heading;
 &man.endnotes.are.numbered;
-&man.base.url.for.relative.links;
+&man.links.are.underlined;
   </reference>
   <reference xml:id="lists">
   <title>Lists</title>
@@ -81,7 +76,6 @@
 &man.charmap.uri;
 &man.charmap.use.subset;
 &man.charmap.subset.profile;
-&man.charmap.subset.profile.english;
 &man.string.subst.map.local.pre;
 &man.string.subst.map;
 &man.string.subst.map.local.post;
@@ -121,7 +115,6 @@
 &man.output.subdirs.enabled;
 &man.output.quietly;
 &man.output.encoding;
-&man.output.better.ps.enabled;
   </reference>
   <reference xml:id="other">
   <title>Other</title>
@@ -154,10 +147,8 @@
 
 <src:fragref linkend="man.authors.section.enabled.frag"/>
 <src:fragref linkend="man.break.after.slash.frag"/>
-<src:fragref linkend="man.base.url.for.relative.links.frag"/>
 <src:fragref linkend="man.charmap.enabled.frag"/>
 <src:fragref linkend="man.charmap.subset.profile.frag"/>
-<src:fragref linkend="man.charmap.subset.profile.english.frag"/>
 <src:fragref linkend="man.charmap.uri.frag"/>
 <src:fragref linkend="man.charmap.use.subset.frag"/>
 <src:fragref linkend="man.copyright.section.enabled.frag"/>
@@ -166,10 +157,8 @@
 <src:fragref linkend="man.endnotes.list.heading.frag"/>
 <src:fragref linkend="man.font.funcprototype.frag"/>
 <src:fragref linkend="man.font.funcsynopsisinfo.frag"/>
-<src:fragref linkend="man.font.links.frag"/>
 <src:fragref linkend="man.font.table.headings.frag"/>
 <src:fragref linkend="man.font.table.title.frag"/>
-<src:fragref linkend="man.funcsynopsis.style.frag"/>
 <src:fragref linkend="man.hyphenate.computer.inlines.frag"/>
 <src:fragref linkend="man.hyphenate.filenames.frag"/>
 <src:fragref linkend="man.hyphenate.frag"/>
@@ -180,13 +169,13 @@
 <src:fragref linkend="man.indent.verbatims.frag"/>
 <src:fragref linkend="man.indent.width.frag"/>
 <src:fragref linkend="man.justify.frag"/>
+<src:fragref linkend="man.links.are.underlined.frag"/>
 <src:fragref linkend="man.output.base.dir.frag"/>
 <src:fragref linkend="man.output.encoding.frag"/>
 <src:fragref linkend="man.output.in.separate.dir.frag"/>
 <src:fragref linkend="man.output.lang.in.name.enabled.frag"/>
 <src:fragref linkend="man.output.manifest.enabled.frag"/>
 <src:fragref linkend="man.output.manifest.filename.frag"/>
-<src:fragref linkend="man.output.better.ps.enabled.frag"/>
 <src:fragref linkend="man.output.quietly.frag"/>
 <src:fragref linkend="man.output.subdirs.enabled.frag"/>
 <src:fragref linkend="man.segtitle.suppress.frag"/>

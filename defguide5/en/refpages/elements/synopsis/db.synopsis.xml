@@ -18,20 +18,24 @@
 <?tdg-refsynopsisdiv?>
 
 <refsection condition="ref.description">
-<title>Description</title><para>A <tag>synopsis</tag> is a verbatim environment for
-      displaying command, function, and other syntax summaries.</para>
+<title>Description</title>
 
-      <para>Unlike <tag>cmdsynopsis</tag> and
-      <tag>funcsynopsis</tag> which have a complex interior structure,
-      <tag>synopsis</tag> is simply a verbatim environment.</para>
 
-      <refsection><info><title>Processing expectations</title></info>
-        
+<para>A <tag>synopsis</tag> is a verbatim environment for displaying command,
+function, and other syntax summaries.
+</para>
 
-        <para>This element is displayed “verbatim”; whitespace and line breaks
-        within this element are significant. A <tag>synopsis</tag>
-        element is usually displayed in a fixed-width font.</para>
-</refsection>
+<para>Unlike <tag>cmdsynopsis</tag> and <tag>funcsynopsis</tag> which have a
+complex interior structure,
+<tag>synopsis</tag> is simply a verbatim environment.
+</para>
+
+<refsection><title>Processing expectations</title>
+<para><?tdg gentext='pexp.linespecific'?> 
+A <tag>synopsis</tag> element is usually
+displayed in a fixed width font.
+</para>
+</refsection> 
 
 <?tdg-attributes?>
 <?tdg-parents?>
