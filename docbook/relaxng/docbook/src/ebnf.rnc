@@ -1,6 +1,6 @@
-# This file is part of DocBook V5.0
+# This file is part of DocBook V5.0b2
 #
-# Copyright 1992-2008 HaL Computer Systems, Inc.,
+# Copyright 1992-2005 HaL Computer Systems, Inc.,
 # O'Reilly & Associates, Inc., ArborText, Inc., Fujitsu Software
 # Corporation, Norman Walsh, Sun Microsystems, Inc., and the
 # Organization for the Advancement of Structured Information
@@ -29,11 +29,9 @@
 
 namespace ctrl = "http://nwalsh.com/xmlns/schema-control/"
 namespace rng  = "http://relaxng.org/ns/structure/1.0"
-namespace s = "http://purl.oclc.org/dsdl/schematron"
+namespace s = "http://www.ascc.net/xml/schematron"
 namespace db = "http://docbook.org/ns/docbook"
 default namespace = "http://docbook.org/ns/docbook"
-
-start |= db.productionset | db.constraintdef
 
 db.technical.inlines |= db.nonterminal
 db.technical.blocks |= db.productionset | db.constraintdef
@@ -140,11 +138,7 @@ div {
 div {
 
    db.nonterminal.role.attribute = attribute role { text }
-   db.nonterminal.def.attribute =
-      [
-         db:refpurpose [ "Specifies a URI that points to a " db:tag [ "production" ] "where the " db:tag [ "nonterminal" ] " is defined" ]
-      ]
-      attribute def { xsd:anyURI }
+   db.nonterminal.def.attribute = attribute def { text }
 
    db.nonterminal.attlist =
       db.nonterminal.role.attribute?

@@ -1,6 +1,6 @@
-# This file is part of DocBook V5.0
+# This file is part of DocBook V5.0b2
 #
-# Copyright 1992-2008 HaL Computer Systems, Inc.,
+# Copyright 1992-2005 HaL Computer Systems, Inc.,
 # O'Reilly & Associates, Inc., ArborText, Inc., Fujitsu Software
 # Corporation, Norman Walsh, Sun Microsystems, Inc., and the
 # Organization for the Advancement of Structured Information
@@ -29,13 +29,22 @@
 
 namespace ctrl = "http://nwalsh.com/xmlns/schema-control/"
 namespace rng  = "http://relaxng.org/ns/structure/1.0"
-namespace s = "http://purl.oclc.org/dsdl/schematron"
+namespace s = "http://www.ascc.net/xml/schematron"
 namespace db = "http://docbook.org/ns/docbook"
 default namespace = "http://docbook.org/ns/docbook"
 
-include "core.rnc"
+start = db.set
+        | db.book
+	| db.divisions
+	| db.components
+	| db.navigation.components
+	| db.section
+	| db.para
+
+include "pool.rnc"
 include "annotations.rnc"
 include "xlink.rnc"
+include "hier.rnc"
 include "sect1.rnc"
 include "refentry.rnc"
 include "refsect1.rnc"
@@ -53,13 +62,4 @@ include "qandaset.rnc"
 include "math.rnc"
 include "mathml.rnc"
 include "svg.rnc"
-include "markup.rnc"
-include "product.rnc"
-include "gui.rnc"
-include "keyboard.rnc"
-include "os.rnc"
-include "programming.rnc"
-include "admonitions.rnc"
-include "error.rnc"
-include "technical.rnc"
-include "topic.rnc"
+

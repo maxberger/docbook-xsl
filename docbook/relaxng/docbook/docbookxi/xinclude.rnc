@@ -1,6 +1,6 @@
-# This file is part of DocBook V5.0
+# This file is part of DocBook V5.0b2
 #
-# Copyright 1992-2008 HaL Computer Systems, Inc.,
+# Copyright 1992-2005 HaL Computer Systems, Inc.,
 # O'Reilly & Associates, Inc., ArborText, Inc., Fujitsu Software
 # Corporation, Norman Walsh, Sun Microsystems, Inc., and the
 # Organization for the Advancement of Structured Information
@@ -44,12 +44,8 @@ db.recursive.sections |=
 
 db.part.components |= db.xi.include
 
-db.reference.components |= db.xi.include
-
 db.all.blocks |= db.xi.include
 db.all.inlines |= db.xi.include
-
-db.info.elements |= db.xi.include
 
 ctrl:conditional [
   pattern="db.refentry"

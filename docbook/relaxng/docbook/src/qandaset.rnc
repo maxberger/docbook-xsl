@@ -1,6 +1,6 @@
-# This file is part of DocBook V5.0
+# This file is part of DocBook V5.0b2
 #
-# Copyright 1992-2008 HaL Computer Systems, Inc.,
+# Copyright 1992-2005 HaL Computer Systems, Inc.,
 # O'Reilly & Associates, Inc., ArborText, Inc., Fujitsu Software
 # Corporation, Norman Walsh, Sun Microsystems, Inc., and the
 # Organization for the Advancement of Structured Information
@@ -29,11 +29,9 @@
 
 namespace ctrl = "http://nwalsh.com/xmlns/schema-control/"
 namespace rng  = "http://relaxng.org/ns/structure/1.0"
-namespace s = "http://purl.oclc.org/dsdl/schematron"
+namespace s = "http://www.ascc.net/xml/schematron"
 namespace db = "http://docbook.org/ns/docbook"
 default namespace = "http://docbook.org/ns/docbook"
-
-start |= db.qandadiv | db.qandaentry | db.qandaset
 
 db.list.blocks |= db.qandaset
 
@@ -47,18 +45,8 @@ div {
 
    db.qandaset.role.attribute = attribute role { text }
 
-   db.qandaset.defaultlabel.enumeration =
-      ## No labels
-      "none"
-    | ## Numeric labels
-      "number"
-    | ## "Q:" and "A:" labels
-      "qanda"
-
+   db.qandaset.defaultlabel.enumeration = "none" | "number" | "qanda"
    db.qandaset.defaultlabel.attribute =
-      [
-         db:refpurpose [ "Specifies the default labelling" ]
-      ]
       attribute defaultlabel { db.qandaset.defaultlabel.enumeration }
 
    db.qandaset.attlist =
@@ -82,7 +70,7 @@ div {
 
 [
    db:refname [ "qandadiv" ]
-   db:refpurpose [ "A titled division in a qandaset" ]
+   db:refpurpose [ "A titled division in a QandASet" ]
 ]
 div {
 
@@ -108,7 +96,7 @@ div {
 
 [
    db:refname [ "qandaentry" ]
-   db:refpurpose [ "A question/answer set within a qandaset" ]
+   db:refpurpose [ "A question/answer set within a QandASet" ]
 ]
 div {
 
@@ -119,7 +107,7 @@ div {
     & db.common.attributes
     & db.common.linking.attributes
 
-   db.qandaentry.info = db._info.title.only
+   db.qandaentry.info = db._info.title.forbidden
 
    db.qandaentry =
       element qandaentry {
@@ -134,7 +122,7 @@ div {
 
 [
    db:refname [ "question" ]
-   db:refpurpose [ "A question in a qandaset" ]
+   db:refpurpose [ "A question in a QandASet" ]
 ]
 div {
 
@@ -157,7 +145,7 @@ div {
 
 [
    db:refname [ "answer" ]
-   db:refpurpose [ "An answer to a question posed in a qandaset" ]
+   db:refpurpose [ "An answer to a question posed in a QandASet" ]
 ]
 div {
 
@@ -180,7 +168,7 @@ div {
 
 [
    db:refname [ "label" ]
-   db:refpurpose [ "A label on a question or answer" ]
+   db:refpurpose [ "A label on a Question or Answer" ]
 ]
 div {
 

@@ -1,6 +1,6 @@
-# This file is part of DocBook V5.0
+# This file is part of DocBook V5.0b2
 #
-# Copyright 1992-2008 HaL Computer Systems, Inc.,
+# Copyright 1992-2005 HaL Computer Systems, Inc.,
 # O'Reilly & Associates, Inc., ArborText, Inc., Fujitsu Software
 # Corporation, Norman Walsh, Sun Microsystems, Inc., and the
 # Organization for the Advancement of Structured Information
@@ -29,78 +29,34 @@
 
 namespace ctrl = "http://nwalsh.com/xmlns/schema-control/"
 namespace rng  = "http://relaxng.org/ns/structure/1.0"
-namespace s = "http://purl.oclc.org/dsdl/schematron"
+namespace s = "http://www.ascc.net/xml/schematron"
 namespace db = "http://docbook.org/ns/docbook"
 namespace dbx = "http://sourceforge.net/projects/docbook/defguide/schema/extra-markup"
 namespace xlink = "http://www.w3.org/1999/xlink"
 namespace html = "http://www.w3.org/1999/xhtml"
-namespace a = "http://relaxng.org/ns/compatibility/annotations/1.0"
 default namespace = "http://docbook.org/ns/docbook"
-
-# ======================================================================
-
-# The start tokens are somewhat arbitrary. To resolve RFE #1899655, the
-# TC concluded that anything with an info element was a reasonable start
-# element. That's mostly what has been done, with a few extra elements
-# where the patterns seemed to warrant it. If you need more, just ask.
-
-start |= db.abstract
- | db.mediaobject.content
- | db.audiodata
- | db.imagedata
- | db.textdata
- | db.videodata
- | db.caption
- | db.publishing.blocks
- | db.formal.blocks
- | db.informal.blocks
- | db.formalpara
- | db.inlinemediaobject
- | db.list.blocks
- | db.legalnotice
- | db.verbatim.blocks
- | db.graphic.blocks
- | db.personblurb
- | db.revhistory
- | db.simpara
- | db.step
- | db.stepalternatives
 
 # ======================================================================
 
 [
    db:refname [ "*:*" ]
-   db:refpurpose [ "Any element from almost any namespace" ]
+   db:refpurpose [ "Any element from any namespace except the DocBook namespace" ]
 ]
 div {
 
-   db._any.attribute =
-      [
-         db:refpurpose [ "Any attribute, including any attribute in any namespace." ]
-      ]
-      attribute * { text }
-
    db._any =
-      element * - (db:* | html:*) { (db._any.attribute | text | db._any)* }
+      element * - (db:* | html:*) { (attribute * { text } | text | db._any)* }
 
 }
 
 # ======================================================================
 
-db.arch.attribute =
+db.effectivity.attributes =
   [
     db:refpurpose [ "Designates the computer or chip architecture to which the element applies" ]
   ]
-  attribute arch        { text }
+  attribute arch        { text }?,
 
-db.audience.attribute =
-  [
-    db:refpurpose [ "Designates the intended audience to which the element applies," ~
-       " for example, system administrators, programmers, or new users." ]
-  ]
-  attribute audience    { text }
-
-db.condition.attribute =
   [
     db:refpurpose [ "provides a standard place for application-specific effectivity" ]
     dbx:description [
@@ -110,21 +66,17 @@ db.condition.attribute =
         " required "
         db:quote [ "abusing" ]
         " the semantics of one of the existing attributes, or adding" ~
-        " their own, making their customization an extension rather than a subset." ~
-        " The"
+        " their own, making their customization "
+        db:link [ linkend="s-notdocbook" "an extension rather than a subset" ]
+        ". The"
         db:tag [ class="attribute" "condition" ]
         " attribute is a general-purpose effectivity attribute" ~
         " with no specified semantics."
       ]
-      db:para [ "The"
-         db:tag [ class="attribute" "condition" ]
-         " attribute provides a standard place for application-specific effectivity."
-      ]
     ]
   ]
-  attribute condition   { text }
+  attribute condition   { text }?,
 
-db.conformance.attribute =
   [
     db:refpurpose [ "Indicates standards conformance characteristics of the element" ]
     dbx:description [
@@ -134,64 +86,40 @@ db.conformance.attribute =
       ]
     ]
   ]
-  attribute conformance { text }
+  attribute conformance { text }?,
 
-db.os.attribute =
   [
     db:refpurpose [ "Indicates the operating system to which the element is applicable"
     ]
   ]
-  attribute os          { text }
+  attribute os          { text }?,
 
-db.revision.attribute =
   [
     db:refpurpose [ "Indicates the editorial revision to which the element belongs" ]
   ]
-  attribute revision    { text }
+  attribute revision    { text }?,
 
-db.security.attribute =
   [
     db:refpurpose [ "Indicates something about the security level associated with the element to which it applies" ]
   ]
-  attribute security    { text }
+  attribute security    { text }?,
 
-db.userlevel.attribute =
   [
     db:refpurpose [ "Indicates the level of user experience for which the element applies" ]
   ]
-  attribute userlevel   { text }
+  attribute userlevel   { text }?,
 
-db.vendor.attribute =
   [
     db:refpurpose [ "Indicates the computer vendor to which the element applies." ]
   ]
-  attribute vendor      { text }
+  attribute vendor      { text }?,
 
-db.wordsize.attribute =
   [
     db:refpurpose [ "Indicates the word size (width in bits) of the computer architecture to which the element applies" ]
   ]
-  attribute wordsize    { text }
-
-db.effectivity.attributes =
-   db.arch.attribute?
- & db.audience.attribute?
- & db.condition.attribute?
- & db.conformance.attribute?
- & db.os.attribute?
- & db.revision.attribute?
- & db.security.attribute?
- & db.userlevel.attribute?
- & db.vendor.attribute?
- & db.wordsize.attribute?
+  attribute wordsize    { text }?
 
 # ======================================================================
-
-db.endterm.attribute =
-   [
-      db:refpurpose [ "Points to the element whose content is to be used as the text of the link" ]
-   ]
-   attribute endterm { xsd:IDREF }
 
 db.linkend.attribute =
    [
@@ -209,35 +137,17 @@ db.xlink.href.attribute =
    [
       db:refpurpose [ "Identifies a link target with a URI" ]
    ]
-   attribute xlink:href { xsd:anyURI }
+   attribute xlink:href { text }
 
 db.xlink.type.attribute =
    [
-      db:refpurpose [ "Identifies the XLink link type" ]
+      db:refpurpose [ "Identifies the element as an XLink simple link" ]
    ]
-   attribute xlink:type {
-      ## An XLink simple link
-      "simple"
-   }
+   attribute xlink:type { "simple" }
 
 db.xlink.role.attribute =
    [
       db:refpurpose [ "Identifies the XLink role of the link" ]
-      dbx:description [
-         db:para [
-            "DocBook uses the XLink role value "
-            db:uri [ "http://docbook.org/xlink/role/olink" ]
-            " to identify linking elements with OLink semantics." ~
-            " That means the part of "
-            db:tag [ class="attribute" "xlink:href" ]
-            " before the number sign (#) is to be interpreted" ~
-            " as equivalent to the olink "
-            db:tag [ class="attribute" "targetdoc" ]
-            " attribute value, and the part after the number sign as the olink "
-            db:tag [ class="attribute" "targetptr" ]
-            " attribute value."
-         ]
-      ]
    ]
    attribute xlink:role { xsd:anyURI }
 
@@ -251,7 +161,7 @@ db.xlink.title.attribute =
    [
       db:refpurpose [ "Identifies the XLink title of the link" ]
    ]
-   attribute xlink:title { text }
+   attribute xlink:title { text }?
 
 db.xlink.show.enumeration =
    ## An application traversing to the ending resource should load it in a new window, frame, pane, or other relevant presentation context.
@@ -287,7 +197,7 @@ db.xlink.actuate.attribute =
    ]
    attribute xlink:actuate { db.xlink.actuate.enumeration }
 
-db.href.attributes =
+db.href.attribute =
    db.xlink.href.attribute
  & db.xlink.type.attribute?
  & db.xlink.role.attribute?
@@ -320,7 +230,7 @@ db.xml.base.attribute =
    [
       db:refpurpose [ "Specifies the base URI of the element and its descendants" ]
    ]
-   attribute xml:base { xsd:anyURI }
+   attribute xml:base { text }
 
 db.remap.attribute =
    [
@@ -333,12 +243,6 @@ db.xreflabel.attribute =
       db:refpurpose [ "Provides the text that is to be generated for a cross reference to the element" ]
    ]
    attribute xreflabel { text }
-
-db.xrefstyle.attribute =
-   [
-      db:refpurpose [ "Specifies a keyword or keywords identifying additional style information" ]
-   ]
-   attribute xrefstyle { text }
 
 db.revisionflag.enumeration =
    ## The element has been changed.
@@ -372,8 +276,9 @@ db.dir.attribute =
    ]
    attribute dir { db.dir.enumeration }
 
-db.common.base.attributes =
-   db.version.attribute?
+db.common.attributes =
+   db.xml.id.attribute?
+ & db.version.attribute?
  & db.xml.lang.attribute?
  & db.xml.base.attribute?
  & db.remap.attribute?
@@ -382,19 +287,22 @@ db.common.base.attributes =
  & db.dir.attribute?
  & db.effectivity.attributes
 
-db.common.attributes =
-   db.xml.id.attribute?
- & db.common.base.attributes
-
 db.common.idreq.attributes =
    db.xml.id.attribute
- & db.common.base.attributes
+ & db.version.attribute?
+ & db.xml.lang.attribute?
+ & db.xml.base.attribute?
+ & db.remap.attribute?
+ & db.xreflabel.attribute?
+ & db.revisionflag.attribute?
+ & db.dir.attribute?
+ & db.effectivity.attributes
 
 db.common.linking.attributes =
-   (db.linkend.attribute | db.href.attributes)?
+   (db.linkend.attribute | db.href.attribute)?
 
 db.common.req.linking.attributes =
-   db.linkend.attribute | db.href.attributes
+   db.linkend.attribute | db.href.attribute
 
 db.common.data.attributes =
    [
@@ -467,18 +375,6 @@ db.verbatim.attributes =
 
 # ======================================================================
 
-db.label.attribute =
-   [
-      db:refpurpose [ "Specifies an identifying string for presentation purposes" ]
-   ]
-   attribute label { text }
-
-db.width.characters.attribute =
-   [
-      db:refpurpose [ "Specifies the width (in characters) of the element" ]
-   ]
-   attribute width { xsd:nonNegativeInteger }
-
 db.spacing.enumeration =
    ## The spacing should be "compact".
    "compact"
@@ -527,42 +423,6 @@ db.floatstyle.attribute =
    ]
    attribute floatstyle { text }
 
-db.width.attribute =
-   [
-      db:refpurpose [ "Specifies the width of the element" ]
-   ]
-   attribute width { text }
-
-db.depth.attribute =
-   [
-      db:refpurpose [ "Specifies the depth of the element" ]
-   ]
-   attribute depth { text }
-
-db.contentwidth.attribute =
-   [
-      db:refpurpose [ "Specifies the width of the content rectangle" ]
-   ]
-   attribute contentwidth { text }
-
-db.contentdepth.attribute =
-   [
-      db:refpurpose [ "Specifies the depth of the content rectangle" ]
-   ]
-   attribute contentdepth { text }
-
-db.scalefit.enumeration =
-   ## False (do not scale-to-fit; anamorphic scaling may occur)
-   "0"
- | ## True (scale-to-fit; anamorphic scaling is forbidden)
-   "1"
-
-db.scale.attribute =
-   [
-      db:refpurpose [ "Specifies the scaling factor" ]
-   ]
-   attribute scale { xsd:positiveInteger }
-
 # ======================================================================
 
 db.halign.enumeration =
@@ -592,7 +452,7 @@ ctrl:other-attribute [ name="db.biblio.class.attribute"
                        other-name="db.biblio.class-other.attributes" ]
 
 db.biblio.class.enumeration =
-   ## A digital object identifier.
+   ## A document object identifier.
    "doi"
  | ## An international standard book number.
    "isbn"
@@ -603,30 +463,152 @@ db.biblio.class.enumeration =
  | ## A Library of Congress reference number.
    "libraryofcongress"
  | ## A publication number (an internal number or possibly organizational standard).
-   "pubsnumber"
+   "pubnumber"
  | ## A Uniform Resource Identifier
    "uri"
 
 db.biblio.class-enum.attribute =
-   [
-      db:refpurpose [ "Identifies the kind of bibliographic identifier" ]
-   ]
-   attribute class { db.biblio.class.enumeration } ?
+  [
+    db:refpurpose [ "Identifies the kind of bibliographic identifier" ]
+    dbx:description [
+      db:informaltable [
+        db:tgroup [
+          cols="2"
+          db:thead [
+            db:row [
+              db:entry [ "Value" ]
+              db:entry [ "Identifier" ]
+            ]
+          ]
+          db:tbody [
+            db:row [
+              db:entry [
+                db:tag [ class="attvalue" "doi" ]
+              ]
+              db:entry [
+                db:para [
+                  "A "
+                  db:link [
+                    xlink:href="http://www.doi.org/"
+                    "Digital Object Identifier"
+                  ]
+                  "."
+                ]
+              ]
+            ]
+            db:row [
+              db:entry [
+                db:tag [ class="attvalue" "isbn" ]
+              ]
+              db:entry [
+                db:para [
+                  "An "
+                  db:link [
+                    xlink:href="http://www.isbn.org/"
+                    "International Standard Book Number"
+                  ]
+                  "."
+                ]
+              ]
+            ]
+            db:row [
+              db:entry [
+                db:tag [ class="attvalue" "isrn" ]
+              ]
+              db:entry [
+                db:para [
+                  "An International Standard Technical Report Number" ~
+                  " as defined by ISO 10444:1994."
+                ]
+              ]
+            ]
+            db:row [
+              db:entry [
+                db:tag [ class="attvalue" "issn" ]
+              ]
+              db:entry [
+                db:para [
+                  "An "
+                  db:link [
+                    xlink:href="http://www.issn.org/"
+                    "International Standard Serial Number"
+                  ]
+                  "."
+                ]
+              ]
+            ]
+            db:row [
+              db:entry [
+                db:tag [ class="attvalue" "libraryofcongress" ]
+              ]
+              db:entry [
+                db:para [
+                  "A Library of Congress subject identifer"
+                ]
+              ]
+            ]
+            db:row [
+              db:entry [
+                db:tag [ class="attvalue" "pubnumber" ]
+              ]
+              db:entry [
+                db:para [
+                  "A publication number, for example from a private" ~
+                  " or corporate numbering scheme."
+                ]
+              ]
+            ]
+            db:row [
+              db:entry [
+                db:tag [ class="attvalue" "uri" ]
+              ]
+              db:entry [
+                db:para [
+                  "A Uniform Resource Identifier."
+                ]
+              ]
+            ]
+            db:row [
+              db:entry [
+                db:tag [ class="attvalue" "other" ]
+              ]
+              db:entry [
+                db:para [
+                  "Some other kind of identifier. If the value "
+                  db:tag [ class="attvalue" "other" ]
+                  " is specified, the "
+                  db:tag [ class="attribute" "otherclass" ]
+                  " attribute must also be provided."
+                ]
+              ]
+            ]
+          ]
+        ]
+      ]
+    ]
+  ]
+  attribute class { db.biblio.class.enumeration } ?
 
 db.biblio.class-other.attribute =
-   [
-      db:refpurpose [ "Identifies the nature of the non-standard bibliographic identifier" ]
-   ]
-   attribute otherclass { xsd:NMTOKEN }
+  [
+    db:refpurpose [ "Provides an identifier for elements with the class 'other'" ]
+    dbx:description [
+      db:para [
+        "The value of the "
+        db:tag [ class="attribute" "otherclass" ]
+        " attribute specifies some identifier for the class. It is required" ~
+        " when the value "
+        db:tag [ class="attvalue" "other" ]
+        " is specified for the "
+        db:tag [ class="attribute" "class" ]
+        " attribute; it is forbidden otherwise."
+      ]
+    ]
+  ]
+  attribute otherclass { xsd:NMTOKEN }
 
 db.biblio.class-other.attributes =
-   [
-      db:refpurpose [ "Identifies the kind of bibliographic identifier" ]
-   ]
-   attribute class {
-      ## Indicates that the identifier is some 'other' kind.
-      "other"
-   }
+   attribute class { "other" }
  & db.biblio.class-other.attribute
 
 db.biblio.class.attribute =
@@ -637,22 +619,10 @@ db.biblio.class.attribute =
 db.ubiq.inlines =
    db.inlinemediaobject
  | db.remark
+ | db.superscript
+ | db.subscript
  | db.link.inlines
  | db.alt
- | db.trademark
- # below, effectively the publishing inlines (as of 5.0)
- | db.abbrev
- | db.acronym
- | db.date
- | db._emphasis
- | db.footnote
- | db.footnoteref
- | db._foreignphrase
- | db._phrase
- | db._quote
- | db.subscript
- | db.superscript
- | db.wordasword
 
 db._text         = (text | db.ubiq.inlines | db._phrase | db.replaceable)*
 
@@ -662,7 +632,7 @@ db._title.only    = db.title? & db.titleabbrev?
 db._title.onlyreq = db.title  & db.titleabbrev?
 
 db._info =
-   (db._title, db.titleforbidden.info?) | db.info?
+   (db._title.req?, db.titleforbidden.info?) | db.info?
 
 db._info.title.req =
    (db._title.req, db.titleforbidden.info?) | db.titlereq.info
@@ -694,14 +664,83 @@ db.general.inlines =
 
 db.domain.inlines =
    db.technical.inlines
+ | db.error.inlines
+ | db.os.inlines
+ | db.programming.inlines
+ | db.markup.inlines
+ | db.gui.inlines
+ | db.keyboard.inlines
 
 db.technical.inlines =
    db.replaceable
+ | db.systemitem
+ | db.option
+ | db.optional
  | db.package
+ | db.property
+ | db.termdef
+
+db.error.inlines =
+   db.errorcode
+ | db.errortext
+ | db.errorname
+ | db.errortype
+
+db.oo.inlines =
+   db.ooclass
+ | db.ooexception
+ | db.oointerface
+
+# TEI: code, programlisting (x.data)
+
+db.programming.inlines =
+   db.function
  | db.parameter
+ | db.varname
+ | db.returnvalue
+ | db.type
+ | db.classname
+ | db.exceptionname
+ | db.interfacename
+ | db.methodname
+ | db.modifier
+ | db.initializer
+ | db.oo.inlines
+
+# TEI: names
 
 db.product.inlines =
-   db.trademark
+   db.productnumber
+ | db.productname
+ | db.database
+ | db.application
+ | db.hardware
+ | db.trademark
+
+# TEI: x.data
+
+db.os.inlines =
+   db.prompt
+ | db.envar
+ | db.filename
+ | db.command
+ | db.computeroutput
+ | db.userinput
+
+# TEI: sgmlKeywords, ident
+
+db.markup.inlines =
+   db.tag
+ | db.markup
+ | db.token
+ | db.symbol
+ | db.literal
+ | db.code
+ | db.constant
+ | db.email
+ | db.uri
+
+# TEI: no class
 
 db.bibliography.inlines =
    db.citation
@@ -709,12 +748,11 @@ db.bibliography.inlines =
  | db.citetitle
  | db.citebiblioid
  | db.author
- | db.person
  | db.personname
- | db.org
  | db.orgname
  | db.editor
- | db.jobtitle
+
+# TEI: hqPhrase
 
 db.publishing.inlines =
    db.abbrev
@@ -730,9 +768,33 @@ db.publishing.inlines =
  | db.superscript
  | db.wordasword
 
+# TEI: figure
+
 db.graphic.inlines = db.inlinemediaobject
 
+# TEI: metadata
+
 db.indexing.inlines = notAllowed
+
+# TEI:
+
+db.gui.inlines =
+   db.guiicon
+ | db.guibutton
+ | db.guimenuitem
+ | db.guimenu
+ | db.guisubmenu
+ | db.guilabel
+ | db.menuchoice
+ | db.mousebutton
+
+db.keyboard.inlines =
+   db.keycombo
+ | db.keycap
+ | db.keycode
+ | db.keysym
+ | db.shortcut
+ | db.accel
 
 db.link.inlines =
    db.xref
@@ -746,12 +808,14 @@ db.extension.inlines = notAllowed
 
 db.nopara.blocks =
    db.list.blocks
+ | db.admonition.blocks
  | db.formal.blocks
  | db.informal.blocks
  | db.publishing.blocks
  | db.graphic.blocks
  | db.technical.blocks
  | db.verbatim.blocks
+ | db.synopsis.blocks
  | db.bridgehead
  | db.remark
  | db.revhistory
@@ -768,6 +832,7 @@ db.all.blocks =
  | db.extension.blocks
 
 ctrl:exclude [ from="db.formal.blocks" exclude="db.formal.blocks" ]
+ctrl:exclude [ from="db.formal.blocks" exclude="db.admonition.blocks" ]
 
 db.formal.blocks =
    db.example
@@ -791,6 +856,15 @@ db.graphic.blocks =
 
 db.technical.blocks = db.procedure
 
+ctrl:exclude [ from="db.admonition.blocks" exclude="db.admonition.blocks" ]
+
+db.admonition.blocks =
+   db.caution
+ | db.important
+ | db.note
+ | db.tip
+ | db.warning
+
 db.list.blocks =
    db.itemizedlist
  | db.orderedlist
@@ -800,14 +874,23 @@ db.list.blocks =
  | db.segmentedlist
 
 db.verbatim.blocks =
-   db.screen
+   db.programlisting
+ | db.screen
  | db.literallayout
+ | db.synopsis
+
+db.synopsis.blocks =
+   db.cmdsynopsis
+ | db.funcsynopsis
+ | db.classsynopsis
+ | db.methodsynopsis
+ | db.constructorsynopsis
+ | db.destructorsynopsis
+ | db.fieldsynopsis
 
 db.extension.blocks = notAllowed
 
 # ======================================================================
-
-db.info.extension = db._any
 
 db.info.elements =
    db.abstract
@@ -824,7 +907,6 @@ db.info.elements =
  | db.contractsponsor
  | db.contractnum
  | db.copyright
- | db.cover
  | db.date
  | db.edition
  | db.editor
@@ -832,11 +914,12 @@ db.info.elements =
  | db.keywordset
  | db.legalnotice
  | db.mediaobject
- | db.org
  | db.orgname
  | db.othercredit
  | db.pagenums
  | db.printhistory
+ | db.productname
+ | db.productnumber
  | db.pubdate
  | db.publisher
  | db.publishername
@@ -845,20 +928,16 @@ db.info.elements =
  | db.seriesvolnums
  | db.subjectset
  | db.volumenum
- | db.info.extension
 
 db.bibliographic.elements =
    db.info.elements
- | db.publishing.inlines
+ | db.abbrev
  | db.citerefentry
  | db.citetitle
  | db.citebiblioid
- | db.person
- | db.personblurb
  | db.personname
  | db.subtitle
  | db.title
- | db.titleabbrev
 
 # ======================================================================
 
@@ -886,7 +965,7 @@ div {
 
 [
    db:refname [ "titleabbrev" ]
-   db:refpurpose [ "The abbreviation of a title" ]
+   db:refpurpose [ "The abbreviation of a Title" ]
 ]
 div {
 
@@ -943,7 +1022,8 @@ div {
    db.info =
       element info {
          db.info.attlist,
-         (db._title & db.info.elements*)
+         db._title,
+         db.info.elements*
       }
 }
 
@@ -964,7 +1044,8 @@ div {
    db.titlereq.info =
       element info {
          db.titlereq.info.attlist,
-         (db._title.req & db.info.elements*)
+         db._title.req,
+         db.info.elements*
       }
 }
 
@@ -985,7 +1066,8 @@ div {
    db.titleonly.info =
       element info {
          db.titleonly.info.attlist,
-         (db._title.only & db.info.elements*)
+         db._title.only,
+         db.info.elements*
       }
 }
 
@@ -1006,7 +1088,8 @@ div {
    db.titleonlyreq.info =
       element info {
          db.titleonlyreq.info.attlist,
-         (db._title.onlyreq & db.info.elements*)
+         db._title.onlyreq,
+         db.info.elements*
       }
 }
 
@@ -1040,11 +1123,7 @@ div {
 div {
 
    db.subjectset.role.attribute = attribute role { text }
-   db.subjectset.scheme.attribute =
-      [
-         db:refpurpose [ "Identifies the controlled vocabulary used by this set's terms" ]
-      ]
-      attribute scheme { xsd:NMTOKEN }
+   db.subjectset.scheme.attribute = attribute scheme { xsd:NMTOKEN }
 
    db.subjectset.attlist =
       db.subjectset.role.attribute?
@@ -1068,11 +1147,7 @@ div {
 div {
 
    db.subject.role.attribute = attribute role { text }
-   db.subject.weight.attribute =
-      [
-         db:refpurpose [ "Specifies a ranking for this subject relative to other subjects in the same set" ]
-      ]
-      attribute weight { text }
+   db.subject.weight.attribute = attribute weight { text }
 
    db.subject.attlist =
       db.subject.role.attribute?
@@ -1272,16 +1347,14 @@ div {
 
    ctrl:exclude [ from="db.sidebar" exclude="db.sidebar" ]
 
-   db.sidebar.floatstyle.attribute = db.floatstyle.attribute
    db.sidebar.role.attribute = attribute role { text }
 
    db.sidebar.attlist =
       db.sidebar.role.attribute?
-    & db.sidebar.floatstyle.attribute?
     & db.common.attributes
     & db.common.linking.attributes
 
-   db.sidebar.info = db._info
+   db.sidebar.info = db._info.title.only
 
    db.sidebar =
       element sidebar {
@@ -1384,7 +1457,7 @@ div {
    db.attribution =
       element attribution {
          db.attribution.attlist,
-         (db._text | db.person | db.personname | db.citetitle | db.citation)*
+         (db._text | db.personname | db.citetitle | db.citation)*
       }
 }
 
@@ -1396,49 +1469,13 @@ div {
 ]
 div {
 
-   ctrl:other-attribute [ name="db.bridgehead.renderas.attribute"
-                          enum-name="db.bridgehead.renderas-enum.attribute"
-                          other-name="db.bridgehead.renderas-other.attributes" ]
+   db.bridgehead.role.attribute = attribute role { text }
 
    db.bridgehead.renderas.enumeration =
-      ## Render as a first-level section
-      "sect1"
-    | ## Render as a second-level section
-      "sect2"
-    | ## Render as a third-level section
-      "sect3"
-    | ## Render as a fourth-level section
-      "sect4"
-    | ## Render as a fifth-level section
-      "sect5"
-
-   db.bridgehead.renderas-enum.attribute =
-      [
-         db:refpurpose [ "Indicates how the bridge head should be rendered" ]
-      ]
-      attribute renderas { db.bridgehead.renderas.enumeration } ?
-
-   db.bridgehead.renderas-other.attribute =
-      [
-         db:refpurpose [ "Identifies the nature of the non-standard rendering" ]
-      ]
-      attribute otherrenderas { xsd:NMTOKEN }
-
-   db.bridgehead.renderas-other.attributes =
-      [
-         db:refpurpose [ "Indicates how the bridge head should be rendered" ]
-      ]
-      attribute renderas {
-         ## Identifies a non-standard rendering
-         "other"
-      }
-    & db.bridgehead.renderas-other.attribute
+      "other"|"sect1"|"sect2"|"sect3"|"sect4"|"sect5"
 
    db.bridgehead.renderas.attribute =
-      (db.bridgehead.renderas-enum.attribute
-       | db.bridgehead.renderas-other.attributes)
-
-   db.bridgehead.role.attribute = attribute role { text }
+      attribute renderas { db.bridgehead.renderas.enumeration }
 
    db.bridgehead.attlist =
       db.bridgehead.role.attribute?
@@ -1470,7 +1507,7 @@ div {
 
    db.remark = element remark {
       db.remark.attlist,
-      db.all.inlines*
+      db._text
    }
 }
 
@@ -1510,17 +1547,15 @@ div {
 
    ctrl:exclude [ from="db.footnote" exclude="db.footnote" ]
    ctrl:exclude [ from="db.footnote" exclude="db.formal.blocks" ]
+   ctrl:exclude [ from="db.footnote" exclude="db.admonition.blocks" ]
+   ctrl:exclude [ from="db.footnote" exclude="db.indexterm" ]
    ctrl:exclude [ from="db.footnote" exclude="db.sidebar" ]
    ctrl:exclude [ from="db.footnote" exclude="db.task" ]
    ctrl:exclude [ from="db.footnote" exclude="db.epigraph" ]
 
    db.footnote.role.attribute = attribute role { text }
 
-   db.footnote.label.attribute =
-      [
-         db:refpurpose [ "Identifies the desired footnote mark" ]
-      ]
-      attribute label { xsd:NMTOKEN }
+   db.footnote.label.attribute = attribute label { text }
 
    db.footnote.attlist =
       db.footnote.role.attribute?
@@ -1613,6 +1648,120 @@ div {
 
 # ======================================================================
 
+db.admonition.contentmodel = db._info.title.only, db.all.blocks+
+
+# ======================================================================
+
+[
+   db:refname [ "caution" ]
+   db:refpurpose [ "A note of caution" ]
+]
+div {
+
+   db.caution.role.attribute = attribute role { text }
+
+   db.caution.attlist =
+      db.caution.role.attribute?
+    & db.common.attributes
+    & db.common.linking.attributes
+
+   db.caution =
+      element caution {
+         db.caution.attlist,
+         db.admonition.contentmodel
+      }
+}
+
+# ======================================================================
+
+[
+   db:refname [ "important" ]
+   db:refpurpose [ "An admonition set off from the text" ]
+]
+div {
+
+   db.important.role.attribute = attribute role { text }
+
+   db.important.attlist =
+      db.important.role.attribute?
+    & db.common.attributes
+    & db.common.linking.attributes
+
+   db.important =
+      element important {
+         db.important.attlist,
+         db.admonition.contentmodel
+      }
+}
+
+# ======================================================================
+
+[
+   db:refname [ "note" ]
+   db:refpurpose [ "A message set off from the text" ]
+]
+div {
+
+   db.note.role.attribute = attribute role { text }
+
+   db.note.attlist =
+      db.note.role.attribute?
+    & db.common.attributes
+    & db.common.linking.attributes
+
+   db.note =
+      element note {
+         db.note.attlist,
+         db.admonition.contentmodel
+      }
+}
+
+# ======================================================================
+
+[
+   db:refname [ "tip" ]
+   db:refpurpose [ "A suggestion to the user, set off from the text" ]
+]
+div {
+
+   db.tip.role.attribute = attribute role { text }
+
+   db.tip.attlist =
+      db.tip.role.attribute?
+    & db.common.attributes
+    & db.common.linking.attributes
+
+   db.tip =
+      element tip {
+         db.tip.attlist,
+         db.admonition.contentmodel
+      }
+}
+
+# ======================================================================
+
+[
+   db:refname [ "warning" ]
+   db:refpurpose [ "An admonition set off from the text" ]
+]
+div {
+
+   db.warning.role.attribute = attribute role { text }
+
+   db.warning.attlist =
+      db.warning.role.attribute?
+    & db.common.attributes
+    & db.common.linking.attributes
+
+   db.warning =
+      element warning {
+         db.warning.attlist,
+         db.admonition.contentmodel
+      }
+}
+
+# ======================================================================
+
 [
    db:refname [ "itemizedlist" ]
    db:refpurpose [ "A list in which each entry is marked with a bullet or other dingbat" ]
@@ -1621,11 +1770,7 @@ div {
 
    db.itemizedlist.role.attribute = attribute role { text }
 
-   db.itemizedlist.mark.attribute =
-      [
-         db:refpurpose [ "Identifies the type of mark to be used on items in this list" ]
-      ]
-      attribute mark { xsd:NMTOKEN }
+   db.itemizedlist.mark.attribute = attribute mark { text }
 
    db.itemizedlist.attlist =
       db.itemizedlist.role.attribute?
@@ -1655,52 +1800,21 @@ div {
 
    db.orderedlist.role.attribute = attribute role { text }
 
-   db.orderedlist.continuation.enumeration =
-      ## Specifies that numbering should begin where the preceding list left off
-      "continues"
-    | ## Specifies that numbering should begin again at 1
-      "restarts"
-
+   db.orderedlist.continuation.enumeration = "continues" | "restarts"
    db.orderedlist.continuation.attribute =
-      [
-         db:refpurpose [ "Indicates how list numbering should begin relative to the immediately preceding list" ]
-      ]
       attribute continuation { db.orderedlist.continuation.enumeration }
 
-   db.orderedlist.startingnumber.attribute =
-      [
-         db:refpurpose [ "Specifies the initial line number." ]
-      ]
-   attribute startingnumber { xsd:integer }
-
-   db.orderedlist.inheritnum.enumeration =
-      ## Specifies that numbering should ignore list nesting
-      "ignore"
-    | ## Specifies that numbering should inherit from outer-level lists
-      "inherit"
-
+   db.orderedlist.inheritnum.enumeration = "ignore" | "inherit"
    db.orderedlist.inheritnum.attribute =
-      [
-         db:refpurpose [ "Indicates whether or not item numbering should be influenced by list nesting" ]
-      ]
       attribute inheritnum { db.orderedlist.inheritnum.enumeration }
 
    db.orderedlist.numeration.enumeration =
-      ## Specifies Arabic numeration (1, 2, 3, …)
       "arabic"
-    | ## Specifies upper-case alphabetic numeration (A, B, C, …)
-      "upperalpha"
-    | ## Specifies lower-case alphabetic numeration (a, b, c, …)
-      "loweralpha"
-    | ## Specifies upper-case Roman numeration (I, II, III, …)
-      "upperroman"
-    | ## Specifies lower-case Roman numeration (i, ii, iii …)
-      "lowerroman"
-
+    | "upperalpha"
+    | "loweralpha"
+    | "upperroman"
+    | "lowerroman"
    db.orderedlist.numeration.attribute =
-      [
-         db:refpurpose [ "Indicates the desired numeration" ]
-      ]
       attribute numeration { db.orderedlist.numeration.enumeration }
 
    db.orderedlist.attlist =
@@ -1708,8 +1822,7 @@ div {
     & db.common.attributes
     & db.common.linking.attributes
     & db.spacing.attribute?
-    & (db.orderedlist.continuation.attribute
-     |db.orderedlist.startingnumber.attribute)?
+    & db.orderedlist.continuation.attribute?
     & db.orderedlist.inheritnum.attribute?
     & db.orderedlist.numeration.attribute?
 
@@ -1733,11 +1846,7 @@ div {
 
    db.listitem.role.attribute = attribute role { text }
 
-   db.listitem.override.attribute =
-      [
-         db:refpurpose [ "Specifies the keyword for the type of mark that should be used on " db:emphasis [ "this" ] " item, instead of the mark that would be used by default" ]
-      ]
-      attribute override { xsd:NMTOKEN }
+   db.listitem.override.attribute = attribute override { text }
 
    db.listitem.attlist =
       db.listitem.role.attribute?
@@ -1865,26 +1974,11 @@ div {
 
    db.simplelist.role.attribute = attribute role { text }
 
-   db.simplelist.type.enumeration =
-      ## A tabular presentation in row-major order.
-      "horiz"
-    | ## A tabular presentation in column-major order.
-      "vert"
-    | ## An inline presentation, usually a comma-delimited list.
-      "inline"
-
+   db.simplelist.type.enumeration = "horiz" | "vert" | "inline"
    db.simplelist.type.attribute =
-      [
-         a:defaultValue="vert"
-         db:refpurpose [ "Specifies the type of list presentation." ]
-      ]
       attribute type { db.simplelist.type.enumeration }
 
-   db.simplelist.columns.attribute =
-      [
-         db:refpurpose [ "Specifies the number of columns for horizontal or vertical presentation" ]
-      ]
-      attribute columns { xsd:integer}
+   db.simplelist.columns.attribute = attribute columns { xsd:integer}
 
    db.simplelist.attlist =
       db.simplelist.role.attribute?
@@ -1932,11 +2026,7 @@ div {
 
    db.variablelist.role.attribute = attribute role { text }
 
-   db.variablelist.termlength.attribute =
-      [
-         db:refpurpose [ "Indicates a length beyond which the presentation system may consider a term too long and select an alternate presentation for that term, item, or list" ]
-      ]
-      attribute termlength { text }
+   db.variablelist.termlength.attribute = attribute termlength { text }
 
    db.variablelist.attlist =
       db.variablelist.role.attribute?
@@ -2010,18 +2100,16 @@ div {
 div {
 
    db.example.role.attribute = attribute role { text }
-   db.example.label.attribute = db.label.attribute
-   db.example.width.attribute = db.width.characters.attribute
-   db.example.pgwide.attribute = db.pgwide.attribute
-   db.example.floatstyle.attribute = db.floatstyle.attribute
+   db.example.label.attribute = attribute label { text }
+   db.example.width.attribute = attribute width { text }
 
    db.example.attlist =
       db.example.role.attribute?
     & db.common.attributes
     & db.common.linking.attributes
     & db.example.label.attribute?
-    & db.example.floatstyle.attribute?
-    & (db.example.width.attribute | db.example.pgwide.attribute)?
+    & db.floatstyle.attribute?
+    & db.example.width.attribute?
 
    db.example.info = db._info.title.onlyreq
 
@@ -2044,15 +2132,13 @@ div {
 
    db.informalexample.role.attribute = attribute role { text }
 
-   db.informalexample.width.attribute = db.width.characters.attribute
-
-   db.informalexample.floatstyle.attribute = db.floatstyle.attribute
+   db.informalexample.width.attribute = attribute width { text }
 
    db.informalexample.attlist =
       db.informalexample.role.attribute?
     & db.common.attributes
     & db.common.linking.attributes
-    & db.informalexample.floatstyle.attribute?
+    & db.floatstyle.attribute?
     & db.informalexample.width.attribute?
 
    db.informalexample.info = db._info.title.forbidden
@@ -2076,6 +2162,32 @@ db.verbatim.contentmodel =
 # ======================================================================
 
 [
+   db:refname [ "programlisting" ]
+   db:refpurpose [ "A literal listing of all or part of a program" ]
+]
+div {
+
+   db.programlisting.role.attribute = attribute role { text }
+
+   db.programlisting.width.attribute = attribute width { text }
+
+   db.programlisting.attlist =
+      db.programlisting.role.attribute?
+    & db.common.attributes
+    & db.common.linking.attributes
+    & db.verbatim.attributes
+    & db.programlisting.width.attribute?
+
+   db.programlisting =
+      element programlisting {
+         db.programlisting.attlist,
+         db.verbatim.contentmodel
+      }
+}
+
+# ======================================================================
+
+[
    db:refname [ "literallayout" ]
    db:refpurpose [ "A block of text in which line breaks and white space are to be reproduced faithfully" ]
 ]
@@ -2083,16 +2195,8 @@ div {
 
    db.literallayout.role.attribute = attribute role { text }
 
-   db.literallayout.class.enumeration =
-      ## The literal layout should be formatted with a monospaced font
-      "monospaced"
-    | ## The literal layout should be formatted with the current font
-      "normal"
-
+   db.literallayout.class.enumeration = "monospaced" | "normal"
    db.literallayout.class.attribute =
-      [
-         db:refpurpose [ "Specifies the class of literal layout" ]
-      ]
       attribute class { db.literallayout.class.enumeration }
 
    db.literallayout.attlist =
@@ -2118,8 +2222,11 @@ div {
 div {
 
    db.screen.role.attribute = attribute role { text }
-
-   db.screen.width.attribute = db.width.characters.attribute
+   db.screen.width.attribute =
+      [
+         db:refpurpose [ "Specifies the width (in characters) of the longest line (formatters may use this value to determine scaling or rotation)." ]
+      ]
+      attribute width { text }
 
    db.screen.attlist =
       db.screen.role.attribute?
@@ -2169,17 +2276,15 @@ div {
 div {
 
    db.figure.role.attribute = attribute role { text }
-   db.figure.label.attribute = db.label.attribute
-   db.figure.pgwide.attribute = db.pgwide.attribute
-   db.figure.floatstyle.attribute = db.floatstyle.attribute
+   db.figure.label.attribute = attribute label { text }
 
    db.figure.attlist =
       db.figure.role.attribute?
     & db.common.attributes
     & db.common.linking.attributes
     & db.figure.label.attribute?
-    & db.figure.pgwide.attribute?
-    & db.figure.floatstyle.attribute?
+    & db.pgwide.attribute?
+    & db.floatstyle.attribute?
 
    db.figure.info = db._info.title.onlyreq
 
@@ -2201,17 +2306,15 @@ div {
 div {
 
    db.informalfigure.role.attribute = attribute role { text }
-   db.informalfigure.label.attribute = db.label.attribute
-   db.informalfigure.pgwide.attribute = db.pgwide.attribute
-   db.informalfigure.floatstyle.attribute = db.floatstyle.attribute
+   db.informalfigure.label.attribute = attribute label { text }
 
    db.informalfigure.attlist =
       db.informalfigure.role.attribute?
     & db.common.attributes
     & db.common.linking.attributes
     & db.informalfigure.label.attribute?
-    & db.informalfigure.pgwide.attribute?
-    & db.informalfigure.floatstyle.attribute?
+    & db.pgwide.attribute?
+    & db.floatstyle.attribute?
 
    db.informalfigure.info = db._info.title.forbidden
 
@@ -2398,32 +2501,25 @@ div {
 
    db.videodata.align.enumeration = db.halign.enumeration
    db.videodata.align.attribute =
-      [
-         db:refpurpose [ "Specifies the (horizontal) alignment of the video data" ]
-      ]
       attribute align { db.videodata.align.enumeration }
 
    db.videodata.valign.enumeration = db.valign.enumeration
    db.videodata.valign.attribute =
-      [
-         db:refpurpose [ "Specifies the vertical alignment of the video data" ]
-      ]
       attribute valign { db.videodata.valign.enumeration }
 
-   db.videodata.width.attribute = db.width.attribute
-   db.videodata.depth.attribute = db.depth.attribute
+   db.videodata.width.attribute = attribute width { text }
 
-   db.videodata.contentwidth.attribute = db.contentwidth.attribute
-   db.videodata.contentdepth.attribute = db.contentdepth.attribute
+   db.videodata.contentwidth.attribute = attribute contentwidth { text }
 
-   db.videodata.scalefit.enumeration = db.scalefit.enumeration
+   db.videodata.scalefit.enumeration = "0" | "1"
    db.videodata.scalefit.attribute =
-      [
-         db:refpurpose [ "Determines if anamorphic scaling is forbidden" ]
-      ]
       attribute scalefit { db.videodata.scalefit.enumeration }
 
-   db.videodata.scale.attribute = db.scale.attribute
+   db.videodata.scale.attribute = attribute scale { text }
+
+   db.videodata.depth.attribute = attribute depth { text }
+
+   db.videodata.contentdepth.attribute = attribute contentdepth { text }
 
    db.videodata.attlist =
       db.videodata.role.attribute?
@@ -2482,32 +2578,25 @@ div {
 
    db.imagedata.align.enumeration = db.halign.enumeration
    db.imagedata.align.attribute =
-      [
-         db:refpurpose [ "Specifies the (horizontal) alignment of the image data" ]
-      ]
       attribute align { db.imagedata.align.enumeration }
 
    db.imagedata.valign.enumeration = db.valign.enumeration
    db.imagedata.valign.attribute =
-      [
-         db:refpurpose [ "Specifies the vertical alignment of the image data" ]
-      ]
       attribute valign { db.imagedata.valign.enumeration }
 
-   db.imagedata.width.attribute = db.width.attribute
-   db.imagedata.depth.attribute = db.depth.attribute
+   db.imagedata.width.attribute = attribute width { text }
 
-   db.imagedata.contentwidth.attribute = db.contentwidth.attribute
-   db.imagedata.contentdepth.attribute = db.contentdepth.attribute
+   db.imagedata.contentwidth.attribute = attribute contentwidth { text }
 
-   db.imagedata.scalefit.enumeration = db.scalefit.enumeration
+   db.imagedata.scalefit.enumeration = "0" | "1"
    db.imagedata.scalefit.attribute =
-      [
-         db:refpurpose [ "Determines if anamorphic scaling is forbidden" ]
-      ]
       attribute scalefit { db.imagedata.scalefit.enumeration }
 
-   db.imagedata.scale.attribute = db.scale.attribute
+   db.imagedata.scale.attribute = attribute scale { text }
+
+   db.imagedata.depth.attribute = attribute depth { text }
+
+   db.imagedata.contentdepth.attribute = attribute contentdepth { text }
 
    db.imagedata.attlist =
       db.imagedata.role.attribute?
@@ -2540,12 +2629,7 @@ div {
 div {
 
    db.textdata.role.attribute = attribute role { text }
-
-   db.textdata.encoding.attribute =
-      [
-         db:refpurpose [ "Identifies the encoding of the text in the external file" ]
-      ]
-      attribute encoding { text }
+   db.textdata.encoding.attribute = attribute encoding { text }
 
    db.textdata.attlist =
       db.textdata.role.attribute?
@@ -2570,6 +2654,7 @@ div {
 ]
 div {
    ctrl:exclude [ from="db.caption" exclude="db.formal.blocks" ]
+   ctrl:exclude [ from="db.caption" exclude="db.admonition.blocks" ]
    ctrl:exclude [ from="db.caption" exclude="db.sidebar" ]
    ctrl:exclude [ from="db.caption" exclude="db.task" ]
 
@@ -2593,6 +2678,760 @@ div {
 # ======================================================================
 
 [
+   db:refname [ "synopsis" ]
+   db:refpurpose [ "A general-purpose element for representing the syntax of commands or functions" ]
+]
+div {
+
+   db.synopsis.role.attribute = attribute role { text }
+   db.synopsis.label.attribute = attribute label { text }
+
+   db.synopsis.attlist =
+      db.synopsis.role.attribute?
+    & db.common.attributes
+    & db.common.linking.attributes
+    & db.verbatim.attributes
+    & db.synopsis.label.attribute?
+
+   db.synopsis =
+      element synopsis {
+         db.synopsis.attlist,
+         db.verbatim.contentmodel
+      }
+}
+
+# ======================================================================
+
+[
+   db:refname [ "cmdsynopsis" ]
+   db:refpurpose [ "A syntax summary for a software command" ]
+]
+div {
+
+   db.cmdsynopsis.role.attribute = attribute role { text }
+   db.cmdsynopsis.sepchar.attribute = attribute sepchar { text }
+   db.cmdsynopsis.cmdlength.attribute = attribute cmdlength { text }
+   db.cmdsynopsis.label.attribute = attribute label { text }
+
+   db.cmdsynopsis.attlist =
+      db.cmdsynopsis.role.attribute?
+    & db.common.attributes
+    & db.common.linking.attributes
+    & db.cmdsynopsis.sepchar.attribute?
+    & db.cmdsynopsis.cmdlength.attribute?
+    & db.cmdsynopsis.label.attribute?
+
+   db.cmdsynopsis.info = db._info.title.forbidden
+
+   db.cmdsynopsis =
+      element cmdsynopsis {
+         db.cmdsynopsis.attlist,
+         db.cmdsynopsis.info,
+         (db.command | db.arg | db.group | db.sbr)+,
+         db.synopfragment*
+      }
+}
+
+# ======================================================================
+
+db.rep.enumeration = "norepeat" | "repeat"
+db.rep.attribute = attribute rep { db.rep.enumeration }
+
+db.choice.enumeration = "opt" | "plain" | "req"
+db.choice.attribute = attribute choice { db.choice.enumeration }
+
+# ======================================================================
+
+[
+   db:refname [ "arg" ]
+   db:refpurpose [ "An argument in a CmdSynopsis" ]
+]
+div {
+
+   db.arg.role.attribute = attribute role { text }
+
+   db.arg.attlist =
+      db.arg.role.attribute?
+    & db.common.attributes
+    & db.common.linking.attributes
+    & db.rep.attribute?
+    & db.choice.attribute?
+
+   db.arg =
+      element arg {
+         db.arg.attlist,
+         (db._text
+          | db.arg
+          | db.group
+          | db.option
+          | db.synopfragmentref
+          | db.sbr)*
+      }
+}
+
+# ======================================================================
+
+[
+   db:refname [ "group" ]
+   db:refpurpose [ "A group of elements in a CmdSynopsis" ]
+]
+div {
+
+   db.group.role.attribute = attribute role { text }
+
+   db.group.attlist =
+      db.group.role.attribute?
+    & db.common.attributes
+    & db.common.linking.attributes
+    & db.rep.attribute?
+    & db.choice.attribute?
+
+   db.group =
+      element group {
+         db.group.attlist,
+         (db.arg
+          | db.group
+          | db.option
+          | db.synopfragmentref
+          | db.replaceable
+          | db.sbr)+
+      }
+}
+
+# ======================================================================
+
+[
+   db:refname [ "sbr" ]
+   db:refpurpose [ "An explicit line break in a command synopsis" ]
+]
+div {
+
+   db.sbr.role.attribute = attribute role { text }
+
+   db.sbr.attlist =
+      db.sbr.role.attribute?
+    & db.common.attributes
+
+   db.sbr =
+      element sbr {
+         db.sbr.attlist,
+         empty
+      }
+}
+
+# ======================================================================
+
+[
+   db:refname [ "synopfragment" ]
+   db:refpurpose [ "A portion of a CmdSynopsis broken out from the main body of the synopsis" ]
+]
+div {
+
+   db.synopfragment.role.attribute = attribute role { text }
+
+   db.synopfragment.attlist =
+      db.synopfragment.role.attribute?
+    & db.common.attributes
+    & db.common.linking.attributes
+
+   db.synopfragment =
+      element synopfragment {
+         db.synopfragment.attlist,
+         (db.arg | db.group)+
+      }
+}
+
+# ======================================================================
+
+[
+   db:refname [ "synopfragmentref" ]
+   db:refpurpose [ "A reference to a fragment of a command synopsis" ]
+]
+div {
+
+   db.synopfragmentref.role.attribute = attribute role { text }
+
+   db.synopfragmentref.attlist =
+      db.synopfragmentref.role.attribute?
+    & db.common.attributes
+    & db.linkend.attribute
+
+   db.synopfragmentref =
+      [
+         s:pattern [
+            name = "Synopsis fragment type constraint"
+            s:rule [
+               context = "db:synopfragmentref"
+               s:assert [
+                  test = "local-name(//*[@id=current()/@linkend]) = 'synopfragment' and namespace-uri(//*[@id=current()/@linkend]) = 'http://docbook.org/ns/docbook'"
+                  "@linkend on synopfragmentref must point to a synopfragment."
+               ]
+            ]
+         ]
+      ]
+      element synopfragmentref {
+         db.synopfragmentref.attlist,
+         text
+      }
+}
+
+# ======================================================================
+
+[
+   db:refname [ "funcsynopsis" ]
+   db:refpurpose [ "The syntax summary for a function definition" ]
+]
+div {
+
+   db.funcsynopsis.role.attribute = attribute role { text }
+
+   db.funcsynopsis.attlist =
+      db.funcsynopsis.role.attribute?
+    & db.common.attributes
+    & db.common.linking.attributes
+    & db.language.attribute?
+
+   db.funcsynopsis.info = db._info.title.forbidden
+
+   db.funcsynopsis =
+      element funcsynopsis {
+         db.funcsynopsis.attlist,
+         db.funcsynopsis.info,
+         (db.funcsynopsisinfo | db.funcprototype)+
+      }
+}
+
+# ======================================================================
+
+[
+   db:refname [ "funcsynopsisinfo" ]
+   db:refpurpose [ "Information supplementing the FuncDefs of a FuncSynopsis" ]
+]
+div {
+
+   db.funcsynopsisinfo.role.attribute = attribute role { text }
+
+   db.funcsynopsisinfo.attlist =
+      db.funcsynopsisinfo.role.attribute?
+    & db.common.attributes
+    & db.common.linking.attributes
+    & db.verbatim.attributes
+
+   db.funcsynopsisinfo =
+      element funcsynopsisinfo {
+         db.funcsynopsisinfo.attlist,
+         db.verbatim.contentmodel
+      }
+}
+
+# ======================================================================
+
+[
+   db:refname [ "funcprototype" ]
+   db:refpurpose [ "The prototype of a function" ]
+]
+div {
+
+   db.funcprototype.role.attribute = attribute role { text }
+
+   db.funcprototype.attlist =
+      db.funcprototype.role.attribute?
+    & db.common.attributes
+    & db.common.linking.attributes
+
+   db.funcprototype =
+      element funcprototype {
+         db.funcprototype.attlist,
+         db.modifier*,
+         db.funcdef,
+         (db.void | db.varargs | (db.paramdef+, db.varargs?)),
+         db.modifier*
+      }
+}
+
+# ======================================================================
+
+[
+   db:refname [ "funcdef" ]
+   db:refpurpose [ "A function (subroutine) name and its return type" ]
+]
+div {
+
+   db.funcdef.role.attribute = attribute role { text }
+
+   db.funcdef.attlist =
+      db.funcdef.role.attribute?
+    & db.common.attributes
+    & db.common.linking.attributes
+
+   db.funcdef =
+      element funcdef {
+         db.funcdef.attlist,
+         (db._text | db.type | db.function)*
+      }
+}
+
+# ======================================================================
+
+[
+   db:refname [ "void" ]
+   db:refpurpose [ "An empty element in a function synopsis indicating that the function in question takes no arguments" ]
+]
+div {
+
+   db.void.role.attribute = attribute role { text }
+
+   db.void.attlist =
+      db.void.role.attribute?
+    & db.common.attributes
+    & db.common.linking.attributes
+
+   db.void =
+      element void {
+         db.void.attlist,
+         empty
+      }
+}
+
+# ======================================================================
+
+[
+   db:refname [ "varargs" ]
+   db:refpurpose [ "An empty element in a function synopsis indicating a variable number of arguments" ]
+]
+div {
+
+   db.varargs.role.attribute = attribute role { text }
+
+   db.varargs.attlist =
+      db.varargs.role.attribute?
+    & db.common.attributes
+    & db.common.linking.attributes
+
+   db.varargs =
+      element varargs {
+         db.varargs.attlist,
+         empty
+      }
+}
+
+# ======================================================================
+
+[
+   db:refname [ "paramdef" ]
+   db:refpurpose [ "Information about a function parameter in a programming language" ]
+]
+div {
+
+   db.paramdef.role.attribute = attribute role { text }
+
+   db.paramdef.attlist =
+      db.paramdef.role.attribute?
+    & db.common.attributes
+    & db.common.linking.attributes
+    & db.choice.attribute?
+
+   db.paramdef =
+      element paramdef {
+         db.paramdef.attlist,
+         (db._text | db.initializer | db.type | db.parameter | db.funcparams)*
+      }
+}
+
+# ======================================================================
+
+[
+   db:refname [ "funcparams" ]
+   db:refpurpose [ "Parameters for a function referenced through a function pointer in a synopsis" ]
+]
+div {
+
+   db.funcparams.role.attribute = attribute role { text }
+
+   db.funcparams.attlist =
+      db.funcparams.role.attribute?
+    & db.common.attributes
+    & db.common.linking.attributes
+
+   db.funcparams =
+      element funcparams {
+         db.funcparams.attlist,
+         db._text
+      }
+}
+
+# ======================================================================
+
+[
+   db:refname [ "classsynopsis" ]
+   db:refpurpose [ "The syntax summary for a class definition" ]
+]
+div {
+
+   db.classsynopsis.role.attribute = attribute role { text }
+
+   db.classsynopsis.class.enumeration = "class" | "interface"
+   db.classsynopsis.class.attribute =
+      attribute class { db.classsynopsis.class.enumeration }
+
+   db.classsynopsis.attlist =
+      db.classsynopsis.role.attribute?
+    & db.common.attributes
+    & db.common.linking.attributes
+    & db.language.attribute?
+    & db.classsynopsis.class.attribute?
+
+   db.classsynopsis =
+      element classsynopsis {
+         db.classsynopsis.attlist,
+         db.oo.inlines+,
+         (db.classsynopsisinfo
+          | db.methodsynopsis
+          | db.constructorsynopsis
+          | db.destructorsynopsis
+          | db.fieldsynopsis)*
+      }
+}
+
+# ======================================================================
+
+[
+   db:refname [ "classsynopsisinfo" ]
+   db:refpurpose [ "Information supplementing the contents of a ClassSynopsis" ]
+]
+div {
+
+   db.classsynopsisinfo.role.attribute = attribute role { text }
+
+   db.classsynopsisinfo.attlist =
+      db.classsynopsisinfo.role.attribute?
+    & db.common.attributes
+    & db.common.linking.attributes
+    & db.verbatim.attributes
+
+   db.classsynopsisinfo =
+      element classsynopsisinfo {
+         db.classsynopsisinfo.attlist,
+         db.verbatim.contentmodel
+      }
+}
+
+# ======================================================================
+
+[
+   db:refname [ "ooclass" ]
+   db:refpurpose [ "A class in an object-oriented programming language" ]
+]
+div {
+
+   db.ooclass.role.attribute = attribute role { text }
+
+   db.ooclass.attlist =
+      db.ooclass.role.attribute?
+    & db.common.attributes
+    & db.common.linking.attributes
+
+   db.ooclass =
+      element ooclass {
+         db.ooclass.attlist,
+         (db.package|db.modifier)*,
+         db.classname
+      }
+}
+
+# ======================================================================
+
+[
+   db:refname [ "oointerface" ]
+   db:refpurpose [ "An interface in an object-oriented programming language" ]
+]
+div {
+
+   db.oointerface.role.attribute = attribute role { text }
+
+   db.oointerface.attlist =
+      db.oointerface.role.attribute?
+    & db.common.attributes
+    & db.common.linking.attributes
+
+   db.oointerface =
+      element oointerface {
+         db.oointerface.attlist,
+         (db.package|db.modifier)*,
+         db.interfacename
+      }
+}
+
+# ======================================================================
+
+[
+   db:refname [ "ooexception" ]
+   db:refpurpose [ "An exception in an object-oriented programming language" ]
+]
+div {
+
+   db.ooexception.role.attribute = attribute role { text }
+
+   db.ooexception.attlist =
+      db.ooexception.role.attribute?
+    & db.common.attributes
+    & db.common.linking.attributes
+
+   db.ooexception =
+      element ooexception {
+         db.ooexception.attlist,
+         (db.package|db.modifier)*,
+         db.exceptionname
+      }
+}
+
+# ======================================================================
+
+[
+   db:refname [ "modifier" ]
+   db:refpurpose [ "Modifiers in a synopsis" ]
+]
+div {
+
+   db.modifier.role.attribute = attribute role { text }
+
+   db.modifier.attlist =
+      db.modifier.role.attribute?
+    & db.common.attributes
+    & db.common.linking.attributes
+
+   db.modifier =
+      element modifier {
+         db.modifier.attlist,
+         db._text
+      }
+}
+
+# ======================================================================
+
+[
+   db:refname [ "interfacename" ]
+   db:refpurpose [ "The name of an interface" ]
+]
+div {
+
+   db.interfacename.role.attribute = attribute role { text }
+
+   db.interfacename.attlist =
+      db.interfacename.role.attribute?
+    & db.common.attributes
+    & db.common.linking.attributes
+
+   db.interfacename =
+      element interfacename {
+         db.interfacename.attlist,
+         db._text
+      }
+}
+
+# ======================================================================
+
+[
+   db:refname [ "exceptionname" ]
+   db:refpurpose [ "The name of an exception" ]
+]
+div {
+
+   db.exceptionname.role.attribute = attribute role { text }
+
+   db.exceptionname.attlist =
+      db.exceptionname.role.attribute?
+    & db.common.attributes
+    & db.common.linking.attributes
+
+   db.exceptionname =
+      element exceptionname {
+         db.exceptionname.attlist,
+         db._text
+      }
+}
+
+# ======================================================================
+
+[
+   db:refname [ "fieldsynopsis" ]
+   db:refpurpose [ "The name of a field in a class definition" ]
+]
+div {
+
+   db.fieldsynopsis.role.attribute = attribute role { text }
+
+   db.fieldsynopsis.attlist =
+      db.fieldsynopsis.role.attribute?
+    & db.common.attributes
+    & db.common.linking.attributes
+    & db.language.attribute?
+
+   db.fieldsynopsis =
+      element fieldsynopsis {
+         db.fieldsynopsis.attlist,
+         db.modifier*,
+         db.type?,
+         db.varname,
+         db.initializer?
+      }
+}
+
+# ======================================================================
+
+[
+   db:refname [ "initializer" ]
+   db:refpurpose [ "The initializer for a FieldSynopsis" ]
+]
+div {
+
+   db.initializer.role.attribute = attribute role { text }
+
+   db.initializer.attlist =
+      db.initializer.role.attribute?
+    & db.common.attributes
+    & db.common.linking.attributes
+
+   db.initializer =
+      element initializer {
+         db.initializer.attlist,
+         db._text
+      }
+}
+
+# ======================================================================
+
+[
+   db:refname [ "constructorsynopsis" ]
+   db:refpurpose [ "A syntax summary for a constructor" ]
+]
+div {
+
+   db.constructorsynopsis.role.attribute = attribute role { text }
+
+   db.constructorsynopsis.attlist =
+      db.constructorsynopsis.role.attribute?
+    & db.common.attributes
+    & db.common.linking.attributes
+    & db.language.attribute?
+
+   db.constructorsynopsis =
+      element constructorsynopsis {
+         db.constructorsynopsis.attlist,
+         db.modifier*,
+         db.methodname?,
+         (db.methodparam+ | db.void?),
+         db.exceptionname*
+      }
+}
+
+# ======================================================================
+
+[
+   db:refname [ "destructorsynopsis" ]
+   db:refpurpose [ "A syntax summary for a destructor" ]
+]
+div {
+
+   db.destructorsynopsis.role.attribute = attribute role { text }
+
+   db.destructorsynopsis.attlist =
+      db.destructorsynopsis.role.attribute?
+    & db.common.attributes
+    & db.common.linking.attributes
+    & db.language.attribute?
+
+   db.destructorsynopsis =
+      element destructorsynopsis {
+         db.destructorsynopsis.attlist,
+         db.modifier*,
+         db.methodname?,
+         (db.methodparam+ | db.void?),
+         db.exceptionname*
+      }
+}
+
+# ======================================================================
+
+[
+   db:refname [ "methodsynopsis" ]
+   db:refpurpose [ "A syntax summary for a method" ]
+]
+div {
+
+   db.methodsynopsis.role.attribute = attribute role { text }
+
+   db.methodsynopsis.attlist =
+      db.methodsynopsis.role.attribute?
+    & db.common.attributes
+    & db.common.linking.attributes
+    & db.language.attribute?
+
+   db.methodsynopsis =
+      element methodsynopsis {
+         db.methodsynopsis.attlist,
+         db.modifier*,
+         (db.type | db.void)?,
+         db.methodname,
+         (db.methodparam+ | db.void),
+         db.exceptionname*,
+         db.modifier*
+      }
+}
+
+# ======================================================================
+
+[
+   db:refname [ "methodname" ]
+   db:refpurpose [ "The name of a method" ]
+]
+div {
+
+   db.methodname.role.attribute = attribute role { text }
+
+   db.methodname.attlist =
+      db.methodname.role.attribute?
+    & db.common.attributes
+    & db.common.linking.attributes
+
+   db.methodname =
+      element methodname {
+         db.methodname.attlist,
+         db._text
+      }
+}
+
+# ======================================================================
+
+[
+   db:refname [ "methodparam" ]
+   db:refpurpose [ "Parameters to a method" ]
+]
+div {
+
+   db.methodparam.role.attribute = attribute role { text }
+
+   db.methodparam.attlist =
+      db.methodparam.role.attribute?
+    & db.common.attributes
+    & db.common.linking.attributes
+    & db.rep.attribute?
+    & db.choice.attribute?
+
+   db.methodparam =
+      element methodparam {
+         db.methodparam.attlist,
+         db.modifier*,
+         db.type?,
+         ((db.parameter, db.initializer?) | db.funcparams),
+         db.modifier*
+      }
+}
+
+# ======================================================================
+# TEI: addrPart
+
+[
    db:refname [ "address" ]
    db:refpurpose [ "A real-world address, generally a postal address" ]
 ]
@@ -2611,7 +3450,6 @@ div {
          db.address.attlist,
          (db._text
           | db.personname
-          | db.orgname
           | db.pob
           | db.street
           | db.city
@@ -2621,7 +3459,6 @@ div {
           | db.phone
           | db.fax
           | db.email
-          | db.uri
           | db.otheraddr)*
       }
 }
@@ -2844,7 +3681,9 @@ div {
          db.affiliation.attlist,
          db.shortaffil?,
          db.jobtitle*,
-         (db.org? | (db.orgname?, db.orgdiv*, db.address*))
+         db.orgname?,
+         db.orgdiv*,
+         db.address*
       }
 }
 
@@ -2896,7 +3735,7 @@ div {
 
 [
    db:refname [ "orgname" ]
-   db:refpurpose [ "The name of an organization" ]
+   db:refpurpose [ "The name of an organization other than a corporation " ]
 ]
 div {
 
@@ -2905,33 +3744,17 @@ div {
                           other-name="db.orgname.class-other.attributes" ]
 
    db.orgname.class.enumeration =
-      ## A consortium
       "consortium"
-    | ## A corporation
-      "corporation"
-    | ## An informal organization
-      "informal"
-    | ## A non-profit organization
-      "nonprofit"
+    | "corporation"
+    | "informal"
+    | "nonprofit"
 
    db.orgname.class-enum.attribute =
-      [
-         db:refpurpose [ "Specifies the nature of the organization" ]
-      ]
       attribute class { db.orgname.class.enumeration }
 
    db.orgname.class-other.attributes =
-      [
-         db:refpurpose [ "Specifies the nature of the organization" ]
-      ]
-      attribute class {
-         ## Indicates a non-standard organization class
-         "other"
-      },
-      [
-         db:refpurpose [ "Identifies the non-standard nature of the organization" ]
-      ]
-      attribute otherclass { text }
+      attribute class { "other" }
+      & attribute otherclass { text }
 
    db.orgname.class.attribute =
       (db.orgname.class-enum.attribute | db.orgname.class-other.attributes)
@@ -3014,9 +3837,11 @@ div {
       element personname {
          db.personname.attlist,
          (db._text
-          | (db.honorific | db.firstname | db.surname | db.lineage | db.othername)+
-          | (db.honorific | db.givenname | db.surname | db.lineage | db.othername)+
-         )
+          | (db.honorific
+           | db.firstname
+           | db.surname
+           | db.lineage
+           | db.othername)+)
       }
 }
 
@@ -3027,7 +3852,6 @@ db.person.author.contentmodel =
    (db.personblurb
     | db.affiliation
     | db.email
-    | db.uri
     | db.address
     | db.contrib)*
 
@@ -3036,7 +3860,6 @@ db.org.author.contentmodel =
    (db.orgdiv
     | db.affiliation
     | db.email
-    | db.uri
     | db.address
     | db.contrib)*
 
@@ -3068,7 +3891,7 @@ div {
 
 [
    db:refname [ "authorgroup" ]
-   db:refpurpose [ "Wrapper for author information when a document has multiple authors or collaborators" ]
+   db:refpurpose [ "Wrapper for author information when a document has multiple authors or collabarators" ]
 ]
 div {
 
@@ -3104,7 +3927,7 @@ div {
    db.collab =
       element collab {
          db.collab.attlist,
-         (db.person | db.personname | db.org | db.orgname)+,
+         (db.personname | db.orgname)+,
          db.affiliation*
       }
 }
@@ -3128,52 +3951,6 @@ div {
       element authorinitials {
          db.authorinitials.attlist,
          db._text
-      }
-}
-
-# ======================================================================
-
-[
-   db:refname [ "person" ]
-   db:refpurpose [ "A person and associated metadata" ]
-]
-div {
-
-   db.person.role.attribute = attribute role { text }
-
-   db.person.attlist =
-      db.person.role.attribute?
-    & db.common.attributes
-    & db.common.linking.attributes
-
-   db.person =
-      element person {
-         db.person.attlist,
-         db.personname,
-         (db.address|db.affiliation|db.email|db.uri|db.personblurb)*
-      }
-}
-
-# ======================================================================
-
-[
-   db:refname [ "org" ]
-   db:refpurpose [ "An organization and associated metadata" ]
-]
-div {
-
-   db.org.role.attribute = attribute role { text }
-
-   db.org.attlist =
-      db.org.role.attribute?
-    & db.common.attributes
-    & db.common.linking.attributes
-
-   db.org =
-      element org {
-         db.org.attlist,
-         db.orgname,
-         (db.address|db.affiliation|db.email|db.uri|db.orgdiv)*
       }
 }
 
@@ -3404,41 +4181,6 @@ div {
 
 # ======================================================================
 
-db.cover.contentmodel =
-   db.para.blocks
- | db.extension.blocks
- | db.list.blocks
- | db.informal.blocks
- | db.publishing.blocks
- | db.graphic.blocks
- | db.technical.blocks
- | db.verbatim.blocks
- | db.bridgehead
- | db.remark
- | db.revhistory
-
-[
-   db:refname [ "cover" ]
-   db:refpurpose [ "Additional content for the cover of a publication" ]
-]
-div {
-
-   db.cover.role.attribute = attribute role { text }
-
-   db.cover.attlist =
-      db.cover.role.attribute?
-    & db.common.attributes
-    & db.common.linking.attributes
-
-   db.cover =
-      element cover {
-         db.cover.attlist,
-         (db.cover.contentmodel)+
-      }
-}
-
-# ======================================================================
-
 db.date.contentmodel = (xsd:date|xsd:dateTime|xsd:gYearMonth|xsd:gYear|text)
 
 # ======================================================================
@@ -3588,49 +4330,25 @@ div {
                           enum-name="db.bibliorelation.type-enum.attribute"
                           other-name="db.bibliorelation.type-other.attributes" ]
 
-   db.bibliorelation.type.enumeration =
-      ## The described resource pre-existed the referenced resource, which is essentially the same intellectual content presented in another format
-      "hasformat"
-    | ## The described resource includes the referenced resource either physically or logically
-      "haspart"
-    | ## The described resource has a version, edition, or adaptation, namely, the referenced resource
-      "hasversion"
-    | ## The described resource is the same intellectual content of the referenced resource, but presented in another format
-      "isformatof"
-    | ## The described resource is a physical or logical part of the referenced resource
-      "ispartof"
-    | ## The described resource is referenced, cited, or otherwise pointed to by the referenced resource
-      "isreferencedby"
-    | ## The described resource is supplanted, displaced, or superceded by the referenced resource
-      "isreplacedby"
-    | ## The described resource is required by the referenced resource, either physically or logically
-      "isrequiredby"
-    | ## The described resource is a version, edition, or adaptation of the referenced resource; changes in version imply substantive changes in content rather than differences in format
-      "isversionof"
-    | ## The described resource references, cites, or otherwise points to the referenced resource
-      "references"
-    | ## The described resource supplants, displaces, or supersedes the referenced resource
-      "replaces"
-    | ## The described resource requires the referenced resource to support its function, delivery, or coherence of content
-      "requires"
-
    db.bibliorelation.type-enum.attribute =
-      [
-         db:refpurpose [ "Identifies the type of relationship" ]
-      ]
-      attribute type { db.bibliorelation.type.enumeration }?
+      attribute type {
+         "hasformat"
+       | "haspart"
+       | "hasversion"
+       | "isformatof"
+       | "ispartof"
+       | "isreferencedby"
+       | "isreplacedby"
+       | "isrequiredby"
+       | "isversionof"
+       | "othertype"
+       | "references"
+       | "replaces"
+       | "requires"
+      }?
 
    db.bibliorelation.type-other.attributes =
-      [
-         db:refpurpose [ "Identifies the type of relationship" ]
-      ]
-      attribute type {
-         ## The described resource has a non-standard relationship with the referenced resource
-         "othertype"
-      }?,
-      [
-         db:refpurpose [ "A keyword that identififes the type of the non-standard relationship" ]
-      ]
+      attribute type { "othertype" }?,
       attribute othertype { xsd:NMTOKEN }
 
    db.bibliorelation.type.attribute =
@@ -3665,32 +4383,13 @@ div {
                           other-name="db.bibliocoverage.spatial-other.attributes" ]
 
    db.bibliocoverage.spacial.enumeration =
-      ## The DCMI Point identifies a point in space using its geographic coordinates
-      "dcmipoint"
-    | ## ISO 3166 Codes for the representation of names of countries
-      "iso3166"
-    | ## The DCMI Box identifies a region of space using its geographic limits
-      "dcmibox"
-    | ## The Getty Thesaurus of Geographic Names
-      "tgn"
+      "dcmipoint" | "iso3166" | "dcmibox" | "tgn"
 
    db.bibliocoverage.spatial-enum.attribute =
-      [
-         db:refpurpose [ "Specifies the type of spatial coverage" ]
-      ]
       attribute spatial { db.bibliocoverage.spacial.enumeration }?
 
    db.bibliocoverage.spatial-other.attributes =
-      [
-         db:refpurpose [ "Specifies the type of spatial coverage" ]
-      ]
-      attribute spatial {
-         ## Identifies a non-standard type of coverage
-         "otherspatial"
-      }?,
-      [
-         db:refpurpose [ "A keyword that identifies the type of non-standard coverage" ]
-      ]
+      attribute spatial { "otherspatial" }?,
       attribute otherspatial { xsd:NMTOKEN }
 
    db.bibliocoverage.spatial.attribute =
@@ -3701,29 +4400,13 @@ div {
                           enum-name="db.bibliocoverage.temporal-enum.attribute"
                           other-name="db.bibliocoverage.temporal-other.attributes" ]
 
-   db.bibliocoverage.temporal.enumeration =
-      ## A specification of the limits of a time interval
-      "dcmiperiod"
-    | ## W3C Encoding rules for dates and times—a profile based on ISO 8601
-      "w3c-dtf"
+   db.bibliocoverage.temporal.enumeration = "dcmiperiod" | "w3c-dtf"
 
    db.bibliocoverage.temporal-enum.attribute =
-      [
-         db:refpurpose [ "Specifies the type of temporal coverage" ]
-      ]
       attribute temporal { db.bibliocoverage.temporal.enumeration }?
 
    db.bibliocoverage.temporal-other.attributes =
-      [
-         db:refpurpose [ "Specifies the type of temporal coverage" ]
-      ]
-      attribute temporal {
-         ## Specifies a non-standard type of coverage
-         "othertemporal"
-      }?,
-      [
-         db:refpurpose [ "A keyword that identifies the type of non-standard coverage" ]
-      ]
+      attribute temporal { "othertemporal" }?,
       attribute othertemporal { xsd:NMTOKEN }
 
    db.bibliocoverage.temporal.attribute =
@@ -3781,65 +4464,14 @@ div {
 ]
 div {
 
-   ctrl:other-attribute [ name="db.othercredit.class.attribute"
-                          enum-name="db.othercredit.class-enum.attribute"
-                          other-name="db.othercredit.class-other.attributes" ]
-
-   db.othercredit.class.enumeration =
-      ## A copy editor
+   db.othercredit.class.attribute = attribute class {
       "copyeditor"
-    | ## A graphic designer
-      "graphicdesigner"
-    | ## Some other contributor
-      "other"
-    | ## A production editor
-      "productioneditor"
-    | ## A technical editor
-      "technicaleditor"
-    | ## A translator
-      "translator"
-    | ## An indexer
-      "indexer"
-    | ## A proof-reader
-      "proofreader"
-    | ## A cover designer
-      "coverdesigner"
-    | ## An interior designer
-      "interiordesigner"
-    | ## An illustrator
-      "illustrator"
-    | ## A reviewer
-      "reviewer"
-    | ## A typesetter
-      "typesetter"
-    | ## A converter (a persons responsible for conversion, not an application)
-      "conversion"
-
-   db.othercredit.class-enum.attribute =
-      [
-         db:refpurpose [ "Identifies the nature of the contributor" ]
-      ]
-      attribute class { db.othercredit.class.enumeration } ?
-
-   db.othercredit.class-other.attribute =
-      [
-         db:refpurpose [ "Identifies the nature of the non-standard contribution" ]
-      ]
-      attribute otherclass { xsd:NMTOKEN }
-
-   db.othercredit.class-other.attributes =
-      [
-         db:refpurpose [ "Identifies the nature of the contributor" ]
-      ]
-      attribute class {
-         ## Identifies a non-standard contribution
-         "other"
-      }
-    & db.othercredit.class-other.attribute
-
-   db.othercredit.class.attribute =
-      (db.othercredit.class-enum.attribute
-       | db.othercredit.class-other.attributes)
+    | "graphicdesigner"
+    | "other"
+    | "productioneditor"
+    | "technicaleditor"
+    | "translator"
+   }?
 
    db.othercredit.role.attribute = attribute role { text }
 
@@ -3926,7 +4558,7 @@ div {
 
 [
    db:refname [ "firstname" ]
-   db:refpurpose [ "A given name of a person" ]
+   db:refpurpose [ "The first name of a person" ]
 ]
 div {
 
@@ -3947,30 +4579,8 @@ div {
 # ======================================================================
 
 [
-   db:refname [ "givenname" ]
-   db:refpurpose [ "The given name of a person" ]
-]
-div {
-
-   db.givenname.role.attribute = attribute role { text }
-
-   db.givenname.attlist =
-      db.givenname.role.attribute?
-    & db.common.attributes
-    & db.common.linking.attributes
-
-   db.givenname =
-      element givenname {
-         db.givenname.attlist,
-         db._text
-      }
-}
-
-# ======================================================================
-
-[
    db:refname [ "surname" ]
-   db:refpurpose [ "An inherited or family name; in western cultures the last name" ]
+   db:refpurpose [ "A family name; in western cultures the last name" ]
 ]
 div {
 
@@ -4014,7 +4624,7 @@ div {
 
 [
    db:refname [ "othername" ]
-   db:refpurpose [ "A component of a person's name that is not a first name, surname, or lineage" ]
+   db:refpurpose [ "A component of a persons name that is not a first name, surname, or lineage" ]
 ]
 div {
 
@@ -4051,6 +4661,56 @@ div {
       element printhistory {
          db.printhistory.attlist,
          db.para.blocks+
+      }
+}
+
+# ======================================================================
+
+[
+   db:refname [ "productname" ]
+   db:refpurpose [ "The formal name of a product" ]
+]
+div {
+
+   db.productname.role.attribute = attribute role { text }
+
+   db.productname.class.enumeration =
+      "copyright" | "registered" | "service" | "trade"
+   db.productname.class.attribute =
+      attribute class { db.productname.class.enumeration }
+
+   db.productname.attlist =
+      db.productname.role.attribute?
+    & db.common.attributes
+    & db.common.linking.attributes
+    & db.productname.class.attribute?
+
+   db.productname =
+      element productname {
+         db.productname.attlist,
+         db._text
+      }
+}
+
+# ======================================================================
+
+[
+   db:refname [ "productnumber" ]
+   db:refpurpose [ "A number assigned to a product" ]
+]
+div {
+
+   db.productnumber.role.attribute = attribute role { text }
+
+   db.productnumber.attlist =
+      db.productnumber.role.attribute?
+    & db.common.attributes
+    & db.common.linking.attributes
+
+   db.productnumber =
+      element productnumber {
+         db.productnumber.attlist,
+         db._text
       }
 }
 
@@ -4328,6 +4988,55 @@ div {
 # ======================================================================
 
 [
+   db:refname [ "accel" ]
+   db:refpurpose [ "A graphical user interface (GUI) keyboard shortcut" ]
+]
+div {
+
+   db.accel.role.attribute = attribute role { text }
+
+   db.accel.attlist =
+      db.accel.role.attribute?
+    & db.common.attributes
+    & db.common.linking.attributes
+
+   db.accel  =
+      element accel {
+         db.accel.attlist,
+         db._text
+      }
+}
+
+# ======================================================================
+
+[
+   db:refname [ "application" ]
+   db:refpurpose [ "The name of a software program" ]
+]
+div {
+
+   db.application.class.enumeration = "hardware" | "software"
+   db.application.class.attribute =
+      attribute class { db.application.class.enumeration }
+
+   db.application.role.attribute = attribute role { text }
+
+   db.application.attlist =
+      db.application.role.attribute?
+    & db.common.attributes
+    & db.common.linking.attributes
+    & db.application.class.attribute?
+
+   db.application =
+      element application {
+         db.application.attlist,
+         db._text
+      }
+}
+
+# ======================================================================
+
+[
    db:refname [ "package" ]
    db:refpurpose [ "A software or application package" ]
 ]
@@ -4343,6 +5052,126 @@ div {
    db.package =
       element package {
          db.package.attlist,
+         db._text
+      }
+}
+
+# ======================================================================
+
+[
+   db:refname [ "classname" ]
+   db:refpurpose [ "The name of a class, in the object-oriented programming sense" ]
+]
+div {
+
+   db.classname.role.attribute = attribute role { text }
+
+   db.classname.attlist =
+      db.classname.role.attribute?
+    & db.common.attributes
+    & db.common.linking.attributes
+
+   db.classname =
+      element classname {
+         db.classname.attlist,
+         db._text
+      }
+}
+
+# ======================================================================
+
+[
+   db:refname [ "command" ]
+   db:refpurpose [ "The name of an executable program or other software command" ]
+]
+div {
+
+   db.command.role.attribute = attribute role { text }
+
+   db.command.attlist =
+      db.command.role.attribute?
+    & db.common.attributes
+    & db.common.linking.attributes
+
+   db.command =
+      element command {
+         db.command.attlist,
+         db._text
+      }
+}
+
+# ======================================================================
+
+db.computeroutput.inlines =
+   text
+ | db.ubiq.inlines
+ | db.os.inlines
+ | db.technical.inlines
+ | db.markup.inlines
+
+# ======================================================================
+
+[
+   db:refname [ "computeroutput" ]
+   db:refpurpose [ "Data, generally text, displayed or presented by a computer" ]
+]
+div {
+
+   db.computeroutput.role.attribute = attribute role { text }
+
+   db.computeroutput.attlist =
+      db.computeroutput.role.attribute?
+    & db.common.attributes
+    & db.common.linking.attributes
+
+   db.computeroutput =
+      element computeroutput {
+         db.computeroutput.attlist,
+         db.computeroutput.inlines*
+      }
+}
+
+# ======================================================================
+
+[
+   db:refname [ "database" ]
+   db:refpurpose [ "The name of a database, or part of a database" ]
+]
+div {
+
+   db.database.class.attribute =
+      attribute class {
+         "altkey"
+       | "constraint"
+       | "datatype"
+       | "field"
+       | "foreignkey"
+       | "group"
+       | "index"
+       | "key1"
+       | "key2"
+       | "name"
+       | "primarykey"
+       | "procedure"
+       | "record"
+       | "rule"
+       | "secondarykey"
+       | "table"
+       | "user"
+       | "view"
+      }
+
+   db.database.role.attribute = attribute role { text }
+
+   db.database.attlist =
+      db.database.role.attribute?
+    & db.common.attributes
+    & db.common.linking.attributes
+    & db.database.class.attribute?
+
+   db.database =
+      element database {
+         db.database.attlist,
          db._text
       }
 }
@@ -4372,6 +5201,471 @@ div {
 # ======================================================================
 
 [
+   db:refname [ "envar" ]
+   db:refpurpose [ "A software environment variable" ]
+]
+div {
+
+   db.envar.role.attribute = attribute role { text }
+
+   db.envar.attlist =
+      db.envar.role.attribute?
+    & db.common.attributes
+    & db.common.linking.attributes
+
+   db.envar =
+      element envar {
+         db.envar.attlist,
+         db._text
+      }
+}
+
+# ======================================================================
+
+[
+   db:refname [ "errorcode" ]
+   db:refpurpose [ "An error code" ]
+]
+div {
+
+   db.errorcode.role.attribute = attribute role { text }
+
+   db.errorcode.attlist =
+      db.errorcode.role.attribute?
+    & db.common.attributes
+    & db.common.linking.attributes
+
+   db.errorcode =
+      element errorcode {
+         db.errorcode.attlist,
+         db._text
+      }
+}
+
+# ======================================================================
+
+[
+   db:refname [ "errorname" ]
+   db:refpurpose [ "An error name" ]
+]
+div {
+
+   db.errorname.role.attribute = attribute role { text }
+
+   db.errorname.attlist =
+      db.errorname.role.attribute?
+    & db.common.attributes
+    & db.common.linking.attributes
+
+   db.errorname =
+      element errorname {
+         db.errorname.attlist,
+         db._text
+      }
+}
+
+# ======================================================================
+
+[
+   db:refname [ "errortext" ]
+   db:refpurpose [ "An error message." ]
+]
+div {
+
+   db.errortext.role.attribute = attribute role { text }
+
+   db.errortext.attlist =
+      db.errortext.role.attribute?
+    & db.common.attributes
+    & db.common.linking.attributes
+
+   db.errortext =
+      element errortext {
+         db.errortext.attlist,
+         db._text
+      }
+}
+
+# ======================================================================
+
+[
+   db:refname [ "errortype" ]
+   db:refpurpose [ "The classification of an error message" ]
+]
+div {
+
+   db.errortype.role.attribute = attribute role { text }
+
+   db.errortype.attlist =
+      db.errortype.role.attribute?
+    & db.common.attributes
+    & db.common.linking.attributes
+
+   db.errortype =
+      element errortype {
+         db.errortype.attlist,
+         db._text
+      }
+}
+
+# ======================================================================
+
+[
+   db:refname [ "filename" ]
+   db:refpurpose [ "The name of a file" ]
+]
+div {
+
+   db.filename.path.attribute = attribute path { text }
+   db.filename.class.attribute =
+      attribute class {
+         "devicefile"
+       | "directory"
+       | "extension"
+       | "headerfile"
+       | "libraryfile"
+       | "partition"
+       | "symlink"
+      }
+
+   db.filename.role.attribute = attribute role { text }
+
+   db.filename.attlist =
+      db.filename.role.attribute?
+    & db.common.attributes
+    & db.common.linking.attributes
+    & db.filename.path.attribute?
+    & db.filename.class.attribute?
+
+   db.filename =
+      element filename {
+         db.filename.attlist,
+         db._text
+      }
+}
+
+# ======================================================================
+
+[
+   db:refname [ "function" ]
+   db:refpurpose [ "The name of a function or subroutine, as in a programming language" ]
+]
+div {
+
+   db.function.role.attribute = attribute role { text }
+
+   db.function.attlist =
+      db.function.role.attribute?
+    & db.common.attributes
+    & db.common.linking.attributes
+
+   db.function =
+      element function {
+         db.function.attlist,
+         db._text
+      }
+}
+
+# ======================================================================
+
+[
+   db:refname [ "guibutton" ]
+   db:refpurpose [ "The text on a button in a GUI" ]
+]
+div {
+
+   db.guibutton.role.attribute = attribute role { text }
+
+   db.guibutton.attlist =
+      db.guibutton.role.attribute?
+    & db.common.attributes
+    & db.common.linking.attributes
+
+   db.guibutton =
+      element guibutton {
+         db.guibutton.attlist,
+         (db._text | db.accel | db.superscript | db.subscript)*
+      }
+}
+
+# ======================================================================
+
+[
+   db:refname [ "guiicon" ]
+   db:refpurpose [ "Graphic and/or text appearing as a icon in a GUI" ]
+]
+div {
+
+   db.guiicon.role.attribute = attribute role { text }
+
+   db.guiicon.attlist =
+      db.guiicon.role.attribute?
+    & db.common.attributes
+    & db.common.linking.attributes
+
+   db.guiicon =
+      element guiicon {
+         db.guiicon.attlist,
+         (db._text | db.accel | db.superscript | db.subscript)*
+      }
+}
+
+# ======================================================================
+
+[
+   db:refname [ "guilabel" ]
+   db:refpurpose [ "The text of a label in a GUI" ]
+]
+div {
+
+   db.guilabel.role.attribute = attribute role { text }
+
+   db.guilabel.attlist =
+      db.guilabel.role.attribute?
+    & db.common.attributes
+    & db.common.linking.attributes
+
+   db.guilabel =
+      element guilabel {
+         db.guilabel.attlist,
+         (db._text | db.accel | db.superscript | db.subscript)*
+      }
+}
+
+# ======================================================================
+
+[
+   db:refname [ "guimenu" ]
+   db:refpurpose [ "The name of a menu in a GUI" ]
+]
+div {
+
+   db.guimenu.role.attribute = attribute role { text }
+
+   db.guimenu.attlist =
+      db.guimenu.role.attribute?
+    & db.common.attributes
+    & db.common.linking.attributes
+
+   db.guimenu =
+      element guimenu {
+         db.guimenu.attlist,
+         (db._text | db.accel | db.superscript | db.subscript)*
+      }
+}
+
+# ======================================================================
+
+[
+   db:refname [ "guimenuitem" ]
+   db:refpurpose [ "The name of a terminal menu item in a GUI" ]
+]
+div {
+
+   db.guimenuitem.role.attribute = attribute role { text }
+
+   db.guimenuitem.attlist =
+      db.guimenuitem.role.attribute?
+    & db.common.attributes
+    & db.common.linking.attributes
+
+   db.guimenuitem =
+      element guimenuitem {
+         db.guimenuitem.attlist,
+         (db._text | db.accel | db.superscript | db.subscript)*
+      }
+}
+
+# ======================================================================
+
+[
+   db:refname [ "guisubmenu" ]
+   db:refpurpose [ "The name of a submenu in a GUI" ]
+]
+div {
+
+   db.guisubmenu.role.attribute = attribute role { text }
+
+   db.guisubmenu.attlist =
+      db.guisubmenu.role.attribute?
+    & db.common.attributes
+    & db.common.linking.attributes
+
+   db.guisubmenu =
+      element guisubmenu {
+         db.guisubmenu.attlist,
+         (db._text | db.accel | db.superscript | db.subscript)*
+      }
+}
+
+# ======================================================================
+
+[
+   db:refname [ "hardware" ]
+   db:refpurpose [ "A physical part of a computer system" ]
+]
+div {
+
+   db.hardware.role.attribute = attribute role { text }
+
+   db.hardware.attlist =
+      db.hardware.role.attribute?
+    & db.common.attributes
+    & db.common.linking.attributes
+
+   db.hardware =
+      element hardware {
+         db.hardware.attlist,
+         db._text
+      }
+}
+
+# ======================================================================
+
+[
+   db:refname [ "keycap" ]
+   db:refpurpose [ "The text printed on a key on a keyboard" ]
+]
+div {
+
+   ctrl:other-attribute [ name="db.keycap.function.attrib"
+                          enum-name="db.keycap.function-enum.attribute"
+                          other-name="db.keycap.function-other.attributes" ]
+
+   db.keycap.function-enum.attribute =
+      attribute function {
+         "alt"
+       | "backspace"
+       | "command"
+       | "control"
+       | "delete"
+       | "down"
+       | "end"
+       | "enter"
+       | "escape"
+       | "home"
+       | "insert"
+       | "left"
+       | "meta"
+       | "option"
+       | "pagedown"
+       | "pageup"
+       | "right"
+       | "shift"
+       | "space"
+       | "tab"
+       | "up"
+      }?
+
+   db.keycap.function-other.attributes =
+      attribute function { "other" }?,
+      attribute otherfunction { text }
+
+   db.keycap.function.attrib =
+      (db.keycap.function-enum.attribute | db.keycap.function-other.attributes)
+
+   db.keycap.role.attribute = attribute role { text }
+
+   db.keycap.attlist =
+      db.keycap.role.attribute?
+    & db.common.attributes
+    & db.common.linking.attributes
+    & db.keycap.function.attrib
+
+   db.keycap =
+      element keycap {
+         db.keycap.attlist,
+         db._text
+      }
+}
+
+# ======================================================================
+
+[
+   db:refname [ "keycode" ]
+   db:refpurpose [ "The internal, frequently numeric, identifier for a key on a keyboard" ]
+]
+div {
+
+   db.keycode.role.attribute = attribute role { text }
+
+   db.keycode.attlist =
+      db.keycode.role.attribute?
+    & db.common.attributes
+    & db.common.linking.attributes
+
+   db.keycode =
+      element keycode {
+         db.keycode.attlist,
+         db._text
+      }
+}
+
+# ======================================================================
+
+[
+   db:refname [ "keycombo" ]
+   db:refpurpose [ "A combination of input actions" ]
+]
+div {
+
+   ctrl:other-attribute [ name="db.keycombo.action.attrib"
+                          enum-name="db.keycombo.action-enum.attribute"
+                          other-name="db.keycombo.action-other.attributes" ]
+
+   db.keycombo.action.enumeration =
+      "click" | "double-click" | "press" | "seq" | "simul"
+
+   db.keycombo.action-enum.attribute =
+      attribute action { db.keycombo.action.enumeration }?
+
+   db.keycombo.action-other.attributes =
+      attribute action { "other" }?,
+      attribute otheraction { text }
+
+   db.keycombo.action.attrib =
+      (db.keycombo.action-enum.attribute | db.keycombo.action-other.attributes)
+
+   db.keycombo.role.attribute = attribute role { text }
+
+   db.keycombo.attlist =
+      db.keycombo.role.attribute?
+    & db.common.attributes
+    & db.common.linking.attributes
+    & db.keycombo.action.attrib
+
+   db.keycombo =
+      element keycombo {
+         db.keycombo.attlist,
+         (db.keycap|db.keycombo|db.keysym|db.mousebutton)+
+      }
+}
+
+# ======================================================================
+
+[
+   db:refname [ "keysym" ]
+   db:refpurpose [ "The symbolic name of a key on a keyboard" ]
+]
+div {
+
+   db.keysym.role.attribute = attribute role { text }
+
+   db.keysym.attlist =
+      db.keysym.role.attribute?
+    & db.common.attributes
+    & db.common.linking.attributes
+
+   db.keysym =
+      element keysym {
+         db.keysym.attlist,
+         db._text
+      }
+}
+
+# ======================================================================
+
+[
    db:refname [ "lineannotation" ]
    db:refpurpose [ "A comment on a line in a verbatim listing" ]
 ]
@@ -4394,23 +5688,265 @@ div {
 # ======================================================================
 
 [
+   db:refname [ "literal" ]
+   db:refpurpose [ "Inline text that is some literal value" ]
+]
+div {
+
+   db.literal.role.attribute = attribute role { text }
+
+   db.literal.attlist =
+      db.literal.role.attribute?
+    & db.common.attributes
+    & db.common.linking.attributes
+
+   db.literal =
+      element literal {
+         db.literal.attlist,
+         db._text
+      }
+}
+
+# ======================================================================
+
+[
+   db:refname [ "code" ]
+   db:refpurpose [ "An inline code fragment" ]
+]
+div {
+
+   code.language.attribute = attribute language { text }
+
+   db.code.role.attribute = attribute role { text }
+
+   db.code.attlist =
+      db.code.role.attribute?
+    & db.common.attributes
+    & db.common.linking.attributes
+    & code.language.attribute?
+
+   db.code =
+      element code {
+         db.code.attlist,
+         db._text
+      }
+}
+
+# ======================================================================
+
+[
+   db:refname [ "constant" ]
+   db:refpurpose [ "A programming or system constant" ]
+]
+div {
+
+   constant.class.attribute = attribute class { "limit" }
+
+   db.constant.role.attribute = attribute role { text }
+
+   db.constant.attlist =
+      db.constant.role.attribute?
+    & db.common.attributes
+    & db.common.linking.attributes
+    & constant.class.attribute?
+
+   db.constant =
+      element constant {
+         db.constant.attlist,
+         db._text
+      }
+}
+
+# ======================================================================
+
+[
+   db:refname [ "varname" ]
+   db:refpurpose [ "The name of a variable" ]
+]
+div {
+
+   db.varname.role.attribute = attribute role { text }
+
+   db.varname.attlist =
+      db.varname.role.attribute?
+    & db.common.attributes
+    & db.common.linking.attributes
+
+   db.varname =
+      element varname {
+         db.varname.attlist,
+         db._text
+      }
+}
+
+# ======================================================================
+
+[
+   db:refname [ "markup" ]
+   db:refpurpose [ "A string of formatting markup in text that is to be represented literally" ]
+]
+div {
+
+   db.markup.role.attribute = attribute role { text }
+
+   db.markup.attlist =
+      db.markup.role.attribute?
+    & db.common.attributes
+    & db.common.linking.attributes
+
+   db.markup =
+      element markup {
+         db.markup.attlist,
+         db._text
+      }
+}
+
+# ======================================================================
+
+[
+   db:refname [ "menuchoice" ]
+   db:refpurpose [ "A selection or series of selections from a menu" ]
+]
+div {
+
+   db.menuchoice.role.attribute = attribute role { text }
+
+   db.menuchoice.attlist =
+      db.menuchoice.role.attribute?
+    & db.common.attributes
+    & db.common.linking.attributes
+
+   db.menuchoice =
+      element menuchoice {
+         db.menuchoice.attlist,
+         db.shortcut?,
+         (db.guibutton|db.guiicon|db.guilabel|db.guimenu|db.guimenuitem|db.guisubmenu)+
+      }
+}
+
+# ======================================================================
+
+[
+   db:refname [ "shortcut" ]
+   db:refpurpose [ "A key combination for an action that is also accessible through a menu" ]
+]
+div {
+
+   db.shortcut.action.attrib = db.keycombo.action.attrib
+
+   db.shortcut.role.attribute = attribute role { text }
+
+   db.shortcut.attlist =
+      db.shortcut.role.attribute?
+    & db.common.attributes
+    & db.common.linking.attributes
+    & db.shortcut.action.attrib
+
+   db.shortcut =
+      element shortcut {
+         db.shortcut.attlist,
+         (db.keycap|db.keycombo|db.keysym|db.mousebutton)+
+      }
+}
+
+# ======================================================================
+
+[
+   db:refname [ "mousebutton" ]
+   db:refpurpose [ "The conventional name of a mouse button" ]
+]
+div {
+
+   db.mousebutton.role.attribute = attribute role { text }
+
+   db.mousebutton.attlist =
+      db.mousebutton.role.attribute?
+    & db.common.attributes
+    & db.common.linking.attributes
+
+   db.mousebutton =
+      element mousebutton {
+         db.mousebutton.attlist,
+         db._text
+      }
+}
+
+# ======================================================================
+
+[
+   db:refname [ "option" ]
+   db:refpurpose [ "An option for a software command" ]
+]
+div {
+
+   db.option.role.attribute = attribute role { text }
+
+   db.option.attlist =
+      db.option.role.attribute?
+    & db.common.attributes
+    & db.common.linking.attributes
+
+   db.option =
+      element option {
+         db.option.attlist,
+         db._text
+      }
+}
+
+# ======================================================================
+
+[
+   db:refname [ "optional" ]
+   db:refpurpose [ "Optional information" ]
+]
+div {
+
+   db.optional.role.attribute = attribute role { text }
+
+   db.optional.attlist =
+      db.optional.role.attribute?
+    & db.common.attributes
+    & db.common.linking.attributes
+
+   db.optional =
+      element optional {
+         db.optional.attlist,
+         db._text
+      }
+}
+
+# ======================================================================
+
+[
+   db:refname [ "property" ]
+   db:refpurpose [ "A unit of data associated with some part of a computer system" ]
+]
+div {
+
+   db.property.role.attribute = attribute role { text }
+
+   db.property.attlist =
+      db.property.role.attribute?
+    & db.common.attributes
+    & db.common.linking.attributes
+
+   db.property =
+      element property {
+         db.property.attlist,
+         db._text
+      }
+}
+
+# ======================================================================
+
+[
    db:refname [ "parameter" ]
    db:refpurpose [ "A value or a symbolic reference to a value" ]
 ]
 div {
 
-   db.parameter.class.enumeration =
-      ## A command
-      "command"
-    | ## A function
-      "function"
-    | ## An option
-      "option"
-
+   db.parameter.class.enumeration = "command" | "function" | "option"
    db.parameter.class.attribute =
-      [
-         db:refpurpose [ "Identifies the class of parameter" ]
-      ]
       attribute class { db.parameter.class.enumeration }
 
    db.parameter.role.attribute = attribute role { text }
@@ -4430,6 +5966,33 @@ div {
 
 # ======================================================================
 
+db.prompt.inlines = db._text
+
+# ======================================================================
+
+[
+   db:refname [ "prompt" ]
+   db:refpurpose [ "A character or string indicating the start of an input field in a  computer display" ]
+]
+div {
+
+
+   db.prompt.role.attribute = attribute role { text }
+
+   db.prompt.attlist =
+      db.prompt.role.attribute?
+    & db.common.attributes
+    & db.common.linking.attributes
+
+   db.prompt =
+      element prompt {
+         db.prompt.attlist,
+         db.prompt.inlines*
+      }
+}
+
+# ======================================================================
+
 db.replaceable.inlines = db._text
 
 # ======================================================================
@@ -4441,19 +6004,9 @@ db.replaceable.inlines = db._text
 div {
 
    db.replaceable.class.enumeration =
-      ## A command
-      "command"
-    | ## A function
-      "function"
-    | ## An option
-      "option"
-    | ## A parameter
-      "parameter"
+      "command" | "function" | "option" | "parameter"
 
    db.replaceable.class.attribute =
-      [
-         db:refpurpose [ "Identifies the nature of the replaceable text" ]
-      ]
       attribute class { db.replaceable.class.enumeration }
 
    db.replaceable.role.attribute = attribute role { text }
@@ -4474,16 +6027,153 @@ div {
 # ======================================================================
 
 [
+   db:refname [ "returnvalue" ]
+   db:refpurpose [ "The value returned by a function" ]
+]
+div {
+
+   db.returnvalue.role.attribute = attribute role { text }
+
+   db.returnvalue.attlist =
+      db.returnvalue.role.attribute?
+    & db.common.attributes
+    & db.common.linking.attributes
+
+   db.returnvalue =
+      element returnvalue {
+         db.returnvalue.attlist,
+         db._text
+      }
+}
+
+# ======================================================================
+
+[
+   db:refname [ "tag" ]
+   db:refpurpose [ "A component of XML (or SGML) markup" ]
+]
+div {
+
+   db.tag.role.attribute = attribute role { text }
+
+   db.tag.class.enumeration =
+      "attribute"
+    | "attvalue"
+    | "element"
+    | "emptytag"
+    | "endtag"
+    | "genentity"
+    | "numcharref"
+    | "paramentity"
+    | "pi"
+    | "sgmlcomment"
+    | "starttag"
+    | "xmlpi"
+
+   db.tag.class.attribute = attribute class { db.tag.class.enumeration }
+
+   db.tag.namespace.attribute = attribute namespace { xsd:anyURI }
+
+   db.tag.attlist =
+      db.tag.role.attribute?
+    & db.common.attributes
+    & db.common.linking.attributes
+    & db.tag.class.attribute?
+    & db.tag.namespace.attribute?
+
+   db.tag =
+      element tag {
+         db.tag.attlist,
+         db._text
+      }
+}
+
+# ======================================================================
+
+[
+   db:refname [ "symbol" ]
+   db:refpurpose [ "A name that is replaced by a value before processing" ]
+]
+div {
+
+   db.symbol.class.attribute = attribute class { "limit" }?
+
+   db.symbol.role.attribute = attribute role { text }
+
+   db.symbol.attlist =
+      db.symbol.role.attribute?
+    & db.common.attributes
+    & db.common.linking.attributes
+    & db.symbol.class.attribute
+
+   db.symbol =
+      element symbol {
+         db.symbol.attlist,
+         db._text
+      }
+}
+
+# ======================================================================
+
+db.systemitem.inlines = db._text
+
+# ======================================================================
+
+[
+   db:refname [ "systemitem" ]
+   db:refpurpose [ "A system-related item or term" ]
+]
+div {
+
+   db.systemitem.class.attribute =
+      attribute class {
+         "daemon"
+       | "domainname"
+       | "etheraddress"
+       | "event"
+       | "eventhandler"
+       | "filesystem"
+       | "fqdomainname"
+       | "groupname"
+       | "ipaddress"
+       | "library"
+       | "macro"
+       | "netmask"
+       | "newsgroup"
+       | "osname"
+       | "process"
+       | "protocol"
+       | "resource"
+       | "server"
+       | "service"
+       | "systemname"
+       | "username"
+      }
+
+   db.systemitem.role.attribute = attribute role { text }
+
+   db.systemitem.attlist =
+      db.systemitem.role.attribute?
+    & db.common.attributes
+    & db.common.linking.attributes
+    & db.systemitem.class.attribute?
+
+   db.systemitem =
+      element systemitem {
+         db.systemitem.attlist,
+         db.systemitem.inlines*
+      }
+}
+
+# ======================================================================
+
+[
    db:refname [ "uri" ]
    db:refpurpose [ "A Uniform Resource Identifier" ]
 ]
 div {
 
-   db.uri.type.attribute =
-      [
-         db:refpurpose [ "Identifies the type of URI specified" ]
-      ]
-      attribute type { text }?
+   db.uri.type.attribute = attribute type { text }?
 
    db.uri.role.attribute = attribute role { text }
 
@@ -4497,6 +6187,81 @@ div {
       element uri {
          db.uri.attlist,
          db._text
+      }
+}
+
+# ======================================================================
+
+[
+   db:refname [ "token" ]
+   db:refpurpose [ "A unit of information" ]
+]
+div {
+
+   db.token.role.attribute = attribute role { text }
+
+   db.token.attlist =
+      db.token.role.attribute?
+    & db.common.attributes
+    & db.common.linking.attributes
+
+   db.token =
+      element token {
+         db.token.attlist,
+         db._text
+      }
+}
+
+# ======================================================================
+
+[
+   db:refname [ "type" ]
+   db:refpurpose [ "The classification of a value" ]
+]
+div {
+
+   db.type.role.attribute = attribute role { text }
+
+   db.type.attlist =
+      db.type.role.attribute?
+    & db.common.attributes
+    & db.common.linking.attributes
+
+   db.type =
+      element type {
+         db.type.attlist,
+         db._text
+      }
+}
+
+# ======================================================================
+
+db.userinput.inlines =
+   text
+ | db.ubiq.inlines
+ | db.os.inlines
+ | db.technical.inlines
+ | db.markup.inlines
+
+# ======================================================================
+
+[
+   db:refname [ "userinput" ]
+   db:refpurpose [ "Data entered by the user" ]
+]
+div {
+
+   db.userinput.role.attribute = attribute role { text }
+
+   db.userinput.attlist =
+      db.userinput.role.attribute?
+    & db.common.attributes
+    & db.common.linking.attributes
+
+   db.userinput =
+      element userinput {
+         db.userinput.attlist,
+         db.userinput.inlines*
       }
 }
 
@@ -4647,49 +6412,27 @@ div {
 ]
 div {
 
-   db.citetitle.pubwork.enumeration =
-      ## An article
-      "article"
-    | ## A bulletin board system
-      "bbs"
-    | ## A book
-      "book"
-    | ## A CD-ROM
-      "cdrom"
-    | ## A chapter (as of a book)
-      "chapter"
-    | ## A DVD
-      "dvd"
-    | ## An email message
-      "emailmessage"
-    | ## A gopher page
-      "gopher"
-    | ## A journal
-      "journal"
-    | ## A manuscript
-      "manuscript"
-    | ## A posting to a newsgroup
-      "newsposting"
-    | ## A part (as of a book)
-      "part"
-    | ## A reference entry
-      "refentry"
-    | ## A section (as of a book or article)
-      "section"
-    | ## A series
-      "series"
-    | ## A set (as of books)
-      "set"
-    | ## A web page
-      "webpage"
-    | ## A wiki page
-      "wiki"
-
    db.citetitle.pubwork.attribute =
-      [
-         db:refpurpose [ "Identifies the nature of the publication being cited" ]
-      ]
-      attribute pubwork { db.citetitle.pubwork.enumeration }
+      attribute pubwork {
+         "article"
+       | "bbs"
+       | "book"
+       | "cdrom"
+       | "chapter"
+       | "dvd"
+       | "emailmessage"
+       | "gopher"
+       | "journal"
+       | "manuscript"
+       | "newsposting"
+       | "part"
+       | "refentry"
+       | "section"
+       | "series"
+       | "set"
+       | "webpage"
+       | "wiki"
+      }
 
    db.citetitle.role.attribute = attribute role { text }
 
@@ -4739,7 +6482,7 @@ div {
    db._emphasis =
       element emphasis {
          db.emphasis.attlist,
-         db._text
+         (db._text | db._emphasis)*
       }
 }
 
@@ -4762,28 +6505,6 @@ div {
       element foreignphrase {
          db.foreignphrase.attlist,
          (text | db.general.inlines)*
-      }
-}
-
-# ======================================================================
-
-[
-   db:refname [ "foreignphrase" ]
-   db:refpurpose [ "A limited word or phrase in a language other than the primary language of the document" ]
-]
-div {
-
-   db._foreignphrase.role.attribute = attribute role { text }
-
-   db._foreignphrase.attlist =
-      db._foreignphrase.role.attribute?
-    & db.common.attributes
-    & db.common.linking.attributes
-
-   db._foreignphrase =
-      element foreignphrase {
-         db._foreignphrase.attlist,
-         db._text
       }
 }
 
@@ -4849,30 +6570,8 @@ div {
 # ======================================================================
 
 [
-   db:refname [ "quote" ]
-   db:refpurpose [ "A limited inline quotation" ]
-]
-div {
-
-   db._quote.role.attribute = attribute role { text }
-
-   db._quote.attlist =
-      db._quote.role.attribute?
-    & db.common.attributes
-    & db.common.linking.attributes
-
-   db._quote =
-      element quote {
-         db._quote.attlist,
-         db._text
-      }
-}
-
-# ======================================================================
-
-[
    db:refname [ "subscript" ]
-   db:refpurpose [ "A subscript (as in H" db:subscript [ "2" ] "O, the molecular formula for water)" ]
+   db:refpurpose [ "A subscript (as in H2O, the molecular formula for water)" ]
 ]
 div {
 
@@ -4894,7 +6593,7 @@ div {
 
 [
    db:refname [ "superscript" ]
-   db:refpurpose [ "A superscript (as in x" db:superscript [ "2" ] ", the mathematical notation for x multiplied by itself)" ]
+   db:refpurpose [ "A superscript (as in x^2, the mathematical notation for x multiplied by itself)" ]
 ]
 div {
 
@@ -4921,19 +6620,9 @@ div {
 div {
 
    db.trademark.class.enumeration =
-      ## A copyright
-      "copyright"
-    | ## A registered copyright
-      "registered"
-    | ## A service
-      "service"
-    | ## A trademark
-      "trade"
+      "copyright" | "registered" | "service" | "trade"
 
    db.trademark.class.attribute =
-      [
-         db:refpurpose [ "Identifies the class of trade mark" ]
-      ]
       attribute class { db.trademark.class.enumeration }
 
    db.trademark.role.attribute = attribute role { text }
@@ -4982,7 +6671,7 @@ div {
 div {
 
    db.footnoteref.role.attribute = attribute role { text }
-   db.footnoteref.label.attribute = db.label.attribute
+   db.footnoteref.label.attribute = attribute label { text }
 
    db.footnoteref.attlist =
       db.footnoteref.role.attribute?
@@ -4997,7 +6686,7 @@ div {
             s:rule [
                context = "db:footnoteref"
                s:assert [
-                  test = "local-name(//*[@xml:id=current()/@linkend]) = 'footnote' and namespace-uri(//*[@xml:id=current()/@linkend]) = 'http://docbook.org/ns/docbook'"
+                  test = "local-name(//*[@id=current()/@linkend]) = 'footnote' and namespace-uri(//*[@id=current()/@linkend]) = 'http://docbook.org/ns/docbook'"
                   "@linkend on footnoteref must point to a footnote."
                ]
             ]
@@ -5018,8 +6707,8 @@ div {
 div {
 
    db.xref.role.attribute = attribute role { text }
-   db.xref.xrefstyle.attribute = db.xrefstyle.attribute
-   db.xref.endterm.attribute = db.endterm.attribute
+   db.xref.xrefstyle.attribute = attribute xrefstyle { text }
+   db.xref.endterm.attribute = attribute endterm { xsd:IDREF }
 
    db.xref.attlist =
       db.xref.role.attribute?
@@ -5040,12 +6729,50 @@ div {
 [
    db:refname [ "link" ]
    db:refpurpose [ "A hypertext link" ]
+   dbx:description [
+      db:para [
+      "The "
+      db:tag [ "link" ]
+      " element is a general purpose hypertext element. Usually, "
+      db:tag [ "link" ]
+      " surrounds the text that should be made “hot” (unlike "
+      db:tag [ "xref" ]
+      " which must generate the text) but the "
+      db:tag [ class = "attribute" "endterm" ]
+      " attribute can be used to copy text from another element."
+    ]
+  ]
+  dbx:expectations [
+    db:para [
+      dbx:format [ class = "inline" ]
+    ]
+    db:para [
+      "If the "
+      db:tag [ "link" ]
+      " element has content, then that content is processed for output " ~
+      "as the “hot” text. If the "
+      db:tag [ "link" ]
+      " element has content and an "
+      db:tag [ class = "attribute" "endterm" ]
+      " attribute, then the content is used and the "
+      db:tag [ class = "attribute" "endterm" ]
+      " is ignored. If the "
+      db:tag [ "link" ]
+      " element has an "
+      db:tag [ class = "attribute" "endterm" ]
+      " attribute and no content, then the content of the element pointed to by "
+      db:tag [ class = "attribute" "endterm" ]
+      "should be repeated at the location of the "
+      db:tag [ "link" ]
+      " and used as the “hot” text."
+    ]
+  ]
 ]
 div {
 
    db.link.role.attribute = attribute role { text }
-   db.link.xrefstyle.attribute = db.xrefstyle.attribute
-   db.link.endterm.attribute = db.endterm.attribute
+   db.link.xrefstyle.attribute = attribute xrefstyle { text }
+   db.link.endterm.attribute = attribute endterm { xsd:IDREF }
 
    db.link.attlist =
       db.link.role.attribute?
@@ -5066,39 +6793,33 @@ div {
 [
    db:refname [ "olink" ]
    db:refpurpose [ "A link that addresses its target indirectly" ]
+   dbx:description [
+      db:para [
+         "The "
+         db:tag [ "olink" ]
+         " element provides a mechanism for establishing links across "
+         ~ "documents where ID/IDREF linking is not possible and "
+         db:tag [ "link" ]
+         " is inadequate."
+      ]
+   ]
+  dbx:expectations [
+    db:para [
+      dbx:format [ class = "inline" ]
+    ]
+  ]
 ]
 div {
    db.olink.role.attribute = attribute role { text }
-
-   db.olink.xrefstyle.attribute = db.xrefstyle.attribute
-
-   db.olink.localinfo.attribute =
-      [
-         db:refpurpose [ "Holds additional information that may be used by the application when resolving the link" ]
-      ]
-      attribute localinfo { text }
-
-   db.olink.targetdoc.attribute =
-      [
-         db:refpurpose [ "Specifies the URI of the document in which the link target appears" ]
-      ]
-      attribute targetdoc { xsd:anyURI }
-
-   db.olink.targetptr.attribute =
-      [
-         db:refpurpose [ "Specifies the location of the link target in the document" ]
-      ]
-      attribute targetptr { text }
-
-   db.olink.type.attribute =
-      [
-         db:refpurpose [ "Identifies application-specific customization of the link behavior" ]
-      ]
-      attribute type { text }
+   db.olink.xrefstyle.attribute = attribute xrefstyle { text }
+   db.olink.localinfo.attribute = attribute localinfo { text }
+   db.olink.targetdoc.attribute = attribute targetdoc { xsd:anyURI }
+   db.olink.targetptr.attribute = attribute targetptr { text }
+   db.olink.type.attribute = attribute type { text }
 
    db.olink.attlist =
       db.common.attributes
-    & db.olink.targetdoc.attribute?
+    & db.olink.targetdoc.attribute
     & db.olink.role.attribute?
     & db.olink.xrefstyle.attribute?
     & db.olink.localinfo.attribute?

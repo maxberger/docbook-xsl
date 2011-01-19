@@ -5,7 +5,6 @@
 		xmlns:doc="http://nwalsh.com/xmlns/schema-doc/"
 		xmlns:ctrl="http://nwalsh.com/xmlns/schema-control/"
 		xmlns:dtd="http://nwalsh.com/xmlns/dtd/"
-		xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
 		exclude-result-prefixes="exsl rng doc ctrl"
 		version="1.0">
 
@@ -75,42 +74,6 @@
     <xsl:when test="@name = 'db.indexterm.startofrange'
 	            or @name = 'db.indexterm.endofrange'">
       <!-- db.indexterm.singular handles all three cases -->
-    </xsl:when>
-
-    <!-- Handle the duplicate area patterns -->
-    <xsl:when test="@name = 'db.area'">
-      <!-- db.area.inareaset is the "right" one; it has an optional id -->
-    </xsl:when>
-
-    <!-- handle the group patterns -->
-    <xsl:when test="@name = 'db.group'">
-      <dtd:element name="group">
-	<dtd:group>
-	  <dtd:choice repeat="+">
-	    <dtd:ref name="arg"/>
-	    <dtd:ref name="group"/>
-	    <dtd:ref name="option"/>
-	    <dtd:ref name="synopfragmentref"/>
-	    <dtd:ref name="replaceable"/>
-	    <dtd:ref name="sbr"/>
-	    <dtd:ref name="paramdef"/>
-	    <dtd:ref name="methodparam"/>
-	  </dtd:choice>
-	</dtd:group>
-      </dtd:element>
-
-      <dtd:attlist name="group">
-	<dtd:attribute name="role" occurs="optional"/>
-	<dtd:peref name="db.common.attributes"/>
-	<dtd:peref name="db.common.linking.attributes"/>
-	<dtd:attribute name="rep" default="norepeat" occurs="optional">(norepeat|repeat)</dtd:attribute>
-	<dtd:attribute name="choice" default="opt" occurs="optional">(opt|plain|req)</dtd:attribute>
-      </dtd:attlist>
-    </xsl:when>
-
-    <xsl:when test="@name = 'db.group.paramdef'
-	            or @name = 'db.group.methodparam'">
-      <!-- nop; handled by group above -->
     </xsl:when>
 
     <!-- Handle the row patterns -->
@@ -255,38 +218,6 @@
       <!-- nop; handled by the db.caption branch -->
     </xsl:when>
 
-    <!-- Handle the UPA problem in modifier... -->
-    <xsl:when test="@name = 'db.methodparam'">
-      <dtd:element name="methodparam">
-	<dtd:group>
-	  <dtd:choice repeat="*">
-	    <dtd:ref name="modifier"/>
-	    <dtd:ref name="type"/>
-	  </dtd:choice>
-	  <dtd:choice>
-	    <dtd:group>
-	      <dtd:ref name="parameter"/>
-	      <dtd:ref name="initializer" repeat="?"/>
-	    </dtd:group>
-	    <dtd:ref name="funcparams"/>
-	  </dtd:choice>
-	  <dtd:choice repeat="*">
-	    <dtd:ref name="modifier"/>
-	  </dtd:choice>
-	</dtd:group>
-      </dtd:element>
-      <dtd:attlist name="methodparam">
-	<xsl:apply-templates select="rng:element/doc:attributes"
-			     mode="attributes"/>
-      </dtd:attlist>
-    </xsl:when>
-
-    <!-- suppress the SVG/MathML imagedata alternatives -->
-    <xsl:when test="@name = 'db.imagedata.mathml'
-		    or @name = 'db.imagedata.svg'">
-      <!-- nop -->
-    </xsl:when>
-
     <xsl:otherwise>
       <xsl:apply-templates/>
     </xsl:otherwise>
@@ -306,9 +237,6 @@
 <xsl:template match="doc:content-model" mode="content-model">
   <xsl:choose>
     <xsl:when test=".//rng:group|.//rng:choice|.//rng:interleave">
-      <xsl:apply-templates mode="content-model"/>
-    </xsl:when>
-    <xsl:when test=".//rng:empty">
       <xsl:apply-templates mode="content-model"/>
     </xsl:when>
     <xsl:otherwise>
@@ -366,18 +294,9 @@
 
 <xsl:template match="rng:oneOrMore" mode="content-model">
   <xsl:param name="repeat" select="''"/>
-
-  <!-- make sure there's something in there... -->
-  <xsl:variable name="content">
+  <dtd:choice repeat="+">
     <xsl:apply-templates select="*" mode="content-model"/>
-  </xsl:variable>
-  <xsl:variable name="contentNS" select="exsl:node-set($content)/*"/>
-
-  <xsl:if test="count($contentNS) &gt; 0">
-    <dtd:choice repeat="+">
-      <xsl:copy-of select="$content"/>
-    </dtd:choice>
-  </xsl:if>
+  </dtd:choice>
 </xsl:template>
 
 <xsl:template match="rng:text" mode="content-model">
@@ -411,12 +330,6 @@
 		    and ../rng:ref[@name='db.cals.informaltable']">
       <!-- suppress -->
     </xsl:when>
-    <xsl:when test="@name = 'db._any.svg'
-		    or @name = 'db._any.mathml'
-		    or @name = 'db.imagedata.svg'
-		    or @name = 'db.imagedata.mathml'">
-      <!-- suppress -->
-    </xsl:when>
     <xsl:when test="$def/rng:element">
       <xsl:if test="$def/rng:element/@name != ''">
 	<dtd:ref name="{$def/rng:element/@name}">
@@ -443,12 +356,6 @@
 <xsl:template match="rng:attribute" mode="attributes">
   <xsl:param name="override" select="0"/>
 
-  <xsl:if test="ancestor::rng:define[1]/@name = 'db.indexterm.singular'
-		and @name = 'zone'">
-    <!-- hack; force the startref attribute to be there... -->
-    <dtd:attribute name="startref" occurs="optional" type="IDREF"/>
-  </xsl:if>
-
   <xsl:choose>
     <xsl:when test="$override = 0">
       <xsl:choose>
@@ -462,7 +369,6 @@
 	<xsl:when test="@name = 'xreflabel'"/>
 	<xsl:when test="@name = 'revisionflag'"/>
 	<xsl:when test="@name = 'arch'"/>
-	<xsl:when test="@name = 'audience'"/>
 	<xsl:when test="@name = 'condition'"/>
 	<xsl:when test="@name = 'conformance'"/>
 	<xsl:when test="@name = 'os'"/>
@@ -487,11 +393,6 @@
 
 	<xsl:otherwise>
 	  <dtd:attribute name="{@name}">
-	    <xsl:if test="@a:defaultValue">
-	      <xsl:attribute name="default">
-		<xsl:value-of select="@a:defaultValue"/>
-	      </xsl:attribute>
-	    </xsl:if>
 	    <xsl:attribute name="occurs">
 	      <xsl:choose>
 		<xsl:when test="ancestor::rng:optional">optional</xsl:when>
@@ -574,14 +475,11 @@
 
 <xsl:template match="rng:optional" mode="trim">
   <!-- optional with multiple children needs a group? -->
-  <!-- ndw: 27 Sep 2007; even if optional has only a single child, it -->
-  <!--      needs a group because if you strip off the group, the optional -->
-  <!--      part sometimes gets lost (refsect2 inside refsect1, for example) -->
   <xsl:copy>
     <xsl:copy-of select="@*"/>
 
     <xsl:choose>
-      <xsl:when test="count(*) &gt;= 1">
+      <xsl:when test="count(*) &gt; 1">
 	<rng:group>
 	  <xsl:apply-templates mode="trim"/>
 	</rng:group>
@@ -599,10 +497,6 @@
 <!--
   Turn this: (((title|titleabbrev|subtitle)*,info?)|info)
   into this:   (title|titleabbrev|subtitle)*,info?)
-  <xsl:message>
-    <xsl:text>0001 for </xsl:text>
-    <xsl:value-of select="ancestor::rng:define[1]/@name"/>
-  </xsl:message>
 -->
   <xsl:apply-templates select="rng:group" mode="trim"/>
 </xsl:template>
@@ -613,10 +507,6 @@
 <!--
   Turn this: (((title|titleabbrev|subtitle)*,info?)|info?)
   into this:   (title|titleabbrev|subtitle)*,info?)
-  <xsl:message>
-    <xsl:text>0002 for </xsl:text>
-    <xsl:value-of select="ancestor::rng:define[1]/@name"/>
-  </xsl:message>
 -->
   <xsl:apply-templates select="rng:group" mode="trim"/>
 </xsl:template>
@@ -656,10 +546,6 @@
 <!--
   Turn this: (((title|titleabbrev)*,info?)|info?)
   into this:   (title|titleabbrev)*,info?)
-  <xsl:message>
-    <xsl:text>0003 for </xsl:text>
-    <xsl:value-of select="ancestor::rng:define[1]/@name"/>
-  </xsl:message>
 -->
   <xsl:apply-templates select="rng:group" mode="trim"/>
 </xsl:template>
@@ -673,10 +559,6 @@
 <!--
   Turn this: (((title|titleabbrev)*,info?)|info?)
   into this:   (title|titleabbrev)*,info?)
-  <xsl:message>
-    <xsl:text>0004 for </xsl:text>
-    <xsl:value-of select="ancestor::rng:define[1]/@name"/>
-  </xsl:message>
 -->
   <xsl:apply-templates select="rng:group" mode="trim"/>
 </xsl:template>
@@ -689,10 +571,6 @@
 <!--
   Turn this: (((title|titleabbrev)*,info?)|info?)
   into this:   (title|titleabbrev)*,info?)
-  <xsl:message>
-    <xsl:text>0005 for </xsl:text>
-    <xsl:value-of select="ancestor::rng:define[1]/@name"/>
-  </xsl:message>
 -->
   <xsl:apply-templates select="rng:group" mode="trim"/>
 </xsl:template>

@@ -3,7 +3,7 @@
                 xmlns:exsl="http://exslt.org/common"
                 xmlns:rng="http://relaxng.org/ns/structure/1.0"
                 xmlns:ctrl="http://nwalsh.com/xmlns/schema-control/"
-		xmlns:s="http://purl.oclc.org/dsdl/schematron"
+		xmlns:s="http://www.ascc.net/xml/schematron"
 		xmlns:db="http://docbook.org/ns/docbook"
 		xmlns:dbx = "http://sourceforge.net/projects/docbook/defguide/schema/extra-markup"
                 exclude-result-prefixes="exsl ctrl"
@@ -34,7 +34,7 @@
 
   <xsl:template match="rng:grammar" priority="2">
     <grammar xmlns="http://relaxng.org/ns/structure/1.0"
-	     xmlns:s="http://purl.oclc.org/dsdl/schematron"
+	     xmlns:s="http://www.ascc.net/xml/schematron"
 	     xmlns:db="http://docbook.org/ns/docbook"
 	     xmlns:dbx = "http://sourceforge.net/projects/docbook/defguide/schema/extra-markup">
 
@@ -52,7 +52,7 @@
 
       <xsl:text>&#10;</xsl:text>
       <xsl:text>&#10;</xsl:text>
-      <xsl:comment> DocBook V5.0</xsl:comment>
+      <xsl:comment> DocBook V5.0b2</xsl:comment>
       <xsl:text>&#10;</xsl:text>
       <xsl:comment> See http://docbook.org/ns/docbook </xsl:comment>
       <xsl:text>&#10;</xsl:text>
@@ -79,30 +79,23 @@
 
       <xsl:for-each select="$exclusions/ctrl:exclusion[ctrl:from[*[name(.)=$name]]]">
 	<xsl:for-each select="ctrl:exclude/*">
-	  <xsl:variable name="ename" select="name(.)"/>
-	  <xsl:if test="($name != 'table' or name(.) != 'table')
-			and not(preceding-sibling::*[name(.) = $ename])">
-	    <!-- tables can't be excluded from themselves because HTML tables may nest -->
-	    <!-- don't output duplicate names, even if they occur in the list -->
+	  <!--
+	  <xsl:message>
+	    <xsl:value-of select="name(.)"/>
+	    <xsl:text> is excluded from </xsl:text>
+	    <xsl:value-of select="$name"/>
+	  </xsl:message>
+	  -->
 
-	    <!--
-		<xsl:message>
+	  <s:pattern name="Element exclusion">
+	    <s:rule context="db:{$name}">
+	      <s:assert test="not(.//db:{name(.)})">
 		<xsl:value-of select="name(.)"/>
-		<xsl:text> is excluded from </xsl:text>
+		<xsl:text> must not occur in the descendants of </xsl:text>
 		<xsl:value-of select="$name"/>
-		</xsl:message>
-	    -->
-
-	    <s:pattern name="Element exclusion">
-	      <s:rule context="db:{$name}">
-		<s:assert test="not(.//db:{name(.)})">
-		  <xsl:value-of select="name(.)"/>
-		  <xsl:text> must not occur among the children or descendants of </xsl:text>
-		  <xsl:value-of select="$name"/>
-		</s:assert>
-	      </s:rule>
-	    </s:pattern>
-	  </xsl:if>
+	      </s:assert>
+	    </s:rule>
+	  </s:pattern>
 	</xsl:for-each>
       </xsl:for-each>
 
@@ -117,7 +110,7 @@
 	<s:pattern name="Root must have version">
 	  <s:rule context="/db:{$name}">
 	    <s:assert test="@version">
-	      <xsl:text>If this element is the root element, it must have a version attribute.</xsl:text>
+	      <xsl:text>The root element must have a version attribute.</xsl:text>
 	    </s:assert>
 	  </s:rule>
 	</s:pattern>

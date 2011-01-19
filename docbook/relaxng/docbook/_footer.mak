@@ -31,8 +31,11 @@ $($(_MODULE)_OUTPUT)/%.rnx: $($(_MODULE)_OBJS) $($(_MODULE)_OUTPUT)/.f
 #	$(PERL) -i $(CLEANUP) $@
 #	$(RM) $@,
 
-$($(_MODULE)_OUTPUT)/%.rnd: $($(_MODULE)_OUTPUT)/%.rnx $(TOOLS)/rngdocxml.xsl
+$($(_MODULE)_OUTPUT)/%.rnd: $($(_MODULE)_OUTPUT)/%.rnx
 	$(XSLTPROC) -output $@ $(TOOLS)/rngdocxml.xsl $<
+
+$($(_MODULE)_OUTPUT)/%.dtx: $($(_MODULE)_OUTPUT)/%.rnd
+	$(XSLTPROC) -output $@ $(TOOLS)/doc2dtd.xsl $<
 
 all:: $($(_MODULE)_BINARY)
 

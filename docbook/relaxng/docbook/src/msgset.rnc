@@ -1,6 +1,6 @@
-# This file is part of DocBook V5.0
+# This file is part of DocBook V5.0b2
 #
-# Copyright 1992-2008 HaL Computer Systems, Inc.,
+# Copyright 1992-2005 HaL Computer Systems, Inc.,
 # O'Reilly & Associates, Inc., ArborText, Inc., Fujitsu Software
 # Corporation, Norman Walsh, Sun Microsystems, Inc., and the
 # Organization for the Advancement of Structured Information
@@ -29,11 +29,9 @@
 
 namespace ctrl = "http://nwalsh.com/xmlns/schema-control/"
 namespace rng  = "http://relaxng.org/ns/structure/1.0"
-namespace s = "http://purl.oclc.org/dsdl/schematron"
+namespace s = "http://www.ascc.net/xml/schematron"
 namespace db = "http://docbook.org/ns/docbook"
 default namespace = "http://docbook.org/ns/docbook"
-
-start |= db.msg | db.msgexplan | db.msgmain | db.msgrel | db.msgset | db.msgsub
 
 db.technical.blocks |= db.msgset
 
@@ -95,32 +93,17 @@ div {
 div {
 
    db.simplemsgentry.role.attribute = attribute role { text }
-
-   db.simplemsgentry.msgaud.attribute =
-      [
-         db:refpurpose [ "The audience to which the message relevant" ]
-      ]
-      attribute msgaud { text }
-
-   db.simplemsgentry.msgorig.attribute =
-      [
-         db:refpurpose [ "The origin of the message" ]
-      ]
-      attribute msgorig { text }
-
-   db.simplemsgentry.msglevel.attribute =
-      [
-         db:refpurpose [ "The level of importance or severity of a message" ]
-      ]
-      attribute msglevel { text }
+   db.simplemsgentry.audience.attribute = attribute audience { text }
+   db.simplemsgentry.origin.attribute = attribute origin { text }
+   db.simplemsgentry.level.attribute = attribute level { text }
 
    db.simplemsgentry.attlist =
       db.simplemsgentry.role.attribute?
     & db.common.attributes
     & db.common.linking.attributes
-    & db.simplemsgentry.msgaud.attribute?
-    & db.simplemsgentry.msgorig.attribute?
-    & db.simplemsgentry.msglevel.attribute?
+    & db.simplemsgentry.audience.attribute
+    & db.simplemsgentry.origin.attribute
+    & db.simplemsgentry.level.attribute
 
    db.simplemsgentry =
       element simplemsgentry {

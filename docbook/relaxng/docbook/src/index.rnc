@@ -1,6 +1,6 @@
-# This file is part of DocBook V5.0
+# This file is part of DocBook V5.0b2
 #
-# Copyright 1992-2008 HaL Computer Systems, Inc.,
+# Copyright 1992-2005 HaL Computer Systems, Inc.,
 # O'Reilly & Associates, Inc., ArborText, Inc., Fujitsu Software
 # Corporation, Norman Walsh, Sun Microsystems, Inc., and the
 # Organization for the Advancement of Structured Information
@@ -28,11 +28,11 @@
 # ======================================================================
 
 namespace rng  = "http://relaxng.org/ns/structure/1.0"
-namespace s = "http://purl.oclc.org/dsdl/schematron"
+namespace s = "http://www.ascc.net/xml/schematron"
 namespace db = "http://docbook.org/ns/docbook"
 default namespace = "http://docbook.org/ns/docbook"
 
-start |= db.setindex | db.index | db.indexdiv
+start |= db.setindex
 
 db.ubiq.inlines |= db.indexterm
 db.indexing.inlines |= db.indexterm
@@ -44,55 +44,12 @@ db.info.elements |= db.itermset
 
 # ======================================================================
 
-db.significance.enumeration =
-   ## Normal
-   "normal"
- | ## Preferred
-   "preferred"
-
-db.significance.attribute =
-      [
-         db:refpurpose [ "Specifies the significance of the term" ]
-      ]
-   attribute significance { db.significance.enumeration }
-
-db.zone.attribute =
-      [
-         db:refpurpose [ "Specifies the IDs of the elements to which this term applies" ]
-      ]
-   attribute zone { xsd:IDREFS }
-
-db.indexterm.pagenum.attribute =
-      [
-         db:refpurpose [ "Indicates the page on which this index term occurs in some version of the printed document" ]
-      ]
-   attribute pagenum { text }
-
-db.scope.enumeration =
-   ## All indexes
-   "all"
- | ## The global index (as for a combined index of a set of books)
-   "global"
- | ## The local index (the index for this document only)
-   "local"
-
-db.scope.attribute =
-      [
-         db:refpurpose [ "Specifies the scope of the index term" ]
-      ]
-   attribute scope { db.scope.enumeration }
-
-db.sortas.attribute =
-      [
-         db:refpurpose [ "Specifies the string by which the term is to be sorted; if unspecified, the term content is used" ]
-      ]
-   attribute sortas { text }
-
-db.index.type.attribute =
-      [
-         db:refpurpose [ "Specifies the target index for this term" ]
-      ]
-   attribute type { text }
+db.significance.attribute = attribute significance { "normal" | "preferred" }
+db.zone.attribute         = attribute zone { xsd:IDREFS }
+db.pagenum.attribute      = attribute pagenum { text }
+db.scope.attribute        = attribute scope { "all" | "global" | "local" }
+db.sortas.attribute       = attribute sortas { text }
+db.type.attribute         = attribute type { text }
 
 # ======================================================================
 
@@ -136,15 +93,7 @@ db.indexterm.contentmodel =
 div {
 
    db.indexterm.singular.role.attribute = attribute role { text }
-
-   db.indexterm.singular.class.attribute =
-      [
-         db:refpurpose [ "Identifies the class of index term" ]
-      ]
-      attribute class {
-         ## A singular index term
-         "singular"
-      }
+   db.indexterm.singular.class.attribute = attribute class { "singular" }
 
    db.indexterm.singular.attlist =
       db.indexterm.singular.role.attribute?
@@ -152,9 +101,9 @@ div {
     & db.common.linking.attributes
     & db.significance.attribute?
     & db.zone.attribute?
-    & db.indexterm.pagenum.attribute?
+    & db.pagenum.attribute?
     & db.scope.attribute?
-    & db.index.type.attribute?
+    & db.type.attribute?
     & db.indexterm.singular.class.attribute?
 
    db.indexterm.singular =
@@ -173,15 +122,7 @@ div {
 div {
 
    db.indexterm.startofrange.role.attribute = attribute role { text }
-
-   db.indexterm.startofrange.class.attribute =
-      [
-         db:refpurpose [ "Identifies the class of index term" ]
-      ]
-      attribute class {
-         ## The start of a range
-         "startofrange"
-      }
+   db.indexterm.startofrange.class.attribute = attribute class { "startofrange" }
 
    db.indexterm.startofrange.attlist =
       db.indexterm.startofrange.role.attribute?
@@ -189,9 +130,9 @@ div {
     & db.common.linking.attributes
     & db.significance.attribute?
     & db.zone.attribute?
-    & db.indexterm.pagenum.attribute?
+    & db.pagenum.attribute?
     & db.scope.attribute?
-    & db.index.type.attribute?
+    & db.type.attribute?
     & db.indexterm.startofrange.class.attribute
 
    db.indexterm.startofrange =
@@ -210,21 +151,8 @@ div {
 div {
 
    db.indexterm.endofrange.role.attribute = attribute role { text }
-
-   db.indexterm.endofrange.class.attribute =
-      [
-         db:refpurpose [ "Identifies the class of index term" ]
-      ]
-      attribute class {
-         ## The end of a range
-         "endofrange"
-      }
-
-   db.indexterm.endofrange.startref.attribute =
-      [
-         db:refpurpose [ "Points to the start of the range" ]
-      ]
-      attribute startref { xsd:IDREF }
+   db.indexterm.endofrange.class.attribute = attribute class { "endofrange" }
+   db.indexterm.endofrange.startref.attribute = attribute startref { xsd:IDREF }
 
    db.indexterm.endofrange.attlist =
       db.indexterm.endofrange.role.attribute?
@@ -384,7 +312,6 @@ div {
     & db.common.linking.attributes
     & db.label.attribute?
     & db.index.status.attribute?
-    & db.index.type.attribute?
 
    db.index.info = db._info
 
@@ -418,7 +345,6 @@ div {
     & db.common.linking.attributes
     & db.label.attribute?
     & db.setindex.status.attribute?
-    & db.index.type.attribute?
 
    db.setindex.info = db._info
 

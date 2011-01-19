@@ -1,6 +1,6 @@
-# This file is part of DocBook V5.0
+# This file is part of DocBook V5.0b2
 #
-# Copyright 1992-2008 HaL Computer Systems, Inc.,
+# Copyright 1992-2005 HaL Computer Systems, Inc.,
 # O'Reilly & Associates, Inc., ArborText, Inc., Fujitsu Software
 # Corporation, Norman Walsh, Sun Microsystems, Inc., and the
 # Organization for the Advancement of Structured Information
@@ -27,13 +27,12 @@
 #
 # ======================================================================
 
-namespace ctrl = "http://nwalsh.com/xmlns/schema-control/"
 namespace rng  = "http://relaxng.org/ns/structure/1.0"
-namespace s = "http://purl.oclc.org/dsdl/schematron"
+namespace s = "http://www.ascc.net/xml/schematron"
 namespace db = "http://docbook.org/ns/docbook"
 default namespace = "http://docbook.org/ns/docbook"
 
-start |= db.refentry | db.refsection | db.refsynopsisdiv
+start |= db.refentry | db.refsection
 
 db.divisions |= db.reference
 
@@ -49,17 +48,11 @@ db.secondlevel.refsection = db.refsection+
 
 # ======================================================================
 
-db.reference.components = db.refentry
-
-# ======================================================================
-
 [
    db:refname [ "reference" ]
    db:refpurpose [ "A collection of reference entries" ]
 ]
 div {
-
-   db.reference.status.attribute = db.status.attribute
 
    db.reference.role.attribute = attribute role { text }
 
@@ -67,7 +60,7 @@ div {
       db.reference.role.attribute?
     & db.common.attributes
     & db.common.linking.attributes
-    & db.reference.status.attribute?
+    & db.status.attribute?
     & db.label.attribute?
 
    db.reference.info = db._info.title.req
@@ -77,7 +70,7 @@ div {
          db.reference.attlist,
          db.reference.info,
          db.partintro?,
-         db.reference.components+
+         db.refentry+
       }
 }
 
@@ -88,7 +81,6 @@ div {
    db:refpurpose [ "A reference page (originally a UNIX man-style reference page)" ]
 ]
 div {
-   db.refentry.status.attribute = db.status.attribute
 
    db.refentry.role.attribute = attribute role { text }
 
@@ -96,7 +88,7 @@ div {
       db.refentry.role.attribute?
     & db.common.attributes
     & db.common.linking.attributes
-    & db.refentry.status.attribute?
+    & db.status.attribute?
     & db.label.attribute?
 
    db.refentry.info = db._info.title.forbidden
@@ -141,49 +133,6 @@ div {
 
 # ======================================================================
 
-ctrl:other-attribute [ name="db.refmiscinfo.class.attribute"
-                       enum-name="db.refmiscinfo.class-enum.attribute"
-                       other-name="db.refmiscinfo.class-other.attributes" ]
-
-db.refmiscinfo.class.enumeration =
-   ## The name of the software product or component to which this topic applies
-   "source"
- | ## The version of the software product or component to which this topic applies
-   "version"
- | ## The section title of the reference page (e.g., User Commands)
-   "manual"
- | ## The section title of the reference page (believed synonymous with "manual" but in wide use)
-   "sectdesc"
- | ## The name of the software product or component to which this topic applies (e.g., SunOS x.y; believed synonymous with "source" but in wide use)
-   "software"
-
-db.refmiscinfo.class-enum.attribute =
-   [
-      db:refpurpose [ "Identifies the kind of miscellaneous information" ]
-   ]
-   attribute class { db.refmiscinfo.class.enumeration } ?
-
-db.refmiscinfo.class-other.attribute =
-   [
-      db:refpurpose [ "Identifies the nature of non-standard miscellaneous information" ]
-   ]
-   attribute otherclass { text }
-
-db.refmiscinfo.class-other.attributes =
-   [
-      db:refpurpose [ "Identifies the kind of miscellaneious information" ]
-   ]
-   attribute class {
-      ## Indicates that the information is some 'other' kind.
-      "other"
-   }
- & db.refmiscinfo.class-other.attribute
-
-db.refmiscinfo.class.attribute =
-  (db.refmiscinfo.class-enum.attribute | db.refmiscinfo.class-other.attributes)
-
-# ======================================================================
-
 [
    db:refname [ "refmiscinfo" ]
    db:refpurpose [ "Meta-information for a reference entry other than the title and volume number" ]
@@ -191,6 +140,7 @@ db.refmiscinfo.class.attribute =
 div {
 
    db.refmiscinfo.role.attribute = attribute role { text }
+   db.refmiscinfo.class.attribute = attribute class { text }
 
    db.refmiscinfo.attlist =
       db.refmiscinfo.role.attribute?
@@ -351,7 +301,6 @@ div {
    db:refpurpose [ "A recursive section in a refentry" ]
 ]
 div {
-   db.refsection.status.attribute = db.status.attribute
 
    db.refsection.role.attribute = attribute role { text }
 
@@ -359,7 +308,7 @@ div {
       db.refsection.role.attribute?
     & db.common.attributes
     & db.common.linking.attributes
-    & db.refsection.status.attribute?
+    & db.status.attribute?
     & db.label.attribute?
 
    db.refsection.info = db._info.title.req

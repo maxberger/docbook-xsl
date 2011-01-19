@@ -1,16 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-		xmlns:xslthl="http://xslthl.sf.net"
-		exclude-result-prefixes="xslthl"
                 version="1.0">
 
-<xsl:import href="../../../../../xsl/html/profile-docbook.xsl"/>
-<xsl:import href="../../../../../xsl/html/highlight.xsl"/>
-
-<xsl:param name="profile.status">final</xsl:param>
-
-<!-- Name used in URIs -->
-<xsl:param name="basename" select="/*[1]/@xml:id"/>
+<xsl:import href="../../../../../xsl/html/docbook.xsl"/>
 
 <xsl:template name="user.head.content">
   <xsl:param name="node" select="."/>
@@ -69,13 +61,13 @@
   <h4>Latest version:</h4>
   <dl class="urilist">
     <dt>
-      <span>http://docbook.org/docs/<xsl:value-of select="$basename"/>/</span>
+      <span>http://docbook.org/docs/howto/</span>
       <xsl:text> (</xsl:text>
-      <a href="http://docbook.org/docs/{$basename}/">HTML</a>
+      <a href="http://docbook.org/docs/howto/">HTML</a>
       <xsl:text>, </xsl:text>
-      <a href="http://docbook.org/docs/{$basename}/{$basename}.xml">XML</a>
+      <a href="http://docbook.org/docs/howto/howto.xml">XML</a>
       <xsl:text>, </xsl:text>
-      <a href="http://docbook.org/docs/{$basename}/{$basename}.pdf">PDF</a>
+      <a href="http://docbook.org/docs/howto/howto.pdf">PDF</a>
       <xsl:text>)</xsl:text>
     </dt>
   </dl>
@@ -106,9 +98,7 @@
 
 <xsl:template match="pubdate" mode="datedURI">
   <xsl:variable name="uri">
-    <xsl:text>http://docbook.org/docs/</xsl:text>
-    <xsl:value-of select="$basename"/>
-    <xsl:text>/</xsl:text>
+    <xsl:text>http://docbook.org/docs/howto/</xsl:text>
     <xsl:value-of select="substring(.,1,4)"/>
     <xsl:text>-</xsl:text>
     <xsl:value-of select="substring(.,6,2)"/>
@@ -123,9 +113,9 @@
   <xsl:text> (</xsl:text>
   <a href="{$uri}">HTML</a>
   <xsl:text>, </xsl:text>
-  <a href="{$uri}{$basename}.xml">XML</a>
+  <a href="{$uri}howto.xml">XML</a>
   <xsl:text>, </xsl:text>
-  <a href="{$uri}{$basename}.pdf">PDF</a>
+  <a href="{$uri}howto.pdf">PDF</a>
   <xsl:text>)</xsl:text>
 </xsl:template>
 
@@ -133,33 +123,24 @@
   <h4>
     <xsl:text>Author</xsl:text>
     <xsl:if test="count(author) &gt; 1">s</xsl:if>
-    <xsl:if test="othercredit">
-      <xsl:text> and other credited contributors</xsl:text>
-    </xsl:if>
     <xsl:text>:</xsl:text>
   </h4>
   <dl class="authorlist">
-    <xsl:apply-templates select="author|othercredit" mode="howto-titlepage"/>
+    <xsl:apply-templates select="author" mode="howto-titlepage"/>
   </dl>
 </xsl:template>
 
-<xsl:template match="author|othercredit" mode="howto-titlepage">
+<xsl:template match="author" mode="howto-titlepage">
   <dt>
     <xsl:apply-templates select="personname"/>
     <xsl:if test="email">
       <xsl:text>, </xsl:text>
       <xsl:apply-templates select="email"/>
     </xsl:if>
-    <xsl:if test="@otherclass">
-      <xsl:text> (</xsl:text>
-      <xsl:value-of select="normalize-space(@otherclass)"/>
-      <xsl:text>)</xsl:text>
-    </xsl:if>
   </dt>
 </xsl:template>
 
-<!-- !!! Namespace stripping will rename db:tag to sgmltag -->
-<xsl:template match="sgmltag[not(@class) or (@class='element')]
+<xsl:template match="tag[not(@class) or (@class='element')]
 		        [not(@condition = 'nolink')]">
   <xsl:variable name="baseUri">
     <xsl:choose>
@@ -170,100 +151,9 @@
     </xsl:choose>
   </xsl:variable>
 
-  <xsl:choose>
-    <xsl:when test="$basename = 'howto'">  <!-- Make links only in howto -->
-      <a href="{$baseUri}{.}.html">
-	<xsl:apply-imports/>
-      </a>
-    </xsl:when>
-    <xsl:otherwise>
-      <xsl:apply-imports/>
-    </xsl:otherwise>
-  </xsl:choose>
-</xsl:template>
-
-<!-- Support for labels identifying programlisting syntax used -->
-<xsl:template match="programlisting[@language]">
-  <xsl:param name="suppress-numbers" select="'0'"/>
-  <xsl:variable name="id">
-    <xsl:call-template name="object.id"/>
-  </xsl:variable>
-
-  <xsl:call-template name="anchor"/>
-
-  <xsl:if test="$shade.verbatim != 0">
-    <xsl:message>
-      <xsl:text>The shade.verbatim parameter is deprecated. </xsl:text>
-      <xsl:text>Use CSS instead,</xsl:text>
-    </xsl:message>
-    <xsl:message>
-      <xsl:text>for example: pre.</xsl:text>
-      <xsl:value-of select="local-name(.)"/>
-      <xsl:text> { background-color: #E0E0E0; }</xsl:text>
-    </xsl:message>
-  </xsl:if>
-
-  <xsl:choose>
-    <xsl:when test="$suppress-numbers = '0'
-		    and @linenumbering = 'numbered'
-		    and $use.extensions != '0'
-		    and $linenumbering.extension != '0'">
-      <xsl:variable name="rtf">
-	<xsl:apply-templates/>
-      </xsl:variable>
-      <pre class="{name(.)}">
-        <xsl:call-template name="role.label"/>
-	<xsl:call-template name="number.rtf.lines">
-	  <xsl:with-param name="rtf" select="$rtf"/>
-	</xsl:call-template>
-      </pre>
-    </xsl:when>
-    <xsl:otherwise>
-      <pre class="{name(.)}">
-        <xsl:call-template name="role.label"/>
-	<xsl:apply-templates/>
-      </pre>
-    </xsl:otherwise>
-  </xsl:choose>
-</xsl:template>
-
-<xsl:template name="role.label">
-  <span class="rolelabel">
-    <xsl:call-template name="brealize">
-      <xsl:with-param name="text" select="@language"/>
-    </xsl:call-template>
-  </span>
-</xsl:template>
-
-<xsl:template name="brealize">
-  <xsl:param name="text"/>
-  <xsl:variable name="head" select="substring($text, 1, 1)"/>
-  <xsl:variable name="tail" select="substring($text, 2)"/>
-
-  <xsl:if test="$head != ''">
-    <xsl:value-of select="$head"/>
-  </xsl:if>
-  
-  <xsl:if test="$tail != ''">
-    <br/>
-    <xsl:call-template name="brealize">
-      <xsl:with-param name="text" select="$tail"/>
-    </xsl:call-template>
-  </xsl:if>
-</xsl:template>
-
-<xsl:param name="highlight.source" select="1"/>
-
-<xsl:template name="language.to.xslthl">
-  <xsl:param name="context"/>
-
-  <xsl:if test="$context/@language != '' or not($context/@language)">
-    <xsl:text>myxml</xsl:text>
-  </xsl:if>
-</xsl:template>
-
-<xsl:template match='xslthl:html' mode="xslthl">
-  <b style="color: navy"><xsl:apply-templates mode="xslthl"/></b>
+  <a href="{$baseUri}{.}.html">
+    <xsl:apply-imports/>
+  </a>
 </xsl:template>
 
 </xsl:stylesheet>

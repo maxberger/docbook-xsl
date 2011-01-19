@@ -8,7 +8,7 @@
 
 <!--
 # ======================================================================
-# This file is part of DocBook V5.0CR5
+# This file is part of DocBook V5.0b2
 #
 # Copyright 2005 Norman Walsh, Sun Microsystems, Inc., and the
 # Organization for the Advancement of Structured Information
@@ -31,21 +31,8 @@
 # ======================================================================
 -->
 
-<xsl:variable name="version" select="'1.0'"/>
-
-<xsl:output method="xml" encoding="utf-8" indent="no" omit-xml-declaration="yes"/>
-
+<xsl:output method="xml" encoding="utf-8" indent="no"/>
 <xsl:preserve-space elements="*"/>
-<xsl:param name="rootid">
-  <xsl:choose>
-  <xsl:when test="/*/@id">
-    <xsl:value-of select="/*/@id"/>
-  </xsl:when>
-  <xsl:otherwise>
-    <xsl:text>UNKNOWN</xsl:text>
-  </xsl:otherwise>
-  </xsl:choose>
-</xsl:param>
 
 <xsl:param name="defaultDate" select="''"/>
 
@@ -53,12 +40,6 @@
   <xsl:variable name="converted">
     <xsl:apply-templates/>
   </xsl:variable>
-  <xsl:comment>
-    <xsl:text> Converted by db4-upgrade version </xsl:text>
-    <xsl:value-of select="$version"/>
-    <xsl:text> </xsl:text>
-  </xsl:comment>
-  <xsl:text>&#10;</xsl:text>
   <xsl:apply-templates select="exsl:node-set($converted)/*" mode="addNS"/>
 </xsl:template>
 
@@ -78,96 +59,11 @@
     <xsl:choose>
       <xsl:when test="title and following-sibling::title">
         <xsl:if test="title != following-sibling::title">
-          <xsl:call-template name="emit-message">
-            <xsl:with-param name="message">
-              <xsl:text>Check </xsl:text>
-              <xsl:value-of select="name(..)"/>
-              <xsl:text> title.</xsl:text>
-            </xsl:with-param>
-          </xsl:call-template>
-        </xsl:if>
-        <xsl:apply-templates select="title" mode="copy"/>
-      </xsl:when>
-      <xsl:when test="title">
-        <xsl:apply-templates select="title" mode="copy"/>
-      </xsl:when>
-      <xsl:when test="following-sibling::title">
-        <xsl:apply-templates select="following-sibling::title" mode="copy"/>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:call-template name="emit-message">
-          <xsl:with-param name="message">
+          <xsl:message>
             <xsl:text>Check </xsl:text>
             <xsl:value-of select="name(..)"/>
-            <xsl:text>: no title.</xsl:text>
-          </xsl:with-param>
-        </xsl:call-template>
-      </xsl:otherwise>
-    </xsl:choose>
-
-    <xsl:choose>
-      <xsl:when test="titleabbrev and following-sibling::titleabbrev">
-        <xsl:if test="titleabbrev != following-sibling::titleabbrev">
-          <xsl:call-template name="emit-message">
-            <xsl:with-param name="message">
-              <xsl:text>Check </xsl:text>
-              <xsl:value-of select="name(..)"/>
-              <xsl:text> titleabbrev.</xsl:text>
-            </xsl:with-param>
-          </xsl:call-template>
-        </xsl:if>
-        <xsl:apply-templates select="titleabbrev" mode="copy"/>
-      </xsl:when>
-      <xsl:when test="titleabbrev">
-        <xsl:apply-templates select="titleabbrev" mode="copy"/>
-      </xsl:when>
-      <xsl:when test="following-sibling::titleabbrev">
-        <xsl:apply-templates select="following-sibling::titleabbrev" mode="copy"/>
-      </xsl:when>
-    </xsl:choose>
-
-    <xsl:choose>
-      <xsl:when test="subtitle and following-sibling::subtitle">
-        <xsl:if test="subtitle != following-sibling::subtitle">
-          <xsl:call-template name="emit-message">
-            <xsl:with-param name="message">
-              <xsl:text>Check </xsl:text>
-              <xsl:value-of select="name(..)"/>
-              <xsl:text> subtitle.</xsl:text>
-            </xsl:with-param>
-          </xsl:call-template>
-        </xsl:if>
-        <xsl:apply-templates select="subtitle" mode="copy"/>
-      </xsl:when>
-      <xsl:when test="subtitle">
-        <xsl:apply-templates select="subtitle" mode="copy"/>
-      </xsl:when>
-      <xsl:when test="following-sibling::subtitle">
-        <xsl:apply-templates select="following-sibling::subtitle" mode="copy"/>
-      </xsl:when>
-    </xsl:choose>
-
-    <xsl:apply-templates/>
-  </info>
-</xsl:template>
-
-<xsl:template match="objectinfo|prefaceinfo|refsynopsisdivinfo
-		     |screeninfo|sidebarinfo"
-	      priority="200">
-  <info>
-    <xsl:call-template name="copy.attributes"/>
-
-    <!-- titles can be inside or outside or both. fix that -->
-    <xsl:choose>
-      <xsl:when test="title and following-sibling::title">
-        <xsl:if test="title != following-sibling::title">
-          <xsl:call-template name="emit-message">
-            <xsl:with-param name="message">
-              <xsl:text>Check </xsl:text>
-              <xsl:value-of select="name(..)"/>
-              <xsl:text> title.</xsl:text>
-            </xsl:with-param>
-          </xsl:call-template>
+            <xsl:text> title.</xsl:text>
+          </xsl:message>
         </xsl:if>
         <xsl:apply-templates select="title" mode="copy"/>
       </xsl:when>
@@ -178,20 +74,22 @@
         <xsl:apply-templates select="following-sibling::title" mode="copy"/>
       </xsl:when>
       <xsl:otherwise>
-	<!-- it's ok if there's no title on these -->
+        <xsl:message>
+          <xsl:text>Check </xsl:text>
+          <xsl:value-of select="name(..)"/>
+          <xsl:text>: no title.</xsl:text>
+        </xsl:message>
       </xsl:otherwise>
     </xsl:choose>
 
     <xsl:choose>
       <xsl:when test="titleabbrev and following-sibling::titleabbrev">
         <xsl:if test="titleabbrev != following-sibling::titleabbrev">
-          <xsl:call-template name="emit-message">
-          <xsl:with-param name="message">
+          <xsl:message>
             <xsl:text>Check </xsl:text>
             <xsl:value-of select="name(..)"/>
             <xsl:text> titleabbrev.</xsl:text>
-          </xsl:with-param>
-        </xsl:call-template>
+          </xsl:message>
         </xsl:if>
         <xsl:apply-templates select="titleabbrev" mode="copy"/>
       </xsl:when>
@@ -206,13 +104,11 @@
     <xsl:choose>
       <xsl:when test="subtitle and following-sibling::subtitle">
         <xsl:if test="subtitle != following-sibling::subtitle">
-          <xsl:call-template name="emit-message">
-            <xsl:with-param name="message">
-              <xsl:text>Check </xsl:text>
-              <xsl:value-of select="name(..)"/>
-              <xsl:text> subtitle.</xsl:text>
-            </xsl:with-param>
-          </xsl:call-template>
+          <xsl:message>
+            <xsl:text>Check </xsl:text>
+            <xsl:value-of select="name(..)"/>
+            <xsl:text> subtitle.</xsl:text>
+          </xsl:message>
         </xsl:if>
         <xsl:apply-templates select="subtitle" mode="copy"/>
       </xsl:when>
@@ -235,62 +131,19 @@
 
     <!-- titles can be inside or outside or both. fix that -->
     <xsl:if test="title">
-      <xsl:call-template name="emit-message">
-        <xsl:with-param name="message">
-          <xsl:text>Discarding title from refentryinfo!</xsl:text>
-        </xsl:with-param>
-      </xsl:call-template>
+      <xsl:message>Discarding title from refentryinfo!</xsl:message>
     </xsl:if>
 
     <xsl:if test="titleabbrev">
-      <xsl:call-template name="emit-message">
-        <xsl:with-param name="message">
-          <xsl:text>Discarding titleabbrev from refentryinfo!</xsl:text>
-        </xsl:with-param>
-      </xsl:call-template>
+      <xsl:message>Discarding titleabbrev from refentryinfo!</xsl:message>
     </xsl:if>
 
     <xsl:if test="subtitle">
-      <xsl:call-template name="emit-message">
-        <xsl:with-param name="message">
-          <xsl:text>Discarding subtitle from refentryinfo!</xsl:text>
-        </xsl:with-param>
-      </xsl:call-template>
+      <xsl:message>Discarding subtitle from refentryinfo!</xsl:message>
     </xsl:if>
 
     <xsl:apply-templates/>
   </info>
-</xsl:template>
-
-<xsl:template match="refmiscinfo"
-              priority="200">
-  <refmiscinfo>
-    <xsl:call-template name="copy.attributes">
-      <xsl:with-param name="suppress" select="'class'"/>
-    </xsl:call-template>
-    <xsl:if test="@class">
-      <xsl:choose>
-	<xsl:when test="@class = 'source'
-		        or @class = 'version'
-		        or @class = 'manual'
-		        or @class = 'sectdesc'
-		        or @class = 'software'">
-	  <xsl:attribute name="class">
-	    <xsl:value-of select="@class"/>
-	  </xsl:attribute>
-	</xsl:when>
-	<xsl:otherwise>
-	  <xsl:attribute name="class">
-	    <xsl:value-of select="'other'"/>
-	  </xsl:attribute>
-	  <xsl:attribute name="otherclass">
-	    <xsl:value-of select="@class"/>
-	  </xsl:attribute>
-	</xsl:otherwise>
-      </xsl:choose>
-    </xsl:if>
-    <xsl:apply-templates/>
-  </refmiscinfo>
 </xsl:template>
 
 <xsl:template match="corpauthor" priority="200">
@@ -331,11 +184,7 @@
 </xsl:template>
 
 <xsl:template match="productname[@class]" priority="200">
-  <xsl:call-template name="emit-message">
-    <xsl:with-param name="message">
-      <xsl:text>Dropping class attribute from productname</xsl:text>
-    </xsl:with-param>
-  </xsl:call-template>
+  <xsl:message>Dropping class attribute from productname</xsl:message>
   <xsl:copy>
     <xsl:call-template name="copy.attributes">
       <xsl:with-param name="suppress" select="'class'"/>
@@ -346,13 +195,10 @@
 
 <xsl:template match="dedication|preface|chapter|appendix|part|partintro
                      |article|bibliography|glossary|glossdiv|index
-		     |reference[not(referenceinfo)]
                      |book" priority="200">
   <xsl:choose>
-    <xsl:when test="not(dedicationinfo|prefaceinfo|chapterinfo
-		        |appendixinfo|partinfo
-                        |articleinfo|artheader|bibliographyinfo
-			|glossaryinfo|indexinfo
+    <xsl:when test="not(dedicationinfo|prefaceinfo|chapterinfo|appendixinfo|partinfo
+                        |articleinfo|artheader|bibliographyinfo|glossaryinfo|indexinfo
                         |bookinfo)">
       <xsl:copy>
         <xsl:call-template name="copy.attributes"/>
@@ -361,7 +207,6 @@
             <xsl:apply-templates select="title" mode="copy"/>
             <xsl:apply-templates select="titleabbrev" mode="copy"/>
             <xsl:apply-templates select="subtitle" mode="copy"/>
-            <xsl:apply-templates select="abstract" mode="copy"/>
           </info>
         </xsl:if>
         <xsl:apply-templates/>
@@ -379,7 +224,7 @@
 <xsl:template match="formalpara|figure|table[tgroup]|example|blockquote
                      |caution|important|note|warning|tip
                      |bibliodiv|glossarydiv|indexdiv
-		     |orderedlist|itemizedlist|variablelist|procedure|step
+		     |orderedlist|itemizedlist|variablelist|procedure
 		     |task|tasksummary|taskprerequisites|taskrelated
 		     |sidebar"
 	      priority="200">
@@ -411,11 +256,7 @@
 <xsl:template match="equation" priority="200">
   <xsl:choose>
     <xsl:when test="not(title)">
-      <xsl:call-template name="emit-message">
-        <xsl:with-param
-            name="message"
-            >Convert equation without title to informal equation.</xsl:with-param>
-      </xsl:call-template>
+      <xsl:message>Convert equation without title to informal equation.</xsl:message>
       <informalequation>
         <xsl:call-template name="copy.attributes"/>
         <xsl:apply-templates/>
@@ -451,7 +292,6 @@
         <xsl:apply-templates select="title" mode="copy"/>
         <xsl:apply-templates select="titleabbrev" mode="copy"/>
         <xsl:apply-templates select="subtitle" mode="copy"/>
-        <xsl:apply-templates select="abstract" mode="copy"/>
       </info>
     </xsl:if>
     <xsl:apply-templates/>
@@ -462,12 +302,14 @@
 	      priority="200">
   <simplesect>
     <xsl:call-template name="copy.attributes"/>
-    <info>
-      <xsl:apply-templates select="title" mode="copy"/>
-      <xsl:apply-templates select="titleabbrev" mode="copy"/>
-      <xsl:apply-templates select="subtitle" mode="copy"/>
-      <xsl:apply-templates select="abstract" mode="copy"/>
-    </info>
+
+    <xsl:if test="not(sect1info|sect2info|sect3info|sect4info|sect5info|sectioninfo)">
+      <info>
+        <xsl:apply-templates select="title" mode="copy"/>
+        <xsl:apply-templates select="titleabbrev" mode="copy"/>
+        <xsl:apply-templates select="subtitle" mode="copy"/>
+      </info>
+    </xsl:if>
     <xsl:apply-templates/>
   </simplesect>
 </xsl:template>
@@ -481,7 +323,6 @@
         <xsl:apply-templates select="title" mode="copy"/>
         <xsl:apply-templates select="titleabbrev" mode="copy"/>
         <xsl:apply-templates select="subtitle" mode="copy"/>
-        <xsl:apply-templates select="abstract" mode="copy"/>
       </info>
     </xsl:if>
     <xsl:apply-templates/>
@@ -494,14 +335,12 @@
       <xsl:with-param name="suppress" select="'srccredit'"/>
     </xsl:call-template>
     <xsl:if test="@srccredit">
-      <xsl:call-template name="emit-message">
-        <xsl:with-param name="message">
-          <xsl:text>Check conversion of srccredit </xsl:text>
-          <xsl:text>(othercredit="srccredit").</xsl:text>
-        </xsl:with-param>
-      </xsl:call-template>
+      <xsl:message>
+        <xsl:text>Check conversion of srccredit </xsl:text>
+        <xsl:text>(othercredit role="srccredit").</xsl:text>
+      </xsl:message>
       <info>
-        <othercredit class="other" otherclass="srccredit">
+        <othercredit role="srccredit">
           <orgname>???</orgname>
           <contrib>
             <xsl:value-of select="@srccredit"/>
@@ -515,9 +354,6 @@
 <xsl:template match="sgmltag" priority="200">
   <tag>
     <xsl:call-template name="copy.attributes"/>
-    <xsl:if test="@class = 'sgmlcomment'">
-      <xsl:attribute name="class">comment</xsl:attribute>
-    </xsl:if>
     <xsl:apply-templates/>
   </tag>
 </xsl:template>
@@ -561,18 +397,16 @@
 </xsl:template>
 
 <xsl:template match="pubsnumber" priority="200">
-  <biblioid class="pubsnumber">
+  <biblioid class="pubnumber">
     <xsl:call-template name="copy.attributes"/>
     <xsl:apply-templates/>
   </biblioid>
 </xsl:template>
 
 <xsl:template match="invpartnumber" priority="200">
-  <xsl:call-template name="emit-message">
-    <xsl:with-param name="message">
-      <xsl:text>Converting invpartnumber to biblioid otherclass="invpartnumber".</xsl:text>
-    </xsl:with-param>
-  </xsl:call-template>
+  <xsl:message>
+    <xsl:text>Converting invpartnumber to biblioid otherclass="invpartnumber".</xsl:text>
+  </xsl:message>
   <biblioid class="other" otherclass="invpartnumber">
     <xsl:call-template name="copy.attributes"/>
     <xsl:apply-templates/>
@@ -583,13 +417,11 @@
   <xsl:variable name="contractnum"
                 select="preceding-sibling::contractnum|following-sibling::contractnum"/>
 
-  <xsl:call-template name="emit-message">
-    <xsl:with-param name="message">
-      <xsl:text>Converting contractsponsor to othercredit="contractsponsor".</xsl:text>
-    </xsl:with-param>
-  </xsl:call-template>
+  <xsl:message>
+   <xsl:text>Converting contractsponsor to othercredit role="contractsponsor".</xsl:text>
+  </xsl:message>
 
-  <othercredit class="other" otherclass="contractsponsor">
+  <othercredit role="contractsponsor">
     <orgname>
       <xsl:call-template name="copy.attributes"/>
       <xsl:apply-templates/>
@@ -606,13 +438,11 @@
   <xsl:if test="not(preceding-sibling::contractsponsor
                     |following-sibling::contractsponsor)
                 and not(preceding-sibling::contractnum)">
-    <xsl:call-template name="emit-message">
-      <xsl:with-param name="message">
-        <xsl:text>Converting contractnum to othercredit="contractnum".</xsl:text>
-      </xsl:with-param>
-    </xsl:call-template>
+    <xsl:message>
+      <xsl:text>Converting contractnum to othercredit role="contractnum".</xsl:text>
+    </xsl:message>
 
-    <othercredit class="other" otherclass="contractnum">
+    <othercredit role="contractnum">
       <orgname>???</orgname>
       <xsl:for-each select="self::contractnum
                             |preceding-sibling::contractnum
@@ -648,13 +478,20 @@
   </personblurb>
 </xsl:template>
 
+<xsl:template match="ackno" priority="200">
+  <ackno>
+    <xsl:call-template name="copy.attributes"/>
+    <para>
+      <xsl:apply-templates/>
+    </para>
+  </ackno>
+</xsl:template>
+
 <xsl:template match="collabname" priority="200">
-  <xsl:call-template name="emit-message">
-    <xsl:with-param name="message">
-      <xsl:text>Check conversion of collabname </xsl:text>
-      <xsl:text>(orgname role="collabname").</xsl:text>
-    </xsl:with-param>
-  </xsl:call-template>
+  <xsl:message>
+    <xsl:text>Check conversion of collabname </xsl:text>
+    <xsl:text>(orgname role="collabname").</xsl:text>
+  </xsl:message>
   <orgname role="collabname">
     <xsl:call-template name="copy.attributes"/>
     <xsl:apply-templates/>
@@ -662,13 +499,11 @@
 </xsl:template>
 
 <xsl:template match="modespec" priority="200">
-  <xsl:call-template name="emit-message">
-    <xsl:with-param name="message">
-      <xsl:text>Discarding modespec (</xsl:text>
-      <xsl:value-of select="."/>
-      <xsl:text>).</xsl:text>
-    </xsl:with-param>
-  </xsl:call-template>
+  <xsl:message>
+    <xsl:text>Discarding modespec (</xsl:text>
+    <xsl:value-of select="."/>
+    <xsl:text>).</xsl:text>
+  </xsl:message>
 </xsl:template>
 
 <xsl:template match="mediaobjectco" priority="200">
@@ -710,13 +545,11 @@
 <xsl:template match="biblioentry/contrib
                      |bibliomset/contrib
                      |bibliomixed/contrib" priority="200">
-  <xsl:call-template name="emit-message">
-    <xsl:with-param name="message">
-      <xsl:text>Check conversion of contrib </xsl:text>
-      <xsl:text>(othercontrib="contrib").</xsl:text>
-    </xsl:with-param>
-  </xsl:call-template>
-  <othercredit class="other" otherclass="contrib">
+  <xsl:message>
+    <xsl:text>Check conversion of contrib </xsl:text>
+    <xsl:text>(othercontrib role="contrib").</xsl:text>
+  </xsl:message>
+  <othercredit>
     <orgname>???</orgname>
     <contrib>
       <xsl:call-template name="copy.attributes"/>
@@ -735,11 +568,9 @@
 <xsl:template match="ulink" priority="200">
   <xsl:choose>
     <xsl:when test="node()">
-      <xsl:call-template name="emit-message">
-        <xsl:with-param name="message">
-          <xsl:text>Converting ulink to link.</xsl:text>
-        </xsl:with-param>
-      </xsl:call-template>
+      <xsl:message>
+	<xsl:text>Converting ulink to link.</xsl:text>
+      </xsl:message>
 
       <link xlink:href="{@url}">
 	<xsl:call-template name="copy.attributes">
@@ -749,11 +580,9 @@
       </link>
     </xsl:when>
     <xsl:otherwise>
-      <xsl:call-template name="emit-message">
-        <xsl:with-param name="message">
-          <xsl:text>Converting ulink to uri.</xsl:text>
-        </xsl:with-param>
-      </xsl:call-template>
+      <xsl:message>
+	<xsl:text>Converting ulink to uri.</xsl:text>
+      </xsl:message>
 
       <uri xlink:href="{@url}">
 	<xsl:call-template name="copy.attributes">
@@ -767,20 +596,16 @@
 
 <xsl:template match="olink" priority="200">
   <xsl:if test="@linkmode">
-    <xsl:call-template name="emit-message">
-      <xsl:with-param name="message">
-        <xsl:text>Discarding linkmode on olink.</xsl:text>
-      </xsl:with-param>
-    </xsl:call-template>
+    <xsl:message>
+      <xsl:text>Discarding linkmode on olink.</xsl:text>
+    </xsl:message>
   </xsl:if>
 
   <xsl:choose>
     <xsl:when test="@targetdocent">
-      <xsl:call-template name="emit-message">
-        <xsl:with-param name="message">
-          <xsl:text>Converting olink targetdocent to targetdoc.</xsl:text>
-        </xsl:with-param>
-      </xsl:call-template>
+      <xsl:message>
+	<xsl:text>Converting olink targetdocent to targetdoc.</xsl:text>
+      </xsl:message>
 
       <olink targetdoc="{unparsed-entity-uri(@targetdocent)}">
 	<xsl:for-each select="@*">
@@ -1029,16 +854,14 @@
 
   <xsl:choose>
     <xsl:when test="normalize-space($date) != normalize-space(.)">
-      <xsl:call-template name="emit-message">
-        <xsl:with-param name="message">
-          <xsl:text>Converted </xsl:text>
-          <xsl:value-of select="normalize-space(.)"/>
-          <xsl:text> into </xsl:text>
-          <xsl:value-of select="$date"/>
-          <xsl:text> for </xsl:text>
-          <xsl:value-of select="name(.)"/>
-        </xsl:with-param>
-      </xsl:call-template>
+      <xsl:message>
+	<xsl:text>Converted </xsl:text>
+	<xsl:value-of select="normalize-space(.)"/>
+	<xsl:text> into </xsl:text>
+	<xsl:value-of select="$date"/>
+	<xsl:text> for </xsl:text>
+	<xsl:value-of select="name(.)"/>
+      </xsl:message>
 
       <xsl:copy>
 	<xsl:copy-of select="@*"/>
@@ -1047,17 +870,15 @@
     </xsl:when>
 
     <xsl:when test="$defaultDate != ''">
-      <xsl:call-template name="emit-message">
-        <xsl:with-param name="message">
-          <xsl:text>Unparseable date: </xsl:text>
-          <xsl:value-of select="normalize-space(.)"/>
-          <xsl:text> in </xsl:text>
-          <xsl:value-of select="name(.)"/>
-          <xsl:text> (Using default: </xsl:text>
-          <xsl:value-of select="$defaultDate"/>
-          <xsl:text>)</xsl:text>
-        </xsl:with-param>
-      </xsl:call-template>
+      <xsl:message>
+	<xsl:text>Unparseable date: </xsl:text>
+	<xsl:value-of select="normalize-space(.)"/>
+	<xsl:text> in </xsl:text>
+	<xsl:value-of select="name(.)"/>
+	<xsl:text> (Using default: </xsl:text>
+	<xsl:value-of select="$defaultDate"/>
+	<xsl:text>)</xsl:text>
+      </xsl:message>
 
       <xsl:copy>
 	<xsl:copy-of select="@*"/>
@@ -1070,14 +891,12 @@
 
     <xsl:otherwise>
       <!-- these don't really matter anymore
-           <xsl:call-template name="emit-message">
-           <xsl:with-param name="message">
-           <xsl:text>Unparseable date: </xsl:text>
-           <xsl:value-of select="normalize-space(.)"/>
-           <xsl:text> in </xsl:text>
-           <xsl:value-of select="name(.)"/>
-           </xsl:with-param>
-           </xsl:call-template>
+      <xsl:message>
+	<xsl:text>Unparseable date: </xsl:text>
+	<xsl:value-of select="normalize-space(.)"/>
+	<xsl:text> in </xsl:text>
+	<xsl:value-of select="name(.)"/>
+      </xsl:message>
       -->
       <xsl:copy>
 	<xsl:copy-of select="@*"/>
@@ -1089,21 +908,6 @@
 
 <xsl:template match="title|subtitle|titleabbrev" priority="300">
   <!-- nop -->
-</xsl:template>
-
-<xsl:template match="abstract" priority="300">
-  <xsl:choose>
-    <xsl:when test="not(contains(name(parent::*),'info'))">
-      <xsl:call-template name="emit-message">
-        <xsl:with-param name="message">
-          <xsl:text>Check abstract; moved into info correctly?</xsl:text>
-        </xsl:with-param>
-      </xsl:call-template>
-    </xsl:when>
-    <xsl:otherwise>
-      <xsl:apply-templates select="." mode="copy"/>
-    </xsl:otherwise>
-  </xsl:choose>
 </xsl:template>
 
 <xsl:template match="indexterm">
@@ -1118,61 +922,14 @@
   </indexterm>
 </xsl:template>
 
-<xsl:template match="ackno" priority="200">
-  <acknowledgements>
-    <xsl:copy-of select="@*"/>
-    <para>
-      <xsl:apply-templates/>
-    </para>
-  </acknowledgements>
-</xsl:template>
-
-<xsl:template match="lot|lotentry|tocback|tocchap|tocfront|toclevel1|
-		     toclevel2|toclevel3|toclevel4|toclevel5|tocpart" priority="200">
-  <tocdiv>
-    <xsl:copy-of select="@*"/>
-    <xsl:apply-templates/>
-  </tocdiv>
-</xsl:template>
-
-<xsl:template match="action" priority="200">
-  <phrase remap="action">
-    <xsl:call-template name="copy.attributes"/>
-    <xsl:apply-templates/>
-  </phrase>
-</xsl:template>
-
-<xsl:template match="beginpage" priority="200">
-  <xsl:comment> beginpage pagenum=<xsl:value-of select="@pagenum"/> </xsl:comment>
-  <xsl:call-template name="emit-message">
-    <xsl:with-param name="message">
-      <xsl:text>Replacing beginpage with comment</xsl:text>
-    </xsl:with-param>
-  </xsl:call-template>
-</xsl:template>
-
-<xsl:template match="structname|structfield" priority="200">
-  <varname remap="{local-name(.)}">
-    <xsl:call-template name="copy.attributes"/>
-    <xsl:apply-templates/>
-  </varname>
-</xsl:template>
-
 <!-- ====================================================================== -->
 
-<!-- 6 Feb 2008, ndw changed mode=copy so that it only copies the first level,
-     then it switches back to "normal" mode so that other rewriting templates
-     catch embedded fixes -->
-
-<!--
 <xsl:template match="ulink" priority="200" mode="copy">
   <xsl:choose>
     <xsl:when test="node()">
-      <xsl:call-template name="emit-message">
-        <xsl:with-param name="message">
-          <xsl:text>Converting ulink to phrase.</xsl:text>
-        </xsl:with-param>
-      </xsl:call-template>
+      <xsl:message>
+	<xsl:text>Converting ulink to phrase.</xsl:text>
+      </xsl:message>
 
       <phrase xlink:href="{@url}">
 	<xsl:call-template name="copy.attributes">
@@ -1182,11 +939,9 @@
       </phrase>
     </xsl:when>
     <xsl:otherwise>
-      <xsl:call-template name="emit-message">
-        <xsl:with-param name="message">
-          <xsl:text>Converting ulink to uri.</xsl:text>
-        </xsl:with-param>
-      </xsl:call-template>
+      <xsl:message>
+	<xsl:text>Converting ulink to uri.</xsl:text>
+      </xsl:message>
 
       <uri xlink:href="{@url}">
 	<xsl:call-template name="copy.attributes">
@@ -1204,20 +959,17 @@
     <xsl:apply-templates/>
   </tag>
 </xsl:template>
--->
 
 <xsl:template match="*" mode="copy">
   <xsl:copy>
     <xsl:call-template name="copy.attributes"/>
-    <xsl:apply-templates/>
+    <xsl:apply-templates mode="copy"/>
   </xsl:copy>
 </xsl:template>
 
-<!--
 <xsl:template match="comment()|processing-instruction()|text()" mode="copy">
   <xsl:copy/>
 </xsl:template>
--->
 
 <!-- ====================================================================== -->
 
@@ -1241,12 +993,10 @@
   <xsl:for-each select="$src/@*">
     <xsl:choose>
       <xsl:when test="local-name(.) = 'moreinfo'">
-        <xsl:call-template name="emit-message">
-          <xsl:with-param name="message">
-            <xsl:text>Discarding moreinfo on </xsl:text>
-            <xsl:value-of select="local-name($src)"/>
-          </xsl:with-param>
-        </xsl:call-template>
+        <xsl:message>
+          <xsl:text>Discarding moreinfo on </xsl:text>
+          <xsl:value-of select="local-name($src)"/>
+        </xsl:message>
       </xsl:when>
       <xsl:when test="local-name(.) = 'lang'">
         <xsl:attribute name="xml:lang">
@@ -1262,95 +1012,45 @@
       <xsl:when test="local-name(.) = 'float'">
 	<xsl:choose>
 	  <xsl:when test=". = '1'">
-            <xsl:call-template name="emit-message">
-              <xsl:with-param name="message">
-                <xsl:text>Discarding float on </xsl:text>
-                <xsl:value-of select="local-name($src)"/>
-              </xsl:with-param>
-            </xsl:call-template>
-            <xsl:if test="not($src/@floatstyle)">
-	      <xsl:call-template name="emit-message">
-                <xsl:with-param name="message">
-                  <xsl:text>Adding floatstyle='normal' on </xsl:text>
-                  <xsl:value-of select="local-name($src)"/>
-                </xsl:with-param>
-              </xsl:call-template>
-              <xsl:attribute name="floatstyle">
-                <xsl:text>normal</xsl:text>
+	    <xsl:message>
+	      <xsl:text>Discarding float on </xsl:text>
+	      <xsl:value-of select="local-name($src)"/>
+	    </xsl:message>
+	    <xsl:if test="not($src/@floatstyle)">
+	      <xsl:message>
+		<xsl:text>Adding floatstyle='normal' on </xsl:text>
+		<xsl:value-of select="local-name($src)"/>
+	      </xsl:message>
+	      <xsl:attribute name="floatstyle">
+		<xsl:text>normal</xsl:text>
 	      </xsl:attribute>
 	    </xsl:if>
 	  </xsl:when>
 	  <xsl:when test=". = '0'">
-	    <xsl:call-template name="emit-message">
-              <xsl:with-param name="message">
-                <xsl:text>Discarding float on </xsl:text>
-                <xsl:value-of select="local-name($src)"/>
-              </xsl:with-param>
-            </xsl:call-template>
-          </xsl:when>
+	    <xsl:message>
+	      <xsl:text>Discarding float on </xsl:text>
+	      <xsl:value-of select="local-name($src)"/>
+	    </xsl:message>
+	  </xsl:when>
 	  <xsl:otherwise>
-	    <xsl:call-template name="emit-message">
-          <xsl:with-param name="message">
-            <xsl:text>Discarding float on </xsl:text>
-            <xsl:value-of select="local-name($src)"/>
-          </xsl:with-param>
-            </xsl:call-template>
-            <xsl:if test="not($src/@floatstyle)">
-              <xsl:call-template name="emit-message">
-                <xsl:with-param name="message">
-                  <xsl:text>Adding floatstyle='</xsl:text>
-                  <xsl:value-of select="."/>
-                  <xsl:text>' on </xsl:text>
-                  <xsl:value-of select="local-name($src)"/>
-                </xsl:with-param>
-              </xsl:call-template>
-              <xsl:attribute name="floatstyle">
+	    <xsl:message>
+	      <xsl:text>Discarding float on </xsl:text>
+	      <xsl:value-of select="local-name($src)"/>
+	    </xsl:message>
+	    <xsl:if test="not($src/@floatstyle)">
+	      <xsl:message>
+		<xsl:text>Adding floatstyle='</xsl:text>
+		<xsl:value-of select="."/>
+		<xsl:text>' on </xsl:text>
+		<xsl:value-of select="local-name($src)"/>
+	      </xsl:message>
+	      <xsl:attribute name="floatstyle">
 		<xsl:value-of select="."/>
 	      </xsl:attribute>
 	    </xsl:if>
 	  </xsl:otherwise>
 	</xsl:choose>
       </xsl:when>
-      <xsl:when test="local-name(.) = 'entityref'">
-	<xsl:attribute name="fileref">
-	  <xsl:value-of select="unparsed-entity-uri(@entityref)"/>
-	</xsl:attribute>
-      </xsl:when>
-
-      <xsl:when test="local-name($src) = 'simplemsgentry'
-	              and local-name(.) = 'audience'">
-        <xsl:attribute name="msgaud">
-          <xsl:value-of select="."/>
-        </xsl:attribute>
-      </xsl:when>
-      <xsl:when test="local-name($src) = 'simplemsgentry'
-	              and local-name(.) = 'origin'">
-        <xsl:attribute name="msgorig">
-          <xsl:value-of select="."/>
-        </xsl:attribute>
-      </xsl:when>
-      <xsl:when test="local-name($src) = 'simplemsgentry'
-	              and local-name(.) = 'level'">
-        <xsl:attribute name="msglevel">
-          <xsl:value-of select="."/>
-        </xsl:attribute>
-      </xsl:when>
-
-      <!-- * for upgrading XSL litprog params documentation -->
-      <xsl:when test="local-name($src) = 'refmiscinfo'
-                      and local-name(.) = 'role'
-                      and . = 'type'
-                      ">
-        <xsl:call-template name="emit-message">
-          <xsl:with-param name="message">
-            <xsl:text>Converting refmiscinfo@role=type to </xsl:text>
-            <xsl:text>@class=other,otherclass=type</xsl:text>
-          </xsl:with-param>
-        </xsl:call-template>
-        <xsl:attribute name="class">other</xsl:attribute>
-        <xsl:attribute name="otherclass">type</xsl:attribute>
-      </xsl:when>
-
       <xsl:otherwise>
         <xsl:copy/>
       </xsl:otherwise>
@@ -1366,7 +1066,7 @@
       <xsl:element name="{local-name(.)}"
 		   namespace="http://docbook.org/ns/docbook">
 	<xsl:if test="not(parent::*)">
-	  <xsl:attribute name="version">5.0</xsl:attribute>
+	  <xsl:attribute name="version">lillet</xsl:attribute>
 	</xsl:if>
 	<xsl:copy-of select="@*"/>
 	<xsl:apply-templates mode="addNS"/>
@@ -1375,7 +1075,7 @@
     <xsl:otherwise>
       <xsl:copy>
 	<xsl:if test="not(parent::*)">
-	  <xsl:attribute name="version">5.0</xsl:attribute>
+	  <xsl:attribute name="version">lillet</xsl:attribute>
 	</xsl:if>
 	<xsl:copy-of select="@*"/>
 	<xsl:apply-templates mode="addNS"/>
@@ -1386,18 +1086,6 @@
 
 <xsl:template match="comment()|processing-instruction()|text()" mode="addNS">
   <xsl:copy/>
-</xsl:template>
-
-<!-- ====================================================================== -->
-
-<xsl:template name="emit-message">
-  <xsl:param name="message"/>
-  <xsl:message>
-    <xsl:value-of select="$message"/>
-    <xsl:text> (</xsl:text>
-    <xsl:value-of select="$rootid"/>
-    <xsl:text>)</xsl:text>
-  </xsl:message>
 </xsl:template>
 
 </xsl:stylesheet>

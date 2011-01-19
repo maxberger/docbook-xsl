@@ -1,6 +1,6 @@
-# This file is part of DocBook V5.0
+# This file is part of DocBook V5.0b2
 #
-# Copyright 1992-2008 HaL Computer Systems, Inc.,
+# Copyright 1992-2005 HaL Computer Systems, Inc.,
 # O'Reilly & Associates, Inc., ArborText, Inc., Fujitsu Software
 # Corporation, Norman Walsh, Sun Microsystems, Inc., and the
 # Organization for the Advancement of Structured Information
@@ -29,24 +29,25 @@
 
 namespace ctrl = "http://nwalsh.com/xmlns/schema-control/"
 namespace rng  = "http://relaxng.org/ns/structure/1.0"
-namespace s = "http://purl.oclc.org/dsdl/schematron"
+namespace s = "http://www.ascc.net/xml/schematron"
 namespace db = "http://docbook.org/ns/docbook"
 default namespace = "http://docbook.org/ns/docbook"
 
-start |= db.equation | db.informalequation
-
-db.formal.blocks |= db.equation
-db.informal.blocks |= db.informalequation
+# TEI: formula
 
 db.math.inlines = db.inlineequation
+
+db.math.blocks =
+   db.equation
+ | db.informalequation
+
 db.domain.inlines |= db.math.inlines
 
-db.initializer.inlines |= db.mathphrase
+db.nopara.blocks |= db.math.blocks
 
 # ======================================================================
 
 db.equation.content = db.mediaobject+ | db.mathphrase+
-db.inlineequation.content = db.inlinemediaobject+ | db.mathphrase+
 
 # ======================================================================
 
@@ -57,7 +58,7 @@ db.inlineequation.content = db.inlinemediaobject+ | db.mathphrase+
 div {
 
    db.equation.role.attribute = attribute role { text }
-   db.equation.label.attribute = db.label.attribute
+   db.equation.label.attribute = attribute label { text }
 
    db.equation.attlist =
       db.equation.role.attribute?
@@ -125,7 +126,7 @@ div {
       element inlineequation {
          db.inlineequation.attlist,
          db.alt?,
-         db.inlineequation.content
+         db.equation.content
       }
 }
 
@@ -133,7 +134,7 @@ div {
 
 [
    db:refname [ "mathphrase" ]
-   db:refpurpose [ "A mathematical phrase that can be represented with ordinary text and a small amount of markup" ]
+   db:refpurpose [ "A mathematical phrase, an expression that can be represented with ordinary text and a small amount of markup" ]
 ]
 div {
 

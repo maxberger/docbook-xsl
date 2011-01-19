@@ -101,12 +101,6 @@
 <uri name="http://docbook.org/xml/{$version}/sch/docbook.sch"
      uri="sch/docbook.sch"/>
 
-<uri name="http://www.oasis-open.org/docbook/xml/{$version}/docbook.nvdl"
-     uri="docbook.nvdl"/>
-
-<uri name="http://docbook.org/xml/{$version}/docbook.nvdl"
-     uri="docbook.nvdl"/>
-
 <xsl:comment> End of XML Catalog for DocBook ............................. </xsl:comment>
 <xsl:comment> ............................................................ </xsl:comment>
 </catalog>

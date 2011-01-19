@@ -6,16 +6,15 @@
 # works and it isn't recursive. I still need to get the documentation
 # build into the new system.
 
-include ../../../buildtools/Makefile.incl
+include ../../../cvstools/Makefile.incl
 
-SAXON=$(CVSTOOLSROOT)/saxon
 XSLTPROC=xsltproc
 PERL=perl
 MV ?= mv
 
 CLASS=wd
-VERSION=5.0b6
-SPECNAME=docbook-$(VERSION)-spec-wd-01
+VERSION=5.0b2
+SPECNAME=$(CLASS)-docbook-docbook-$(VERSION)
 
 TOOLS=../tools
 AUGMENT=$(TOOLS)/augment.xsl
@@ -32,25 +31,24 @@ DISTRIB=$(_OUTTOP)/docbook-$(VERSION)
 
 .PHONY: clean
 
-clean:: ; rm -rf $(_OUTTOP) *.xsd
+clean:: ; rm -rf $(_OUTTOP)
 
 .SUFFIXES:
 
-MODULES=docbook assembly dbforms defguide docbookxi dbits dtd assemblydtd
+MODULES=docbook dbforms defguide docbookxi
 
 include $(addsuffix /Makefile,$(MODULES))
 
 .PHONY: tests
 
 distrib: docbook.dtd docbook.rng   docbook.rnc   docbook.sch \
-                     docbookxi.rng docbookxi.rnc docbook.xsd
+                     docbookxi.rng docbookxi.rnc
 	$(MAKE) -C howto
 	$(MAKE) -C spec
 	rm -rf $(DISTRIB)
 	mkdir -p $(DISTRIB)/{rng,dtd,xsd,sch,docs,tools}
 	mkdir $(DISTRIB)/docs/images
 	echo $(VERSION) > $(DISTRIB)/VERSION
-	cp docbook.nvdl $(DISTRIB)/
 	cp docbook.{rng,rnc} docbookxi.{rng,rnc} $(DISTRIB)/rng/
 	cp docbook.dtd $(DISTRIB)/dtd/
 	cp docbook.sch $(DISTRIB)/sch/
@@ -64,8 +62,7 @@ distrib: docbook.dtd docbook.rng   docbook.rnc   docbook.sch \
 	cp spec/docbook.xml $(DISTRIB)/docs/$(SPECNAME).xml
 	cp spec/docbook.html $(DISTRIB)/docs/$(SPECNAME).html
 	cp spec/docbook.pdf $(DISTRIB)/docs/$(SPECNAME).pdf
-	$(SAXON) -8b ../tools/catalog.xsl ../tools/catalog.xsl $(DISTRIB)/catalog.xml version=$(VERSION)
+	saxon -8b ../tools/catalog.xsl ../tools/catalog.xsl $(DISTRIB)/catalog.xml version=$(VERSION)
 	cp ../tools/db4-upgrade.xsl $(DISTRIB)/tools/
 	cp ../tools/db4-entities.pl $(DISTRIB)/tools/
 	cp README $(DISTRIB)/
-	cp ChangeLog $(DISTRIB)/

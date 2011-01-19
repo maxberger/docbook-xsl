@@ -1,6 +1,6 @@
-# This file is part of DocBook V5.0
+# This file is part of DocBook V5.0b2
 #
-# Copyright 1992-2008 HaL Computer Systems, Inc.,
+# Copyright 1992-2005 HaL Computer Systems, Inc.,
 # O'Reilly & Associates, Inc., ArborText, Inc., Fujitsu Software
 # Corporation, Norman Walsh, Sun Microsystems, Inc., and the
 # Organization for the Advancement of Structured Information
@@ -29,11 +29,9 @@
 
 namespace ctrl = "http://nwalsh.com/xmlns/schema-control/"
 namespace rng  = "http://relaxng.org/ns/structure/1.0"
-namespace s = "http://purl.oclc.org/dsdl/schematron"
+namespace s = "http://www.ascc.net/xml/schematron"
 namespace db = "http://docbook.org/ns/docbook"
 default namespace = "http://docbook.org/ns/docbook"
-
-start |= db.calloutlist | db.programlistingco | db.screenco | db.imageobjectco
 
 db.publishing.inlines |= db.coref
 db.list.blocks |= db.calloutlist
@@ -42,9 +40,9 @@ db.computeroutput.inlines |= db.co
 db.verbatim.inlines |= db.co
 db.prompt.inlines |= db.co
 db.systemitem.inlines |= db.co
+db.computeroutput.inlines |= db.co
 db.userinput.inlines |= db.co
 db.replaceable.inlines |= db.co
-db.ubiq.inlines |= db.coref
 
 db.mediaobject.content |= db.imageobjectco
 
@@ -55,31 +53,16 @@ ctrl:other-attribute [ name="area.units.attrib"
                        other-name="area.units-other.attributes" ]
 
 db.area.units.enumeration =
-   ## Coordinates expressed as a pair of CALS graphic coordinates.
    "calspair"
- | ## Coordinates expressed as a line and column.
-   "linecolumn"
- | ## Coordinates expressed as a pair of lines and columns.
-   "linecolumnpair"
- | ## Coordinates expressed as a line range.
-   "linerange"
+ | "linecolumn"
+ | "linecolumnpair"
+ | "linerange"
 
 db.area.units-enum.attribute =
-   [
-      db:refpurpose [ "Identifies the units used in the coords attribute. The default units vary according to the type of callout specified: " db:tag [ class="attvalue" "calspair" ] " for graphics and " db:tag [ class="attvalue" "linecolumn" ] " for line-oriented elements." ]
-   ]
    attribute units { db.area.units.enumeration }?
 
 db.area.units-other.attributes =
-   [
-      db:refpurpose [ "Indicates that non-standard units are used for this " db:tag [ "area" ] ". In this case " db:tag [ class="attribute" "otherunits" ] " must be specified." ]
-   ]
-   attribute units {
-      ## Coordinates expressed in some non-standard units.
-      "other" }?,
-   [
-      db:refpurpose [ "Identifies the units used in the " db:tag [ class="attribute" "coords" ] " attribute when the " db:tag [ class="attribute" "units" ] " attribute is " db:quote [ "other" ] ". This attribute is forbidden otherwise." ]
-   ]
+   attribute units { "other" }?,
    attribute otherunits { xsd:NMTOKEN }
 
 db.area.units.attribute =
@@ -115,16 +98,12 @@ div {
 
 [
    db:refname [ "callout" ]
-   db:refpurpose [ "A " db:quote [ "called out" ] " description of a marked area" ]
+   db:refpurpose [ "A " db:quote [ "called out" ] " description of a marked Area" ]
 ]
 div {
 
    db.callout.role.attribute = attribute role { text }
-   db.callout.arearefs.attribute =
-      [
-         db:refpurpose [ "Identifies the areas described by this callout." ]
-      ]
-      attribute arearefs { xsd:IDREFS }
+   db.callout.arearefs.attribute = attribute arearefs { xsd:IDREFS }
 
    db.callout.attlist =
       db.callout.role.attribute?
@@ -192,32 +171,20 @@ div {
 
 [
    db:refname [ "area" ]
-   db:refpurpose [ "A region defined for a callout in a graphic or code example" ]
+   db:refpurpose [ "A region defined for a Callout in a graphic or code example" ]
 ]
 div {
 
    db.area.role.attribute = attribute role { text }
-   db.area.linkends.attribute =
-      [
-         db:refpurpose [ "Point to the " db:tag [ "callout" ] "s which refer to this area. (This provides bidirectional linking which may be useful in online presentation.)" ]
-      ]
-      attribute linkends { xsd:IDREFS }
-   db.area.label.attribute =
-      [
-         db:refpurpose [ "Specifies an identifying number or string that may be used in presentation. The area label might be drawn on top of the figure, for example, at the position indicated by the coords attribute." ]
-      ]
-      attribute label { text }
-   db.area.coords.attribute =
-      [
-         db:refpurpose [ "Provides the coordinates of the area. The coordinates must be interpreted using the " db:tag [ class="attribute" "units" ] " specified." ]
-      ]
-      attribute coords { text }
+   db.area.linkends.attribute = attribute linkends { xsd:IDREFS }
+   db.area.label.attribute = attribute label { text }
+   db.area.coords.attribute = attribute coords { text }
 
    db.area.attlist =
       db.area.role.attribute?
     & db.common.idreq.attributes
     & db.area.units.attribute
-    & (db.area.linkends.attribute | db.href.attributes)?
+    & (db.area.linkends.attribute | db.href.attribute)?
     & db.area.label.attribute?
     & db.area.coords.attribute
 
@@ -232,7 +199,7 @@ div {
 
 [
    db:refname [ "area" ]
-   db:refpurpose [ "A region defined for a callout in a graphic or code example" ]
+   db:refpurpose [ "A region defined for a Callout in a graphic or code example" ]
 ]
 div {
    # The only difference is that xml:id is optional
@@ -240,7 +207,7 @@ div {
       db.area.role.attribute?
     & db.common.attributes
     & db.area.units.attribute
-    & (db.area.linkends.attribute | db.href.attributes)?
+    & (db.area.linkends.attribute | db.href.attribute)?
     & db.area.label.attribute?
     & db.area.coords.attribute
 
@@ -260,14 +227,14 @@ div {
 div {
 
    db.areaset.role.attribute = attribute role { text }
-   db.areaset.linkends.attribute = db.linkends.attribute
-   db.areaset.label.attribute = db.label.attribute
+   db.areaset.linkends.attribute = attribute linkends { xsd:IDREFS }
+   db.areaset.label.attribute = attribute label { text }
 
    db.areaset.attlist =
       db.areaset.role.attribute?
     & db.common.idreq.attributes
     & db.area.units.attribute
-    & (db.areaset.linkends.attribute | db.href.attributes)?
+    & (db.areaset.linkends.attribute | db.href.attribute)?
     & db.areaset.label.attribute?
 
    db.areaset =
@@ -326,7 +293,7 @@ div {
          db.imageobjectco.attlist,
          db.imageobjectco.info,
          db.areaspec,
-         db.imageobject+,
+         db.imageobject,
          db.calloutlist*
       }
 }
@@ -340,8 +307,8 @@ div {
 div {
 
    db.co.role.attribute = attribute role { text }
-   db.co.linkends.attribute = db.linkends.attribute
-   db.co.label.attribute = db.label.attribute
+   db.co.linkends.attribute = attribute linkends { xsd:IDREFS }
+   db.co.label.attribute = attribute label { text }
 
    db.co.attlist =
       db.co.role.attribute?
@@ -365,7 +332,7 @@ div {
 div {
 
    db.coref.role.attribute = attribute role { text }
-   db.coref.label.attribute = db.label.attribute
+   db.coref.label.attribute = attribute label { text }
 
    db.coref.attlist =
       db.coref.role.attribute?
