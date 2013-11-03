@@ -1116,6 +1116,7 @@
     <xsl:apply-templates/>
   </varname>
 </xsl:template>
+  
 <!-- ====================================================================== -->
 <!-- glossterm and term have broader content models in 4.x than 5.0.
      Warn when an unsupported element is found under glossterm.
@@ -1129,6 +1130,14 @@
     <xsl:apply-templates mode="clean-terms"/>
   </xsl:element>
 </xsl:template>
+
+<!-- Any other elements inside term or glossterm which doesn't have a
+     template rule are copied 
+-->
+<xsl:template match="*" mode="clean-terms">
+    <xsl:apply-templates select="." mode="copy"/>
+</xsl:template>
+  
 
 <!-- The synopsis elements have child elements that don't work inside phrase, plus
      they have attributes that shouldn't be lost. So, leave as is, but warn. -->
